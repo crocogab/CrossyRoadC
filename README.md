@@ -11,10 +11,12 @@ Les élèves devront réaliser une application complète en langage C suivant de
 - Une version intégralement textuelle avec une interaction avec le joueur par ligne de commande et
 - UNe version graphique utilisant la librairie libSDL (https://www.libsdl.org/)
 
-![Blokus](figures/blokus.jpg)
+![Crossy Roads](crossy-road-revenue.webp)
 
 ## Objectifs Pédagogiques
 
+- Elaborer un cahier des charges
+- Modéliser un jeu
 - Implémentation de structures de données et d'algorithmes avancés en langage C.
 - Développement et application de tests unitaires pour assurer la qualité et la fiabilité du code.
 - Expérience concrète de la gestion de projet en équipe (planification, suivi d'avancement, compte rendu de réunion, etc.).
@@ -23,49 +25,44 @@ Les élèves devront réaliser une application complète en langage C suivant de
 ## Cahier des charges
 
 #### Fonctionnalités requises
-   - **Gestion des parties** : Permettre la création de nouvelles parties et l'ajout de joueurs (humains ou IA).
-   - **Tour par tour** : Implémentation du déroulement des parties en mode tour par tour, avec les vérifications de règles associées (validité des coups, placements corrects des pièces).
-   - **Reprendre une partie** : La possibilité de sauvegarder et de reprendre une partie en cours.
-   - **Historique des parties** : Un accès à l’historique complet des coups pour chaque partie.
-   - **IA pour un joueur virtuel** : Développer un algorithme d'intelligence artificielle qui pourra participer à la partie en tant que joueur virtuel, avec des choix de coups basés sur des algorithmes tels que Minimax ou Alpha-Beta Pruning.
+   - **Réalisation d'une partie** : Permettre le lancement d'une partie.
 
 
 #### Technologies
-   - **Back-end** : Utilisation de **Flask** (framework Python) pour implémenter la logique du jeu Blokus, la gestion des parties et des joueurs, ainsi que les interactions avec la base de données.
-   - **Base de données** : Concevoir un schéma relationnel en 3ème forme normale pour stocker les informations de jeu (joueurs, parties, historique des coups). Toutes les informations relatives aux parties (joueurs, positions des pièces, historique des coups) seront stockées dans une base de données relationnelle (SQLite, PostgreSQL, ou MySQL).
-   - **Front-end** : Créer une interface web interactive avec HTML/CSS/(JavaScript en option) permettant de représenter le plateau de jeu, les pièces disponibles pour chaque joueur et l'historique des coups.
-
+   - **C** : Utilisation exclusive du langage C pour la programmation du jeu
+   - **libSDL*** : Utilisation de la librairie C libSDL pour la réalisation de la version graphique de l'interface du jeu.
 
 ## Étapes du projet
 
 #### Étude préalable
-   - Réaliser un **état de l’art** des algorithmes d'intelligence artificielle utilisés dans les jeux de stratégie (algorithmes Minimax, Alpha-Beta Pruning, etc.) afin de déterminer le plus adapté pour implémenter un joueur virtuel compétent.
-   - Décrire le schéma conceptuel de la base de données pour modéliser les parties, les joueurs et l'historique des coups.
-   - Proposer un mécanisme pour permettre "le jeu en tour par tour".
+   - Réalisez une étude sur le fonctionnement du jeu Crossy Roads, tout particulièrement sur la gestion des véhicules et sur les déplacements possibles.
+   - Réalisez un **état de l’art** des algorithmes d'intelligence artificielle utilisés dans les jeux de stratégie (algorithmes Minimax, Alpha-Beta Pruning, etc.) afin de déterminer le plus adapté pour implémenter un joueur virtuel compétent.
 
-#### Conception de la base de données
-   - Élaboration d’un conceptuel de données **modèle entité-association** et de son **modèle relationnel** associé en 3ème forme normale.
-   - Définir les relations entre les parties, les joueurs, les coups joués et leur stockage.
+
+#### Conception de l'application
+   - Définissez l'ensemble des structures de données nécessaires à la réalisation du jeu dans sa forme la plus élémentaire 
+   - Etendez votre modèle afin qu'il puisse interagir avec la librairie libSDL.
+   - Pensez dès la conception de votre application à une modalité d'interaction avec une intelligence artificielle remplaçant le joueur humain.
 
 #### Développement de l’application
-   - **Back-end** : Implémentation de la logique du jeu, des règles de Blokus, et des interactions avec la base de données à l’aide de Flask.
+   - **Core** : Implémentation de la logique du jeu, des règles de Crossy Roads, et des interactions avec le joueur.
    - **IA** : Implémenter un ou plusieurs algorithmes pour le joueur virtuel prenant en compte le niveau de difficulté et/ou les temps de réflexion/calcul.
-   - **Front-end** : Conception de l’interface utilisateur pour visualiser le plateau de jeu, placer les pièces et interagir avec les autres joueurs.
+   - **UI** : Conception de l’interface utilisateur pour visualiser le plateau de jeu, l'évolution des véhicules et les déplacements du joueur. Celle-ci comprendra deux modes: un mode textuel et un mode graphique.
    
 #### Documentation et tests
-   - Documentation complète du code et des choix d'implémentation (structure de la base de données, algorithmes utilisés, logique de jeu).
-   - Tests unitaires et fonctionnels pour s'assurer que l'application respecte les règles du jeu et gère correctement les scénarios (annulation de coups, parties sauvegardées, etc.).
+   - Documentation complète du code et des choix d'implémentation (structures de données, algorithmes mis en oeuvre, logique de jeu).
+   - Tests unitaires et fonctionnels pour s'assurer que l'application respecte les règles du jeu et gère correctement les scénarios (mise en pause, contact joueur véhicule, ...).
 
 
 ##  Exigences du projet et points évalués
 
 Pour l'évaluation, les points suivants seront pris en considération :
 
-- Qualité du **modèle relationnel** et respect de la 3ème forme normale.
-- Implémentation correcte de la **logique du jeu** et respect des règles de Blokus.
+- Qualité de la modélisation et des **structures de données** utilisées pour représenter les éléments du jeu.
+- Implémentation correcte de la **logique du jeu** et respect des règles de Crossy Roads.
 - Fonctionnalité de l'**intelligence artificielle** (qualité de l'algorithme choisi et performances).
-- **Qualité de l'interface utilisateur** et fluidité des interactions avec le jeu.
-- Respect des **bonnes pratiques de programmation** (structure du code, commentaires, organisation).
+- **Qualité de l'interface utilisateur** et fluidité des interactions avec le jeu (à la fois sur la version textuelle que sur la version graphique)
+- Respect des **bonnes pratiques de programmation** (structure du code, compilation séparée, commentaires, organisation, makefile, ...).
 - Tests et gestion des erreurs (robustesse de l’application).
 
 
@@ -82,9 +79,9 @@ Tous ces éléments seront fournis sur le dépôt GitLab du projet.
 
 ## Date de rendu et Soutenance
 
-Le projet est à rendre pour le **mardi 7 janvier 2025** à 22 heures au plus tard.
+Le projet est à rendre pour le **Date à définir** à 22 heures au plus tard.
 
-Des soutenances de groupes de projet seront organisées la deuxième ou troisième semaine de janvier.
+Des soutenances de groupes de projet seront organisées dans la foulée.
 
 Votre projet fera l'objet d'une démonstration devant un jury composé d'au moins 2 membres de l’équipe pédagogique. Durant cette soutenance, vous serez jugés sur votre démonstration de l'application et votre capacité à expliquer votre projet et son fonctionnement. Chaque membre du groupe devra être présent lors de soutenance et **participer activement**.
 
