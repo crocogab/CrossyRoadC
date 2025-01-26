@@ -1,23 +1,24 @@
-# Développement d'une application web pour le jeu **Blokus** avec IA
+# Développement d'une application de jeu **Crossy Roads** avec IA
 
 
 ## Objectif du projet
 
-Ce projet doit vous permettre de mettre en œuvre des compétences en développement web, en bases de données, en intelligence artificielle, et en gestion de projet, tout en étant un défi ludique et pratique avec la conception d'un jeu de société.
+Ce projet doit vous permettre de mettre en œuvre des compétences en développement C, en implémementation de structures de données, en utilisation d'une librairie graphique externe, en intelligence artificielle et en gestion de projet,tout en étant un défi ludique et pratique avec la conception d'un jeu.
 
-L'objectif de ce projet est de concevoir et de développer une application web permettant de jouer au jeu de plateau **Blokus** en tour par tour. L'application devra permettre à plusieurs joueurs humains de participer à une partie, soit co-localisés (dans le même navigateur internet), soit à distance (depuis différentes machines à travers plusieurs navigateurs internet), et inclure au moins un joueur virtuel contrôlé par un algorithme d'intelligence artificielle (IA). Les élèves devront réaliser une application complète en Python, avec une partie serveur (*back-end*) gérant la logique du jeu et une interface utilisateur interactive (*front-end*).
-
+L'objectif de ce projet est de concevoir et de développer une application permettant de jouer au jeu élétronique **Crossy Roads**. 
+L'application devra permettre à un joueur humain (dans un premier temps pui à une IA) de jouer une partie. 
+Les élèves devront réaliser une application complète en langage C suivant deux réalisations:
+- Une version intégralement textuelle avec une interaction avec le joueur par ligne de commande et
+- UNe version graphique utilisant la librairie libSDL (https://www.libsdl.org/)
 
 ![Blokus](figures/blokus.jpg)
 
 ## Objectifs Pédagogiques
 
-- Implémentation de structures de base et d'algorithmes avancés.
-- Application pratique des connaissances en base de données et programmation Web.
+- Implémentation de structures de données et d'algorithmes avancés en langage C.
 - Développement et application de tests unitaires pour assurer la qualité et la fiabilité du code.
 - Expérience concrète de la gestion de projet en équipe (planification, suivi d'avancement, compte rendu de réunion, etc.).
 - Mise en pratique de la gestion de versions (utilisation de git/GitLab)
-
 
 ## Cahier des charges
 
