@@ -1,56 +1,61 @@
-# Développement d'une application de jeu **Crossy Roads** avec IA
+# Développement d'une application de jeu **Crossy Road** avec IA
 
 
 ## Objectif du projet
 
-Ce projet doit vous permettre de mettre en œuvre des compétences en développement C, en implémementation de structures de données, en utilisation d'une librairie graphique externe, en intelligence artificielle et en gestion de projet,tout en étant un défi ludique et pratique avec la conception d'un jeu.
+Ce projet doit vous permettre de mettre en œuvre des compétences en développement C, en implémentation de structures de données, en utilisation d'une librairie graphique externe, en intelligence artificielle et en gestion de projet, tout en étant un défi ludique et pratique avec la conception d'un jeu.
 
-L'objectif de ce projet est de concevoir et de développer une application permettant de jouer au jeu élétronique **Crossy Roads**. 
-L'application devra permettre à un joueur humain (dans un premier temps pui à une IA) de jouer une partie. 
-Les élèves devront réaliser une application complète en langage C suivant deux réalisations:
+L'objectif de ce projet est de concevoir et de développer une application permettant de jouer au jeu électronique **Crossy Road**. 
+L'application devra permettre à un joueur humain (dans un premier temps puis à une IA) de jouer une partie. 
+Les élèves devront réaliser une application complète en langage C suivant deux réalisations :
 - Une version intégralement textuelle avec une interaction avec le joueur par ligne de commande et
-- UNe version graphique utilisant la librairie libSDL (https://www.libsdl.org/)
+- Une version graphique utilisant la librairie libSDL (https://www.libsdl.org/)
 
-![Crossy Roads](crossy-road-revenue.webp)
+![Crossy Road](crossy-road-revenue.webp)
+
 
 ## Objectifs Pédagogiques
 
-- Elaborer un cahier des charges
+- Élaborer un cahier des charges
 - Modéliser un jeu
 - Implémentation de structures de données et d'algorithmes avancés en langage C.
 - Développement et application de tests unitaires pour assurer la qualité et la fiabilité du code.
 - Expérience concrète de la gestion de projet en équipe (planification, suivi d'avancement, compte rendu de réunion, etc.).
 - Mise en pratique de la gestion de versions (utilisation de git/GitLab)
 
+
 ## Cahier des charges
 
 #### Fonctionnalités requises
-   - **Réalisation d'une partie** : Permettre le lancement d'une partie.
+   - **Réalisation d'une partie en mode textuel** : Permettre le lancement d'une partie en mode textuel dans un terminal et permettre à l'utilisateur d'y jouer.
+   - **Réalisation d'une partie en mode graphique** : Permettre le lancement d'une partie en mode graphique et permettre à l'utilisateur d'y jouer.
+   - **Réalisation d'un joueur virtuel** : Permettre le lancement d'une partie avec un joueur virtuel qui cherche à résoudre au mieux le jeu. L'affichage sera réalisé en mode textuel et graphique (choix laissé à l'utilisateur).
 
 
 #### Technologies
-   - **C** : Utilisation exclusive du langage C pour la programmation du jeu
-   - **libSDL*** : Utilisation de la librairie C libSDL pour la réalisation de la version graphique de l'interface du jeu.
+   - **C** : Utilisation exclusive du langage C pour la programmation du jeu.
+   - **libSDL** : Utilisation de la librairie C libSDL pour la réalisation de la version graphique de l'interface du jeu.
+
 
 ## Étapes du projet
 
 #### Étude préalable
-   - Réalisez une étude sur le fonctionnement du jeu Crossy Roads, tout particulièrement sur la gestion des véhicules et sur les déplacements possibles.
-   - Réalisez un **état de l’art** des algorithmes d'intelligence artificielle utilisés dans les jeux de stratégie (algorithmes Minimax, Alpha-Beta Pruning, etc.) afin de déterminer le plus adapté pour implémenter un joueur virtuel compétent.
+   - Réalisez une étude sur le fonctionnement du jeu Crossy Road, tout particulièrement sur la gestion des véhicules et sur les déplacements possibles.
+   - Réalisez un **état de l’art** des algorithmes d'intelligence artificielle utilisés dans les jeux de stratégie (algorithmes Minimax, Alpha-Beta Pruning, Algorithmes d'apprentissage automatique, etc.) afin de déterminer le plus adapté pour implémenter un joueur virtuel compétent.
 
 
 #### Conception de l'application
    - Définissez l'ensemble des structures de données nécessaires à la réalisation du jeu dans sa forme la plus élémentaire 
-   - Etendez votre modèle afin qu'il puisse interagir avec la librairie libSDL.
+   - Étendez votre modèle afin qu'il puisse interagir avec la librairie libSDL.
    - Pensez dès la conception de votre application à une modalité d'interaction avec une intelligence artificielle remplaçant le joueur humain.
 
 #### Développement de l’application
-   - **Core** : Implémentation de la logique du jeu, des règles de Crossy Roads, et des interactions avec le joueur.
+   - **Core** : Implémentation de la logique du jeu, des règles de Crossy Road, et des interactions avec le joueur.
    - **IA** : Implémenter un ou plusieurs algorithmes pour le joueur virtuel prenant en compte le niveau de difficulté et/ou les temps de réflexion/calcul.
-   - **UI** : Conception de l’interface utilisateur pour visualiser le plateau de jeu, l'évolution des véhicules et les déplacements du joueur. Celle-ci comprendra deux modes: un mode textuel et un mode graphique.
+   - **UI** : Conception de l’interface utilisateur pour visualiser le plateau de jeu, l'évolution des véhicules et les déplacements du joueur. Celle-ci comprendra deux modes : un mode textuel et un mode graphique. Les deux interfaces utilisateurs feront usage du même code du moteur de jeu (**Core**).
    
 #### Documentation et tests
-   - Documentation complète du code et des choix d'implémentation (structures de données, algorithmes mis en oeuvre, logique de jeu).
+   - Documentation complète du code et des choix d'implémentation (structures de données, algorithmes mis en œuvre, logique de jeu).
    - Tests unitaires et fonctionnels pour s'assurer que l'application respecte les règles du jeu et gère correctement les scénarios (mise en pause, contact joueur véhicule, ...).
 
 
@@ -59,7 +64,7 @@ Les élèves devront réaliser une application complète en langage C suivant de
 Pour l'évaluation, les points suivants seront pris en considération :
 
 - Qualité de la modélisation et des **structures de données** utilisées pour représenter les éléments du jeu.
-- Implémentation correcte de la **logique du jeu** et respect des règles de Crossy Roads.
+- Implémentation correcte de la **logique du jeu** et respect des règles de Crossy Road.
 - Fonctionnalité de l'**intelligence artificielle** (qualité de l'algorithme choisi et performances).
 - **Qualité de l'interface utilisateur** et fluidité des interactions avec le jeu (à la fois sur la version textuelle que sur la version graphique)
 - Respect des **bonnes pratiques de programmation** (structure du code, compilation séparée, commentaires, organisation, makefile, ...).
@@ -69,6 +74,7 @@ Pour l'évaluation, les points suivants seront pris en considération :
 ## Rendu Final
 
 Le rendu final sera constitué a minima des éléments suivants :
+
 - **Code source** : Livraison du code source complet et des instructions pour exécuter celui-ci. 
 - **État de l'art** : Rapport de l’état de l’art sur les algorithmes d’intelligence artificielle applicables et appliqués.
 - **Documentation** : Comprend une description du jeu, des détails techniques et tous les éléments de gestion de projet que vous aurez produits (fiche de projet, comptes-rendus de réunion, planification et répartition des tâches, analyse post-mortem des efforts individuels et de l'atteinte des objectifs, etc.).
@@ -79,9 +85,9 @@ Tous ces éléments seront fournis sur le dépôt GitLab du projet.
 
 ## Date de rendu et Soutenance
 
-Le projet est à rendre pour le **Date à définir** à 22 heures au plus tard.
+Le projet est à rendre pour le **26 mai 2025** à 22 heures au plus tard.
 
-Des soutenances de groupes de projet seront organisées dans la foulée.
+Des soutenances de groupes de projet seront organisées dans la foulée (début juin).
 
 Votre projet fera l'objet d'une démonstration devant un jury composé d'au moins 2 membres de l’équipe pédagogique. Durant cette soutenance, vous serez jugés sur votre démonstration de l'application et votre capacité à expliquer votre projet et son fonctionnement. Chaque membre du groupe devra être présent lors de soutenance et **participer activement**.
 
@@ -94,7 +100,7 @@ Il est attendu que chaque membre du groupe ait contribué à plusieurs parties f
 
 Il est vivement recommandé à ce que le groupe adopte une stratégie de développement incrémentale.
 
-L'idée est donc de planifier et de définir des "incréments" ou de petites unités fonctionnelles du jeu (ou de ces composants). Cela permet de se concentrer sur une petite section du jeu à la fois et d'être toujours capable d'avoir une version fonctionnelle du jeu complet. Cela permet également d'éviter l'effet tunnel : de commencer le développement de beaucoup de fonctionnalités et de n'avoir finalement rien ou pas grand chose de fonctionnel à montrer à la fin du projet.
+L'idée est donc de planifier et de définir des "incréments" ou de petites unités fonctionnelles du jeu (ou de ces composants). Cela permet de se concentrer sur une petite section du jeu à la fois et d'être toujours capable d'avoir une version fonctionnelle du jeu complet. Cela permet également d'éviter l'effet tunnel : de commencer le développement de beaucoup de fonctionnalités et de n'avoir finalement rien ou pas grand-chose de fonctionnel à montrer à la fin du projet.
 
 
 ## Fraude, tricherie et plagiat
@@ -110,7 +116,7 @@ Par tricher, nous entendons notamment :
 Nous encourageons les séances de *brainstorming* et de discussion entre les élèves sur le projet. C’est une démarche naturelle et saine comme vous la rencontrerez dans votre vie professionnelle. Si les réflexions communes sont fortement recommandées, vous ne pouvez rendre que du code et des documents écrits par vous-même. Vous indiquerez notamment dans votre rapport toutes vos sources (comme les sites internet que vous auriez consultés), en indiquant brièvement ce que vous en avez retenu.
 Il est quasi certain que nous détections les tricheries. En effet, les rapports et les codes sont systématiquement soumis à des outils de détection de plagiat et de copie. Il existe notamment des outils de détection de manipulation de code extraordinaire mis à disposition par l’Université de Stanford, tels que `MOSS` (https://theory.stanford.edu/~aiken/moss/) ou `compare50` (https://cs50.readthedocs.io/projects/compare50/). De plus, chacun a son propre style de programmation et personne ne développe la même chose de la même manière.
 
-Puisqu'il s'agit d'un projet réalisé dans le cadre de cours avancés de programmation, nous nous attendons à ce que vous soyez capable d'apprendre à déboguer des programmes par vous-même. Par exemple, demander à un autre élève de regarder directement votre code et de donner des suggestions d'amélioration commence à devenir un peu délicat au niveau éthique.
+Puisqu'il s'agit d'un projet réalisé dans le cadre de cours avancés de programmation, nous nous attendons à ce que vous soyez capable d'apprendre à débogguer des programmes par vous-même. Par exemple, demander à un autre élève de regarder directement votre code et de donner des suggestions d'amélioration commence à devenir un peu délicat au niveau éthique.
 
 Si vous rencontrez des difficultés pour terminer une tâche, veuillez contacter l'un de vos enseignants afin que nous puissions vous aider. Nous préférons de loin passer du temps à vous aider plutôt que de traiter des cas de fraudes.
 
