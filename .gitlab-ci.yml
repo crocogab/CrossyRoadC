@@ -1,0 +1,20 @@
+build-job:
+  stage: build
+  image: alpine:latest 
+  script:
+    - apk update
+    - apk add clang
+    - echo "Test du Makefile"
+    - make all
+    - if [ -f "main_tui.o" ]; then echo "Makefile is compiling."; else echo "main_tui.o not found. " && exit 1; fi
+    - make clean
+    - if [ -f "main_tui.o" ]; then echo "Makefile is not cleaning well."&& exit 1; else echo "Makefile is cleaning well. "; fi
+
+    
+
+test-job1:
+  stage: test
+  script:
+    - echo "Job exemple qui va verifier que il existe bien un fichier main_tui.c "
+    - if [ -f "main_tui.c" ]; then echo "main_tui.c exists"; else echo "main_tui.c not found" && exit 1; fi
+
