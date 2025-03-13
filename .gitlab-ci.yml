@@ -3,15 +3,12 @@ build-job:
   image: alpine:latest 
   script:
     - apk update
-    - apk add clang
-    - apk add clang git
-    - git checkout dev 
+    - apk add clang make
     - echo "Test du Makefile"
     - make all
     - if [ -f "main_tui.o" ]; then echo "Makefile is compiling."; else echo "main_tui.o not found. " && exit 1; fi
     - make clean
     - if [ -f "main_tui.o" ]; then echo "Makefile is not cleaning well."&& exit 1; else echo "Makefile is cleaning well. "; fi
-    
   only:
     - dev
     
