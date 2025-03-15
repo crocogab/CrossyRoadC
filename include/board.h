@@ -1,3 +1,6 @@
+#ifndef BOARD_H
+#define BOARD_H
+
 #include "obstacle.h"
 #include "player.h"
 #include "ground.h"
@@ -7,3 +10,6 @@ typedef struct _Board {
     Player *player; // * ou pas * ?
     Ground *grid_ground;  
 } Board;
+
+
+#endif

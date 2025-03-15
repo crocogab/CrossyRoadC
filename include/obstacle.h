@@ -1,3 +1,6 @@
+#ifndef OBSTACLE_H
+#define OBSTACLE_H
+
 typedef struct _Obstacle {
     char type; //macro
     char model;
@@ -5,3 +8,5 @@ typedef struct _Obstacle {
     float velocity;
     float length;
 } Obstacle;
+
+#endif

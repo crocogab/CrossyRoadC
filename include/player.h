@@ -1,3 +1,6 @@
+#ifndef PLAYER_H
+#define PLAYER_H
+
 #include <stdbool.h>
 
 
@@ -9,3 +12,5 @@ typedef struct _Player {
     bool is_jumping;
 
 } Player;
+
+#endif
