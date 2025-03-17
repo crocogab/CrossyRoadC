@@ -20,3 +20,20 @@ test-job1:
     - if [ -f "main_tui.c" ]; then echo "main_tui.c exists"; else echo "main_tui.c not found" && exit 1; fi
   only:
     - dev
+
+test-job-player:
+  stage: test
+  script:
+    - echo "Début du test du modèle player."
+    - OUTPUT=$(make run_test_player 2>&1)
+    - echo "$OUTPUT"
+    - LAST_LINE=$(echo "$OUTPUT" | tail -n 1)
+    - echo "Dernière ligne: $LAST_LINE"
+    - if [[ "$LAST_LINE" == *"La librairie player passe tout les tests"* ]]; then
+        echo "Test réussi! La librairie player passe tous les tests.";
+      else
+        echo "Test échoué! La dernière ligne ne contient pas le message attendu.";
+        exit 1;
+      fi
+  only:
+    - dev

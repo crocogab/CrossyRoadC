@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "../include/player.h"
+#include "player.h"
 
 #define GRID_CELL_SIZE 10.0
 
