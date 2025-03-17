@@ -28,7 +28,6 @@ test-job-player:
     - OUTPUT=$(make run_test_player 2>&1)
     - echo "$OUTPUT"
     - LAST_LINE=$(echo "$OUTPUT" | tail -n 1)
-    - echo "Dernière ligne: $LAST_LINE"
     - if [[ "$LAST_LINE" == *"La librairie player passe tout les tests"* ]]; then
         echo "Test réussi! La librairie player passe tous les tests.";
       else
