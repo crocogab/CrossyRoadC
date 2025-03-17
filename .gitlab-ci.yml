@@ -23,12 +23,16 @@ test-job1:
 
 test-job-player:
   stage: test
+  image: alpine:latest
   script:
+    - apk update
+    - apk add bash make compiler-rt
+    - make all 
     - echo "Début du test du modèle player."
     - OUTPUT=$(make run_test_player 2>&1)
     - echo "$OUTPUT"
     - LAST_LINE=$(echo "$OUTPUT" | tail -n 1)
-    - if [[ "$LAST_LINE" == *"La librairie player passe tout les tests"* ]]; then
+    - if echo "$LAST_LINE" | grep -q "La librairie player passe tout les tests"; then
         echo "Test réussi! La librairie player passe tous les tests.";
       else
         echo "Test échoué! La dernière ligne ne contient pas le message attendu.";
