@@ -3,6 +3,7 @@ LDFLAGS = -fsanitize=address
 CC= clang
 HEADER_LOCATION= ./include
 SRC_DIR = ./src
+TEST_DIR = ./Tests
 
 all: main_tui
 
@@ -18,8 +19,8 @@ ground.o:
 player.o: $(SRC_DIR)/player.c $(HEADER_LOCATION)/player.h
 	$(CC) -c $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) $(SRC_DIR)/player.c
 
-test_player.o: $(SRC_DIR)/test_player.c
-	$(CC) -c $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) $(SRC_DIR)/test_player.c
+test_player.o: $(TEST_DIR)/test_player.c
+	$(CC) -c $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) $(TEST_DIR)/test_player.c
 
 test_player: test_player.o player.o
 	$(CC) -o test_player $(LDFLAGS) test_player.o player.o
