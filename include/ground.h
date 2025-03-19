@@ -6,4 +6,8 @@ typedef struct _Ground {
     char type;
 } Ground;
 
+Ground *ground_make(char);
+
+void ground_free(Ground *);
+
 #endif

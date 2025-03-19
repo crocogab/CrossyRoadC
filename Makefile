@@ -8,6 +8,11 @@ all: main_tui
 
 test: test_player
 
+obstacle.o: 
+	$(CC) $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) -c $(SRC_DIR)/obstacle.c
+
+ground.o:
+	$(CC) $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) -c $(SRC_DIR)/ground.c
 
 
 player.o: $(SRC_DIR)/player.c $(HEADER_LOCATION)/player.h
@@ -25,8 +30,6 @@ run_test_player: test_player
 game.o:
 	$(CC) -c $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) $(SRC_DIR)/game.c
 
-obstacle.o: 
-	$(CC) $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) -c $(SRC_DIR)/obstacle.c
 
 main_tui.o : main_tui.c
 	$(CC) -I $(HEADER_LOCATION) -c $(CFLAGS) $(LDFLAGS) main_tui.c
