@@ -5,16 +5,28 @@
 #include "player.h"
 #include "ground.h"
 
-#define MAP_WIDTH 19 //il n'y a que 9 cases atteignables au spawn mais il faut en afficher plus
-#define MAP_LEN 13 // cela dépend de comment en compte (certaines ne sont pas entières)  
+#define MAP_WIDTH_GUI 19 
+#define MAP_WIDTH_TXT 9
+#define MAP_LEN_GUI 25 // cela dépend de comment en compte (certaines ne sont pas entières)  
+#define MAP_LEN_TXT 13
+#define V_POS 4 // position du joueur sur la board
 
 
 
 typedef struct _Board {
     Obstacle **grid_obstacle;
-    Player *player; // * ou pas * ?
+    Player *player; // pointeur vers le joueur
     Ground *grid_ground;  
 } Board;
 
+Board* board_make();
+void board_free(Board* b);
+Ground* board_get_ground(Board* b);
+void board_set_ground(Board* b, Ground* ground);
+Player* board_get_player(Board* b);
+void board_set_player(Board* b, Player* player);
+void board_update(Board* b, int direction);
+bool check_collision(Player* player, int direction, Obstacle** grid_obstacle);
 
 #endif
+
