@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "player.h"
+#include "macro.h"
 
 #define GRID_CELL_SIZE 10.0
 

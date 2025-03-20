@@ -3,15 +3,6 @@
 
 #include <stdbool.h>
 
-#define LEFT 1
-#define RIGHT 2
-#define UP 3
-#define DOWN 4
-
-#define DEFAULT_CELL_SIZE 10.0
-#define LEFT_MAP_X 0.0
-#define RIGHT_MAP_X 100.0
-
 typedef struct _Player {
     // Skin *skin;
     bool alive;

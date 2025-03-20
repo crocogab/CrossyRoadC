@@ -31,7 +31,6 @@ run_test_player: test_player
 game.o:
 	$(CC) -c $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) $(SRC_DIR)/game.c
 
-
 main_tui.o : main_tui.c
 	$(CC) -I $(HEADER_LOCATION) -c $(CFLAGS) $(LDFLAGS) main_tui.c
 
