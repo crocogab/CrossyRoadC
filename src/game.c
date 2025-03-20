@@ -9,6 +9,11 @@ Game game_make(int status,int score,Board * b){
     return g;
 }
 
+void kill_player(Game g){
+    g.status = 0;
+    g.board->player->alive = false;
+}
+
 void game_change_status(Game g,int status){
     // change le status de la game pour le nouveau status
     g.status = status;
