@@ -6,7 +6,7 @@ SRC_DIR = ./src
 TEST_DIR = ./Tests
 LIBS = -lncurses
 
-all: main_tui
+all: game.o
 
 test: test_player
 
@@ -41,4 +41,4 @@ main_tui: main_tui.o
 run_tui : main_tui
 	./main_tui
 clean: 
-	rm -rf *.o main_tui test_player
+	rm -rf *.o main_tui test_player game.o
