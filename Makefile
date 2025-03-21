@@ -1,9 +1,10 @@
-CFLAGS = -std=c99 -Wall -Wextra -pedantic -g3
+CFLAGS = -std=c99 -Wall -Wextra -pedantic -g3 
 LDFLAGS = -fsanitize=address
 CC= clang
 HEADER_LOCATION= ./include
 SRC_DIR = ./src
 TEST_DIR = ./Tests
+LIBS = -lncurses
 
 all: main_tui
 
@@ -34,8 +35,10 @@ game.o:
 main_tui.o : main_tui.c
 	$(CC) -I $(HEADER_LOCATION) -c $(CFLAGS) $(LDFLAGS) main_tui.c
 
-main_tui: main_tui.o game.o
-	$(CC) -o main_tui $(LDFLAGS) main_tui.o game.o
+main_tui: main_tui.o 
+	$(CC) -o main_tui $(LDFLAGS) main_tui.o $(LIBS)
 
+run_tui : main_tui
+	./main_tui
 clean: 
 	rm -rf *.o main_tui test_player

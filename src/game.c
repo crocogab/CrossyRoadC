@@ -1,11 +1,11 @@
 #include "game.h"
+#include "board.h"
 
-Game game_make(int status,int score,Board * b){
+Game game_make(){
     // crée la game 
     Game g;
-    g.board=b;
-    g.score=score;
-    g.status=status;
+    g.score=0;
+    g.status=0; // à changer quand on aura les macros
     return g;
 }
 
@@ -14,32 +14,9 @@ void kill_player(Game g){
     g.board->player->alive = false;
 }
 
-void game_change_status(Game g,int status){
-    // change le status de la game pour le nouveau status
-    g.status = status;
-}
-
-int game_get_status(Game g){
-    // renvoie le status de la partie
-    return g.status;
-}
-
-void game_change_score(Game g,int score){
-    // change le score de la game pour le nouveau score
-    g.score = score;
-}
-
-int game_get_score(Game g){
-    // renvoie le score de la partie
-    return g.score;
-}
-
-Board* game_get_board(Game g){
-    // renvoie le board associé à la partie
-    return g.board;
-}
-
-void game_change_board(Game g, Board * b){
-    // change le board associé à la game
+Game game_start(Game g){
+    Board * b= board_make();
     g.board=b;
+    g.score=0;
+    g.status=1; // à changer avec les macros
 }
