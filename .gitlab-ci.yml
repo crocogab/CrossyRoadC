@@ -3,7 +3,7 @@ build-job:
   image: alpine:latest 
   script:
     - apk update
-    - apk add clang make compiler-rt
+    - apk add clang make compiler-rt ncurses-dev
     - echo "Test du Makefile"
     - make all
     - if [ -f "main_tui.o" ]; then echo "Makefile is compiling."; else echo "main_tui.o not found. " && exit 1; fi
@@ -26,7 +26,7 @@ test-job-player:
   image: alpine:latest
   script:
     - apk update
-    - apk add bash make compiler-rt clang
+    - apk add bash make compiler-rt clang 
     - make all 
     - echo "Début du test du modèle player."
     - OUTPUT=$(make run_test_player 2>&1)
