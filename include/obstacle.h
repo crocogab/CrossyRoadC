@@ -1,5 +1,7 @@
 #ifndef OBSTACLE_H
 #define OBSTACLE_H
+#define TYPE_VIDE 'a'
+#define TYPE_VOITURE 'b'
 
 
 typedef struct _Obstacle {
@@ -9,6 +11,7 @@ typedef struct _Obstacle {
     float velocity;
     float length;
 } Obstacle;
+
 
 typedef struct _couple {
     int a;

@@ -90,28 +90,29 @@ void board_set_player(Board* b, Player* player) {
 }
 
 /**
- * Met à jour l'état du plateau en fonction de la direction donnée.
+ * Fait avancer le temps dans la grille (fait bouger les obstacles)
  * 
  * @param[in] b Le plateau à mettre à jour
- * @param[in] direction La direction dans laquelle le joueur doit se déplacer
+ * @param[in] delta_t le temps qui s'est écoulé
  */
 /*parler ordre des arguments, update puis on voit l'erreur ou autre sens ?*/
-void board_update(Board* b, int direction) {
+void board_update(Board* b, float delta_t) {
     if (b == NULL || b->player == NULL) {
         return; // Si le plateau ou le joueur est NULL, on ne fait rien
     }
+    Obstacle **grid = b->grid_obstacle;
+    bool stop;
 
-    if (check_collision(b->player, direction, b->grid_obstacle)) { // Fonction  qui vérifie s'il y a une collision
-        b->player->alive = false; // Si collision, le joueur n'est plus en vie
-    }else{
-        // Met à jour la position du joueur en fonction de la direction
-        move_player(direction, b->player);
-
-        if (b->grid_obstacle != NULL) {
-            update_obstacles(b->grid_obstacle, direction); // Fonction de mise à jour les obstacles
-        }
-        if(b->grid_ground != NULL) {
-            update_ground(b->grid_ground, direction);
+    for (int lig = 0; lig < MAP_LEN_GUI; lig++) {
+        stop = false;
+        for (int col = 0; col < MAP_WIDTH_GUI; col++) {
+            
+            if (grid[lig][col].type != TYPE_VIDE && !stop) {
+                stop = true;
+                obstacle_update(grid[lig]+col, delta_t);
+            } else {    
+                stop = false;
+            }
         }
     }
 }

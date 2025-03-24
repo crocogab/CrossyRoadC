@@ -25,7 +25,7 @@ Ground* board_get_ground(Board* b);
 void board_set_ground(Board* b, Ground* ground);
 Player* board_get_player(Board* b);
 void board_set_player(Board* b, Player* player);
-void board_update(Board* b, int direction);
+void board_update(Board* b, float delta_t);
 bool check_collision(Player* player, int direction, Obstacle** grid_obstacle);
 
 #endif
