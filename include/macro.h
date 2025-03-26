@@ -25,4 +25,11 @@
 #define TYPE_VIDE 80
 #define TYPE_VOITURE 81
 
+//Définition de la taille de la map
+#define MAP_WIDTH_GUI 19 // Largeur de la map en GUI
+#define MAP_WIDTH_TXT 9 // Largeur de la map en TUI
+#define MAP_LEN_GUI 25 // Hauteur de la map en GUI
+#define MAP_LEN_TXT 13 // Hauteur de la map en TUI
+#define V_POS 15 // Position verticale du joueur sur la board
+
 #endif

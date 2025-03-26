@@ -5,13 +5,6 @@
 #include "player.h"
 #include "ground.h"
 
-#define MAP_WIDTH_GUI 19 
-#define MAP_WIDTH_TXT 9
-#define MAP_LEN_GUI 25 // cela dépend de comment en compte (certaines ne sont pas entières)  
-#define MAP_LEN_TXT 13
-#define V_POS 15 // position du joueur sur la board
-
-
 
 typedef struct _Board {
     Obstacle **grid_obstacle;
