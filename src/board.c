@@ -108,10 +108,15 @@ void board_update(Board* b, float delta_t) {
     for (int lig = 0; lig < MAP_LEN_GUI; lig++) {
         stop = false;
         for (int col = 0; col < MAP_WIDTH_GUI; col++) {
-            
-            if (grid[lig][col].type != TYPE_VIDE && !stop) {
+            Obstacle *obst = grid[lig]+col;
+            if (obst->type != TYPE_VIDE && !stop) {
                 stop = true;
-                obstacle_update(grid[lig]+col, delta_t);
+                obstacle_update(obst, delta_t);
+                // on update la place de l'obstacle dans la grille
+                Couple hitbox = obstacle_hitbox(obst) ;
+                for (int i = hitbox.a; i<= hitbox.b; i++) {
+                    grid[lig][col] = *obst;
+                }
             } else {    
                 stop = false;
             }
