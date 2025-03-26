@@ -165,12 +165,14 @@ void ground_move(Board* b, int direction) {
     if (direction == 2) { // Déplacement vers le haut
         for(int i = MAP_LEN_GUI-1 ; i>0 ; i++){
             b->grid_ground[i] = b->grid_ground[i-1];
+            b->grid_obstacle[i] = b->grid_obstacle[i-1];
             //Que fait on du b->ground[0] ?
         }
 
     } else if (direction == -2) { // Déplacement vers le bas
         for(int i = 0 ; i<MAP_LEN_GUI-1; i++){
             b->grid_ground[i] = b->grid_ground[i+1];
+            b->grid_obstacle[i] = b->grid_obstacle[i+1];
             //Que fait on du b->ground[MAP_LEN_GUI-1] ?
         } 
     }
