@@ -9,7 +9,7 @@
 #define MAP_WIDTH_TXT 9
 #define MAP_LEN_GUI 25 // cela dépend de comment en compte (certaines ne sont pas entières)  
 #define MAP_LEN_TXT 13
-#define V_POS 4 // position du joueur sur la board
+#define V_POS 15 // position du joueur sur la board
 
 
 
@@ -26,7 +26,9 @@ void board_set_ground(Board* b, Ground* ground);
 Player* board_get_player(Board* b);
 void board_set_player(Board* b, Player* player);
 void board_update(Board* b, float delta_t);
-bool check_collision(Player* player, int direction, Obstacle** grid_obstacle);
+bool check_collision(Board* b);
+void player_move (Player* p, int direction, float delta_t);
+void ground_move (Board* b, int direction);
 
 #endif
 

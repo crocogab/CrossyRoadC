@@ -3,7 +3,7 @@
 #include "board.h"
 
 
-Game game_make(int status,int score,Board * b){
+Game game_make(int status,int score){
     Game g;
     g.score=score;
     g.status=status;
@@ -15,7 +15,7 @@ void kill_player(Game g){
     g.board->player->alive = false;
 }
 
-Game game_start(Game g){
+void game_start(Game g){
     Board * b= board_make();
     g.board=b;
     g.score=0;

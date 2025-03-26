@@ -1,8 +1,9 @@
 #include "board.h"
 #include "ground.h"
 #include "obstacle.h"
-#include "macro.h"
 #include <stdlib.h>
+#include <math.h>
+#include "macro.h"
 
 /**
  * Crée un nouveau plateau.
@@ -121,19 +122,59 @@ void board_update(Board* b, float delta_t) {
 /**
  * Vérifie s'il y a une collision entre le joueur et un obstacle.
  * 
- * @param[in] player Le joueur à vérifier
- * @param[in] direction La direction dans laquelle le joueur se déplace
- * @param[in] grid_obstacle La grille des obstacles sur le plateau
+ * @param[in] b Le plateau de jeu
  * @return true s'il y a une collision, false sinon
  */
 /*comment check la collision, changement puis regarde si pb ou détection après, comment marche la grille*/
-bool check_collision(Player* player, int direction, Obstacle** grid_obstacle) {
-    if (player == NULL || grid_obstacle == NULL) {
-        return false; // Pas de collision si le joueur ou la grille d'obstacles est NULL
+bool check_collision(Board* b) {
+    if (b == NULL|| b->grid_obstacle == NULL ){
+        return; //Si le plateau et la grille d'obstacle est NULL, on ne fait rien
+    }
+    return(((b->grid_obstacle)[V_POS][(int)(b->player->h_position)].type)!=TYPE_VIDE);
+    /* comment on gère la hitbox car position flotante*/
+        
+}
+
+/**
+ * Déplace le joueur en mettant à jour sa position horizontale.
+ * 
+ * @param[in] p Le joueur à déplacer
+ * @param[in] direction La direction du mouvement ()
+ * @param[in] delta_t Le temps écoulé depuis la dernière mise à jour
+ */
+void player_move(Player* p, int direction, float delta_t) {
+    if (p == NULL) {
+        return; // Si le joueur est NULL, on ne fait rien
+    }
+    if ((direction == 1)||(direction == -1)){
+        p->h_position += direction * delta_t; // Met à jour la position du joueur
+    }    
+}
+
+/**
+ * Fait avancer le sol d'une case dans la direction donnée.
+ * 
+ * @param[in] b Le plateau contenant la grille de sol
+ * @param[in] direction La direction dans laquelle le sol doit avancer (1 pour droite, -1 pour gauche)
+ */
+void ground_move(Board* b, int direction) {
+    if (b == NULL || b->grid_ground == NULL) {
+        return; // Si le plateau ou la grille du sol est NULL, on ne fait rien
     }
 
-    // Calculer la position future du joueur en fonction de la direction
-    int future_position = player->h_position + direction;
+    // Décale les cases de la grille de sol dans la direction donnée
+    if (direction == 2) { // Déplacement vers le haut
+        for(int i = MAP_LEN_GUI-1 ; i>0 ; i++){
+            b->grid_ground[i] = b->grid_ground[i-1];
+            b->grid_obstacle[i] = b->grid_obstacle[i-1];
+            //Que fait on du b->ground[0] ?
+        }
 
-    return false; // Pas de collision
+    } else if (direction == -2) { // Déplacement vers le bas
+        for(int i = 0 ; i<MAP_LEN_GUI-1; i++){
+            b->grid_ground[i] = b->grid_ground[i+1];
+            b->grid_obstacle[i] = b->grid_obstacle[i+1];
+            //Que fait on du b->ground[MAP_LEN_GUI-1] ?
+        } 
+    }
 }
