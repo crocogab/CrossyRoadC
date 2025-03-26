@@ -6,6 +6,7 @@
 #define RIGHT 65
 #define UP 66
 #define DOWN 67
+#define NEUTRAL 68
 
 //Définition des tailles par défaut de la map, pour les tests uniquement
 #define DEFAULT_CELL_SIZE 10.0
@@ -19,5 +20,9 @@
 #define DEAD 73 //L'écran de mort est affiché
 #define PAUSED 74 // Le jeu est en pause
 #define SETTINGS 75 //Le menu des paramètres est affiché
+
+//Définition des types d'obstacles
+#define TYPE_VIDE 80
+#define TYPE_VOITURE 81
 
 #endif

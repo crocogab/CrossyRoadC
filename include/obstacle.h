@@ -1,11 +1,10 @@
 #ifndef OBSTACLE_H
 #define OBSTACLE_H
-#define TYPE_VIDE 'a'
-#define TYPE_VOITURE 'b'
+
 
 
 typedef struct _Obstacle {
-    char type; //macro
+    int type; //macro
     char model;
     float h_position;
     float velocity;
@@ -19,7 +18,7 @@ typedef struct _couple {
 } Couple;
 
 Obstacle *obstacle_make(
-    char type, 
+    int type, 
     char model, 
     float h_position, 
     float velocity, 

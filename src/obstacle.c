@@ -15,7 +15,7 @@
  * @return Un pointeur vers le nouvel obstacle créé.
  */
 
-Obstacle *obstacle_make(char type, char model, float h_position, float velocity, float length) {
+Obstacle *obstacle_make(int type, char model, float h_position, float velocity, float length) {
     // crée et initialise un obstacle à partir des paramètres donnés
     Obstacle *obst = malloc(sizeof(Obstacle));
     obst->type = type;

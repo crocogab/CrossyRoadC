@@ -1,7 +1,8 @@
 #include "board.h"
 #include "ground.h"
 #include "obstacle.h"
-#include "stdlib.h"
+#include "macro.h"
+#include <stdlib.h>
 
 /**
  * Crée un nouveau plateau.
