@@ -68,7 +68,7 @@ int main() {
     
 
     // Dimensions
-    int hauteur_monde = 26*2+2;       // Hauteur totale du monde -> +2 pour les bordures
+    int hauteur_monde = 26*4+2;       // Hauteur totale du monde -> +2 pour les bordures
     int longueur_monde = 38+2;      // Largeur totale du monde
     int largeur_cam = 38+2;         // Largeur de la caméra (fenêtre visible)
     int hauteur_cam = 26+2;         // Hauteur de la caméra (fenêtre visible)
@@ -202,7 +202,7 @@ int main() {
         //tableau[p.posi.y][p.posi.x] = p.repr;
         
         // Contrôle de la vitesse
-        usleep(10000);
+        usleep(1000);
     }
     
     // Nettoyage
