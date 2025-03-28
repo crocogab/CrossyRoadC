@@ -1,44 +1,75 @@
-CFLAGS = -std=c99 -Wall -Wextra -pedantic -g3 
-LDFLAGS = -fsanitize=address
-CC= clang
-HEADER_LOCATION= ./include
+# Répertoires
+HEADER_DIR = ./include
 SRC_DIR = ./src
 TEST_DIR = ./Tests
+
+# Fichiers principaux -> pour instant main_tui
+TARGET = main_tui
+SRCS = main_tui.c
+OBJS = $(SRCS:.c=.o)
+
+# Fichiers de test -> rajouter à chaque nouveau test
+TEST_PLAYER = test_player
+TEST_PLAYER_SRCS = $(TEST_DIR)/test_player.c $(SRC_DIR)/player.c
+
+TEST_OBSTACLE = test_obstacle
+TEST_OBSTACLE_SRCS = $(TEST_DIR)/test_obstacle.c $(SRC_DIR)/obstacle.c
+
+TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE)
+
+# Compilation
+CC = clang
+CFLAGS = -std=c99 -Wall -Wextra -pedantic -g3 -I$(HEADER_DIR)
+
+# Debug
+CFLAGS  += -fsanitize=address -fno-omit-frame-pointer
+LDFLAGS = -fsanitize=address
+
+# Libs
 LIBS = -lncurses
 
-all: main_tui
+# CFLAGS  += $(shell pkg-config --cflags sdl2)
+# LDFLAGS += $(shell pkg-config --libs   sdl2)
+# CFLAGS  += $(shell pkg-config --cflags sdl2_image)
+# LDFLAGS += $(shell pkg-config --libs   sdl2_image)
 
-test: test_player
+# Cibles par défaut
+all: $(TARGET)
 
-obstacle.o: 
-	$(CC) $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) -c $(SRC_DIR)/obstacle.c
+test: $(TEST_TARGETS)
 
-ground.o:
-	$(CC) $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) -c $(SRC_DIR)/ground.c
+$(TARGET): $(OBJS)
+	$(CC) $^ $(LDFLAGS) $(LIBS) -o $@
 
+# Compilation des tests
+$(TEST_PLAYER): $(TEST_PLAYER_SRCS:.c=.o)
+	$(CC) $^ $(LDFLAGS) $(LIBS) -o $@
 
-player.o: $(SRC_DIR)/player.c $(HEADER_LOCATION)/player.h
-	$(CC) -c $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) $(SRC_DIR)/player.c
+$(TEST_OBSTACLE): $(TEST_OBSTACLE_SRCS:.c=.o)
+	$(CC) $^ $(LDFLAGS) $(LIBS) -o $@
 
-test_player.o: $(TEST_DIR)/test_player.c
-	$(CC) -c $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) $(TEST_DIR)/test_player.c
+# Règles de compilation génériques
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-test_player: test_player.o player.o
-	$(CC) -o test_player $(LDFLAGS) test_player.o player.o
+run_test_player: $(TEST_PLAYER)
+	./$(TEST_PLAYER)
 
-run_test_player: test_player
-	./test_player
+run_test_obstacle: $(TEST_OBSTACLE)
+	./$(TEST_OBSTACLE)
 
-game.o:
-	$(CC) -c $(CFLAGS) $(LDFLAGS) -I $(HEADER_LOCATION) $(SRC_DIR)/game.c
+# Exécuter tous les tests
+run_tests: $(TEST_TARGETS)
+	for test in $(TEST_TARGETS); do ./$$test; done
 
-main_tui.o : main_tui.c
-	$(CC) -I $(HEADER_LOCATION) -c $(CFLAGS) $(LDFLAGS) main_tui.c
+# Exécution du programme principal
+run_tui: $(TARGET)
+	./$(TARGET)
 
-main_tui: main_tui.o 
-	$(CC) -o main_tui $(LDFLAGS) main_tui.o $(LIBS)
+# Nettoyage
+clean:
+	rm -f $(OBJS) $(TARGET) $(TEST_PLAYER) $(TEST_OBSTACLE)
+	rm -f $(TEST_PLAYER_SRCS:.c=.o) $(TEST_OBSTACLE_SRCS:.c=.o)
+	rm -f *~ \#*\# .\#*
 
-run_tui : main_tui
-	./main_tui
-clean: 
-	rm -rf *.o main_tui test_player
+.PHONY: all clean test run_tests run_test_player run_test_obstacle run_tui
