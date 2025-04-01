@@ -15,7 +15,10 @@ TEST_PLAYER_SRCS = $(TEST_DIR)/test_player.c $(SRC_DIR)/player.c
 TEST_OBSTACLE = test_obstacle
 TEST_OBSTACLE_SRCS = $(TEST_DIR)/test_obstacle.c $(SRC_DIR)/obstacle.c
 
-TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE)
+TEST_GROUND = test_ground
+TEST_GROUND_SRCS = $(TEST_DIR)/test_ground.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c
+
+TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND)
 
 # Compilation
 CC = clang
@@ -48,6 +51,9 @@ $(TEST_PLAYER): $(TEST_PLAYER_SRCS:.c=.o)
 $(TEST_OBSTACLE): $(TEST_OBSTACLE_SRCS:.c=.o)
 	$(CC) $^ $(LDFLAGS) $(LIBS) -o $@
 
+$(TEST_GROUND): $(TEST_GROUND_SRCS:.c=.o)
+	$(CC) $^ $(LDFLAGS) $(LIBS) -o $@
+
 # Règles de compilation génériques
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -57,6 +63,9 @@ run_test_player: $(TEST_PLAYER)
 
 run_test_obstacle: $(TEST_OBSTACLE)
 	./$(TEST_OBSTACLE)
+
+run_test_ground: $(TEST_GROUND)
+	./$(TEST_GROUND)
 
 # Exécuter tous les tests
 run_tests: $(TEST_TARGETS)
