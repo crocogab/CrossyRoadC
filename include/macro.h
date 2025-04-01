@@ -27,19 +27,46 @@
 
 //Définition des types de sols
 #define GROUND_GRASS 90
-#define GROUND_ROAD 91
-#define GROUND_WATER 92
-#define GROUND_TRAIN 93
+#define GROUND_ROAD_CAR 91
+#define GROUND_ROAD_TRUCKS 92
+#define GROUND_WATER_LILY 93
+#define GROUND_WATER_LOGS 94
+#define GROUND_TRAIN 95
+
+//Définition des objets
+
+//Définition des attributs de voiture
+#define CAR_LEN 2
+#define CAR_MODEL '>'
+#define CAR_TYPE 100
+#define CAR_MAX_SPEED 4 //Vitesse maximum de la voiture en valeur absolue
+#define CAR_MIN_SPEED 1 //Vitesse minimum de la voiture en valeur absolue
+
+//Définition des attributs de arbre
+#define TREE_LEN 1
+#define TREE_MODEL 'T'
+#define TREE_TYPE 101
+
+
 
 //Définition des intervalles d'obstacles
-#define INTER_VOITURE_MAX 12
+#define INTER_CAR_MIN 6
 
 //Définition de la taille de la map
 #define MAP_WIDTH_GUI 19 // Largeur de la map en GUI
 #define MAP_WIDTH_TXT 9 // Largeur de la map en TUI
 #define MAP_LEN_GUI 25 // Hauteur de la map en GUI
 #define MAP_LEN_TXT 13 // Hauteur de la map en TUI
-#define V_POS 15 // Position verticale du joueur sur la board
 
+#define MAP_WIDTH 9 // Largeur de la map actuelle
+#define MAP_LEN 13 // Hauteur de la map actuelle
+
+#define V_POS 15 // Position verticale du joueur sur le board
+
+//Définition des seuils de difficulté
+#define DIFF_EASY 25 // Le jeu devient plus dur au dessus de 25 de score
+#define DIFF_NORMAL 50 // Le jeu devient plus dur au dessus de 50
+#define DIFF_MEDIUM 75 // Le jeu devient plus dur au dessus de 75
+#define DIFF_HARD 110 // Le jeu devient plus dur au dessus de 110
 
 #endif
