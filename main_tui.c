@@ -15,8 +15,13 @@ typedef struct _player {
     pos posi;
 } player;
 
-void draw_visible_area(char **tableau, player p,int cam_x, int cam_y, int longueur, int largeur_cam, int hauteur_cam) {
+void draw_visible_area(char **tableau, player p,int cam_x, int cam_y, int longueur, int largeur_cam, int hauteur_cam,int score) {
     clear();
+    
+    attron(A_BOLD); // GRAS
+    mvprintw(1, largeur_cam + 3, "SCORE : %d",score);
+    attroff(A_BOLD);
+    
     
     // Dessiner les bordures horizontales
     for (int x = 0; x < largeur_cam; x++) {
@@ -77,6 +82,9 @@ int main() {
     int cam_x = 0;
     int cam_y = hauteur_monde-hauteur_cam; // on se met tout en bas
 
+
+    // mvprintw moved after ncurses initialization
+
     // INITIALISATIONS
     char **tableau = NULL;
     tableau = malloc(sizeof(char *) * hauteur_monde);
@@ -125,6 +133,9 @@ int main() {
     raw();
     typeahead(-1);
     clear();
+
+    // Example text output after ncurses initialization
+    
     
     // Initialisation des bordures dans le tableau
     for (int y = 0; y < hauteur_monde; y++) {
@@ -148,11 +159,13 @@ int main() {
     // Configuration des touches et non-blocage
     keypad(stdscr, TRUE);
     nodelay(stdscr, TRUE);
-    
+    int score=0;
+    int ligne_actu=0;
     // Boucle principale
     while (true) {
+        
         // Dessiner la zone visible par la caméra
-        draw_visible_area(tableau, p,cam_x, cam_y, longueur_monde, largeur_cam, hauteur_cam);
+        draw_visible_area(tableau, p,cam_x, cam_y, longueur_monde, largeur_cam, hauteur_cam,score);
         
         // Vérification des entrées utilisateur
         int ch = getch();
@@ -163,34 +176,46 @@ int main() {
             
             
             switch(ch) {
+                
                 case KEY_UP:
                     if (p.posi.y > 1 && tableau[p.posi.y-1][p.posi.x]=='.') { // pour instant interdit que +
                         p.posi.y--;
+                        ligne_actu++;
+
+                        if (ligne_actu>=score){
+                            score=ligne_actu; // on met a jour le score
+                        }
                         
                         // Déplacement de caméra sur l'axe Y
                         if (p.posi.y - cam_y < decal_cam && cam_y > 0) {
                             cam_y--;
+                            
                         }
+                        
                     }
                     break;
                 case KEY_DOWN:
                     if (p.posi.y < hauteur_monde-2 && tableau[p.posi.y+1][p.posi.x]=='.') {
                         p.posi.y++;
+                        ligne_actu--;
                         
                         // Déplacement de caméra sur l'axe Y
                         if (p.posi.y - cam_y > hauteur_cam - decal_cam && cam_y < hauteur_monde - hauteur_cam) {
                             cam_y++;
+                           
                         }
                     }
                     break;
                 case KEY_LEFT:
                     if (p.posi.x > 1 && tableau[p.posi.y][p.posi.x-1]=='.') {
-                        p.posi.x--;                       
+                        p.posi.x--;
+                                            
                     }
                     break;
                 case KEY_RIGHT:
                     if (p.posi.x < longueur_monde-2 && tableau[p.posi.y][p.posi.x+1]=='.') {
                         p.posi.x++;
+                        
                     }
                     break;
             }
