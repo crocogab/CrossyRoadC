@@ -25,11 +25,21 @@
 #define TYPE_VIDE 80
 #define TYPE_VOITURE 81
 
+//Définition des types de sols
+#define GROUND_GRASS 90
+#define GROUND_ROAD 91
+#define GROUND_WATER 92
+#define GROUND_TRAIN 93
+
+//Définition des intervalles d'obstacles
+#define INTER_VOITURE_MAX 12
+
 //Définition de la taille de la map
 #define MAP_WIDTH_GUI 19 // Largeur de la map en GUI
 #define MAP_WIDTH_TXT 9 // Largeur de la map en TUI
 #define MAP_LEN_GUI 25 // Hauteur de la map en GUI
 #define MAP_LEN_TXT 13 // Hauteur de la map en TUI
 #define V_POS 15 // Position verticale du joueur sur la board
+
 
 #endif
