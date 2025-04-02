@@ -62,3 +62,6 @@ main
 main_tui
 test_*
 !test_*.c
+
+# fichiers spécifiques nixos
+shell.nix
