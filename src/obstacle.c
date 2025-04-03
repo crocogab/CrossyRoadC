@@ -21,7 +21,6 @@ Obstacle *obstacle_make(int type, char model, float h_position, float velocity, 
     obst->type = type;
     obst->model = model;
     obst->h_position = h_position;
-    obst->velocity = velocity;
     obst->length = length;
     return obst;
 }
@@ -46,9 +45,9 @@ void obstacle_free(Obstacle *o) {
  * @param[in] delta_t le temps écoulé depuis le dernier appel de cette fonction
  * 
  */
-void obstacle_update(Obstacle *o, float delta_t) {
+void obstacle_update(Obstacle *o, float delta_t, float velocity) {
     // met a jour la position de l'obstacle (fonction appelée à chaque boucle)
-    o->h_position = o->h_position + delta_t * o->velocity;
+    o->h_position = o->h_position + delta_t * velocity;
 
 }
 

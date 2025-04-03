@@ -7,7 +7,6 @@ typedef struct _Obstacle {
     int type; //macro
     char model;
     float h_position;
-    float velocity;
     float length;
 } Obstacle;
 
@@ -20,14 +19,13 @@ typedef struct _couple {
 Obstacle *obstacle_make(
     int type, 
     char model, 
-    float h_position, 
-    float velocity, 
+    float h_position,
     float length
 );
 
 void obstacle_free(Obstacle *o);
 
-void obstacle_update(Obstacle *o, float delta_t);
+void obstacle_update(Obstacle *o, float delta_t, float velocity);
 
 Couple obstacle_hitbox(Obstacle *o);
 
