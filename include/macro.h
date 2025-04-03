@@ -51,7 +51,7 @@
 #define COLLIDE_NONE 110
 #define COLLIDE_DEADLY 111
 #define COLLIDE_HARMLESS 112
-
+#define COLLIDE_ERROR 113
 
 //Définition des intervalles d'obstacles
 #define INTER_CAR_MIN 6

@@ -16,7 +16,6 @@ Board* board_make() {
         return NULL; // En cas d'erreur d'allocation
     }
     b->grid_ground = grid_ground_make(); // Fonction qui initialise le sol
-    b->grid_obstacle = grid_obstacle_make(); // Initialiser à NULL ou appeler une fonction pour créer les obstacles
     b->player = NULL; // Initialiser à NULL ou ajouter un joueur si nécessaire
     return b;
 }
@@ -30,9 +29,6 @@ void board_free(Board* b) {
     if (b != NULL) {
         if (b->grid_ground != NULL) {
             grid_ground_free(b->grid_ground); // Fonction qui libère le sol
-        }
-        if (b->grid_obstacle != NULL) {
-            grid_obstacle_free(b->grid_obstacle); // Libérer les obstacles si nécessaire
         }
         if (b->player != NULL) {
             player_free(b->player);
@@ -106,7 +102,6 @@ void board_update(Board* b, float delta_t) {
     Ground ground;
     Obstacle *obst;
     Couple hb; 
-    int **grid = b->grid_obstacle;
 
     for (int lig = 0; lig < MAP_LEN_GUI; lig++) {
         ground = b->grid_ground[lig];
@@ -115,35 +110,81 @@ void board_update(Board* b, float delta_t) {
             // update des obstacles
             obst = ground.obstacles[i]; // obst ou *obst ?????
             obstacle_update(obst, delta_t, ground.velocity);
-            // update la grille
-            hb = obstacle_hitbox(obst);
-            for (int col = hb.a; col <= hb.b; col++) {
-                grid[lig][col] = obst->type;
-            }
         }
     }
 }
 
+
+
+
+
+
 /**
- * Vérifie s'il y a une collision entre le joueur et un obstacle.
+ * Vérifie s'il y a collision entre le joueur et un obstacle si le coup donné est joué.
  * 
- * @param[in] b Le plateau de jeu
- * @return 0 si pas de collision, 1 si collision non mortelle, 2 si collision mortelle, -1 si problème
+ * @param[in] b un plateau de jeu
+ * @param[in] direction une direction de mouvement, def par une macro
+ * 
+ * @return COLLIDE_NONE | COLLIDE_DEADLY | COLLIDE_HARMLESS
+ * 
+ * tomber dans l'eau renvoie COLLIDE_DEADLY et marcher sur un rondin COLLIDE_NONE
  */
-/*comment check la collision, changement puis regarde si pb ou détection après, comment marche la grille*/
-int check_collision(Board* b) {
-    if (b == NULL|| b->grid_obstacle == NULL ){
-        return -1; //Si le plateau et la grille d'obstacle est NULL, on ne fait rien
+int check_future_collision(Board *b, int direction) {
+    if (b == NULL) {
+        return COLLIDE_ERROR;
     }
+
+    // on change virtuellement la ligne et la position du joueur en fonction du coup donné
+    int lig = V_POS;
+    float h = b->player->h_position;
+    switch (direction) {
+        case UP:
+            lig++; 
+            break;
+        case DOWN: 
+            lig--;
+            break;
+        case RIGHT:
+            h = h + 1;
+            break;
+        case LEFT: 
+            h = h - 1;
+            break;
+    }
+    Ground g = b->grid_ground[lig];
+    Couple hb;
     
-    /* comment on gère la hitbox car position flotante*/
-
-    switch ((b->grid_obstacle)[V_POS][(int)(b->player->h_position)]) {
-        case TYPE_VIDE: return 0;
-
-        case TYPE_VOITURE: return 2;
+    if (g.type == GROUND_GRASS) {
+        for (int i = 0; i<g.nb_obstacles; i++) {
+            hb = obstacle_hitbox(g.obstacles + i);
+            if (hb.a <= i && i <= b) {
+                return COLLIDE_HARMLESS;
+            }
+            return COLLIDE_NONE;
+        }
     }
+    else if (g.type == GROUND_ROAD_CAR || g.type == GROUND_ROAD_TRUCKS || g.type == GROUND_TRAIN) {
+        for (int i = 0; i<g.nb_obstacles; i++) {
+            hb = obstacle_hitbox(g.obstacles + i);
+            if (hb.a <= i && i <= b) {
+                return COLLIDE_DEADLY;
+            }
+            return COLLIDE_NONE;
+        }      
+    }
+    else if (g.type == GROUND_WATER_LOGS || g.type == GROUND_WATER_LILY) {
+        for (int i = 0; i<g.nb_obstacles; i++) {
+            hb = obstacle_hitbox(g.obstacles + i);
+            if (hb.a <= i && i <= b) {
+                return COLLIDE_NONE;
+            }
+            return COLLIDE_DEADLY;
+        }       
+    }
+    return COLLIDE_ERROR;
 }
+
+
 
 /**
  * Déplace le joueur en mettant à jour sa position horizontale.
@@ -176,14 +217,12 @@ void ground_move(Board* b, int direction) {
     if (direction == UP) { // Déplacement vers le haut
         for(int i = MAP_LEN_GUI-1 ; i>0 ; i++){
             b->grid_ground[i] = b->grid_ground[i-1];
-            b->grid_obstacle[i] = b->grid_obstacle[i-1];
             //Que fait on du b->ground[0] ?
         }
         b->grid_ground[0] = *ground_generate(TYPE_VIDE, 0);
     } else if (direction == DOWN) { // Déplacement vers le bas
         for(int i = 0 ; i<MAP_LEN_GUI-1; i++){
             b->grid_ground[i] = b->grid_ground[i+1];
-            b->grid_obstacle[i] = b->grid_obstacle[i+1];
             //Que fait on du b->ground[MAP_LEN_GUI-1] ?
         } 
         b->grid_ground[MAP_LEN_GUI-1] = *ground_generate(TYPE_VIDE, 0);
