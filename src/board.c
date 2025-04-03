@@ -102,23 +102,23 @@ void board_update(Board* b, float delta_t) {
     if (b == NULL || b->player == NULL) {
         return; // Si le plateau ou le joueur est NULL, on ne fait rien
     }
-    Obstacle **grid = b->grid_obstacle;
-    bool stop;
+    
+    Ground ground;
+    Obstacle *obst;
+    Couple hb; 
+    int **grid = b->grid_obstacle;
 
     for (int lig = 0; lig < MAP_LEN_GUI; lig++) {
-        stop = false;
-        for (int col = 0; col < MAP_WIDTH_GUI; col++) {
-            Obstacle *obst = grid[lig]+col;
-            if (obst->type != TYPE_VIDE && !stop) {
-                stop = true;
-                obstacle_update(obst, delta_t);
-                // on update la place de l'obstacle dans la grille
-                Couple hitbox = obstacle_hitbox(obst) ;
-                for (int i = hitbox.a; i<= hitbox.b; i++) {
-                    grid[lig][col] = *obst;
-                }
-            } else {    
-                stop = false;
+        ground = b->grid_ground[lig];
+
+        for (int i = 0; i < ground.nb_obstacles; i++) {
+            // update des obstacles
+            obst = ground.obstacles[i]; // obst ou *obst ?????
+            obstacle_update(obst, delta_t, ground.velocity);
+            // update la grille
+            hb = obstacle_hitbox(obst);
+            for (int col = hb.a; col <= hb.b; col++) {
+                grid[lig][col] = obst->type;
             }
         }
     }
@@ -133,11 +133,10 @@ void board_update(Board* b, float delta_t) {
 /*comment check la collision, changement puis regarde si pb ou détection après, comment marche la grille*/
 bool check_collision(Board* b) {
     if (b == NULL|| b->grid_obstacle == NULL ){
-        return; //Si le plateau et la grille d'obstacle est NULL, on ne fait rien
+        return false; //Si le plateau et la grille d'obstacle est NULL, on ne fait rien
     }
-    return(((b->grid_obstacle)[V_POS][(int)(b->player->h_position)].type)!=TYPE_VIDE);
+    return (b->grid_obstacle)[V_POS][(int)(b->player->h_position)] != TYPE_VIDE;
     /* comment on gère la hitbox car position flotante*/
-        
 }
 
 /**

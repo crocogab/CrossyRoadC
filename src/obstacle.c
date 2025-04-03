@@ -9,13 +9,12 @@
  * @param[in] type Le type d'obstacle
  * @param[in] model Le modèle tui de l'obstacle
  * @param[in] h_position la position horizontale de l'avant de l'obstacle
- * @param[in] velocity La vitesse de l'obstacle (constante)
  * @param[in] length La longueur de l'obstacle
  * 
  * @return Un pointeur vers le nouvel obstacle créé.
  */
 
-Obstacle *obstacle_make(int type, char model, float h_position, float velocity, float length) {
+Obstacle *obstacle_make(int type, char model, float h_position, float length) {
     // crée et initialise un obstacle à partir des paramètres donnés
     Obstacle *obst = malloc(sizeof(Obstacle));
     obst->type = type;
