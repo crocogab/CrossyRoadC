@@ -47,6 +47,10 @@
 #define TREE_MODEL 'T'
 #define TREE_TYPE 101
 
+// Définition des types de collisions
+#define COLLIDE_NONE 110
+#define COLLIDE_DEADLY 111
+#define COLLIDE_HARMLESS 112
 
 
 //Définition des intervalles d'obstacles
