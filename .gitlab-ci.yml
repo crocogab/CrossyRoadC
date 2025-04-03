@@ -55,7 +55,7 @@ test-job-ground:
   image: alpine:latest
   script:
     - apk update
-    - apk add bash make compiler-rt clang ncurses-dev musl-dev
+    - apk add bash make compiler-rt clang 
     - echo "Début du test du modèle ground."
     - OUTPUT=$(make run_test_ground 2>&1) || true # récupère sortie standard et sortie erreur
     - if echo "$OUTPUT" | grep -q "Assertion failed\|assertion\|SIGABRT"; then
