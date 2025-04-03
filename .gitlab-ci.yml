@@ -17,7 +17,7 @@ test-job-player:
   image: alpine:latest
   script:
     - apk update
-    - apk add bash make compiler-rt clang 
+    - apk add bash make compiler-rt clang ncurses-dev
     - make all 
     - echo "Début du test du modèle player."
     - OUTPUT=$(make run_test_player 2>&1)
@@ -65,5 +65,30 @@ test-job-ground:
       else
         echo "Tests de grond reussis !";
       fi
+  only:
+    - dev
+
+
+final-test:
+  stage: test
+  image: alpine:latest
+  script:
+    - apk update
+    - apk add bash make compiler-rt clang ncurses-dev musl-dev
+    - echo "Exécution de tous les tests ensemble"
+    - make test
+    - OUTPUT=$(make run_tests 2>&1) || true
+    - |
+      if echo "$OUTPUT" | grep -q "Assertion failed\|assertion\|SIGABRT"; then
+        echo "Problème détecté dans l'exécution groupée des tests"
+        echo "$OUTPUT"
+        exit 1 
+      else
+        echo "Tous les tests ont réussi avec succès!"
+      fi
+  needs:
+    - test-job-player
+    - test-job-obstacle
+    - test-job-ground
   only:
     - dev
