@@ -3,7 +3,7 @@
 #include "obstacle.h"
 #include "macro.h"
 
-Ground *ground_make(Obstacle *obstacles, float velocity, int type, int nb_obstacles) {
+Ground *ground_make(Obstacle **obstacles, float velocity, int type, int nb_obstacles) {
     Ground *g = malloc(sizeof(Ground));
     g->obstacles = obstacles; 
     //Initialisation des vitesses des obstacles sur la ligne
@@ -31,7 +31,6 @@ void ground_free(Ground *g) {
 Ground *ground_generate(int type, float previous_velo)
 {   
     float velo = 0.0;
-    int type_g = 0;
     int nb = 0;
 
     //On peut avoir au maximum autant d'obstacles que la map est large
@@ -53,9 +52,6 @@ Ground *ground_generate(int type, float previous_velo)
             obs[i] = obstacle_make(TREE_TYPE, TREE_MODEL, (rand() * MAP_WIDTH / RAND_MAX), TREE_LEN);
         }
 
-        //On choisit le type de sol
-        type_g = GROUND_GRASS;
-
         break;
     
     case GROUND_ROAD_CAR:
@@ -76,8 +72,7 @@ Ground *ground_generate(int type, float previous_velo)
             obs[i] = obstacle_make(CAR_TYPE, CAR_MODEL, i*6, CAR_LEN);
         }
 
-        //On définit le type de sol
-        type_g = GROUND_ROAD_CAR;
+        break;
 
 
     default:

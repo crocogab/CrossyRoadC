@@ -10,7 +10,7 @@ typedef struct _Ground {
     int nb_obstacles; //Le nombre d'obstacles sur la ligne
 } Ground;
 
-Ground *ground_make(Obstacle *obscacles, float velocity, int type, int nb_obstacles);
+Ground *ground_make(Obstacle **obscacles, float velocity, int type, int nb_obstacles);
 
 void ground_free(Ground *g);
 
