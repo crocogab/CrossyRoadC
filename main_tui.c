@@ -64,7 +64,7 @@ void draw_visible_area(char **tableau, player p,int cam_x, int cam_y, int longue
     refresh();
 }
 
-int main() {
+int main(void) {
     // camera à l'origine - cam_x est fixe à 0
 
     srand(time(NULL));// pour la génération du terrain

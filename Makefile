@@ -77,8 +77,8 @@ run_tui: $(TARGET)
 
 # Nettoyage
 clean:
-	rm -f $(OBJS) $(TARGET) $(TEST_PLAYER) $(TEST_OBSTACLE)
-	rm -f $(TEST_PLAYER_SRCS:.c=.o) $(TEST_OBSTACLE_SRCS:.c=.o)
+	rm -f $(OBJS) $(TARGET) $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND)
+	rm -f $(TEST_PLAYER_SRCS:.c=.o) $(TEST_OBSTACLE_SRCS:.c=.o) $(TEST_GROUND_SRCS:.c=.o)
 	rm -f *~ \#*\# .\#*
 
 .PHONY: all clean test run_tests run_test_player run_test_obstacle run_tui
