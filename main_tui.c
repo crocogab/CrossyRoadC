@@ -227,7 +227,7 @@ int main(void) {
         //tableau[p.posi.y][p.posi.x] = p.repr;
         
         // Contrôle de la vitesse
-        usleep(1000);
+        napms(1); // 10ms
     }
     
     // Nettoyage
