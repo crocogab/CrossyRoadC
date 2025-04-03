@@ -128,15 +128,21 @@ void board_update(Board* b, float delta_t) {
  * Vérifie s'il y a une collision entre le joueur et un obstacle.
  * 
  * @param[in] b Le plateau de jeu
- * @return true s'il y a une collision, false sinon
+ * @return 0 si pas de collision, 1 si collision non mortelle, 2 si collision mortelle, -1 si problème
  */
 /*comment check la collision, changement puis regarde si pb ou détection après, comment marche la grille*/
-bool check_collision(Board* b) {
+int check_collision(Board* b) {
     if (b == NULL|| b->grid_obstacle == NULL ){
-        return false; //Si le plateau et la grille d'obstacle est NULL, on ne fait rien
+        return -1; //Si le plateau et la grille d'obstacle est NULL, on ne fait rien
     }
-    return (b->grid_obstacle)[V_POS][(int)(b->player->h_position)] != TYPE_VIDE;
+    
     /* comment on gère la hitbox car position flotante*/
+
+    switch ((b->grid_obstacle)[V_POS][(int)(b->player->h_position)]) {
+        case TYPE_VIDE: return 0;
+
+        case TYPE_VOITURE: return 2;
+    }
 }
 
 /**
@@ -167,18 +173,19 @@ void ground_move(Board* b, int direction) {
     }
 
     // Décale les cases de la grille de sol dans la direction donnée
-    if (direction == 2) { // Déplacement vers le haut
+    if (direction == UP) { // Déplacement vers le haut
         for(int i = MAP_LEN_GUI-1 ; i>0 ; i++){
             b->grid_ground[i] = b->grid_ground[i-1];
             b->grid_obstacle[i] = b->grid_obstacle[i-1];
             //Que fait on du b->ground[0] ?
         }
-
-    } else if (direction == -2) { // Déplacement vers le bas
+        b->grid_ground[0] = *ground_generate(TYPE_VIDE, 0);
+    } else if (direction == DOWN) { // Déplacement vers le bas
         for(int i = 0 ; i<MAP_LEN_GUI-1; i++){
             b->grid_ground[i] = b->grid_ground[i+1];
             b->grid_obstacle[i] = b->grid_obstacle[i+1];
             //Que fait on du b->ground[MAP_LEN_GUI-1] ?
         } 
+        b->grid_ground[MAP_LEN_GUI-1] = *ground_generate(TYPE_VIDE, 0);
     }
 }
