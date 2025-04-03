@@ -50,7 +50,7 @@ Ground *ground_generate(int type, float previous_velo)
         //On va maintenant générer autant d'obstacles sur la ligne
         for (int i = 0; i < nb; i++)
         {
-            obs[i] = obstacle_make(TREE_TYPE, TREE_MODEL, (rand() * MAP_WIDTH / RAND_MAX), velo, TREE_LEN);
+            obs[i] = obstacle_make(TREE_TYPE, TREE_MODEL, (rand() * MAP_WIDTH / RAND_MAX), TREE_LEN);
         }
 
         //On choisit le type de sol
@@ -73,7 +73,7 @@ Ground *ground_generate(int type, float previous_velo)
         nb = rand() * (MAP_WIDTH/INTER_CAR_MIN) / (RAND_MAX); //On tire au maximum des voitures espacées de 6
         for (int i = 0; i < nb; i++)
         {
-            obs[i] = obstacle_make(CAR_TYPE, CAR_MODEL, i*6, velo, CAR_LEN);
+            obs[i] = obstacle_make(CAR_TYPE, CAR_MODEL, i*6, CAR_LEN);
         }
 
         //On définit le type de sol

@@ -10,8 +10,8 @@ int main() {
     Ground *test_ground = ground_generate(GROUND_ROAD_CAR, 0);
     for (int i = 0; i < test_ground->nb_obstacles; i++)
     {
-        assert(test_ground->obstacles[i]->velocity < CAR_MAX_SPEED);
-        assert(test_ground->obstacles[i]->velocity < CAR_MIN_SPEED);
+        assert(test_ground->velocity < CAR_MAX_SPEED);
+        assert(test_ground->velocity < CAR_MIN_SPEED);
         printf("Car nb %d  |  h_pos : %f\n", i, test_ground->obstacles[i]->h_position);
     }
 
