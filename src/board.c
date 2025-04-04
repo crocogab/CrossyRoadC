@@ -197,8 +197,17 @@ void player_move(Player* p, int direction, float delta_t) {
     if (p == NULL) {
         return; // Si le joueur est NULL, on ne fait rien
     }
-    if ((direction == 1)||(direction == -1)){
-        p->h_position += direction * delta_t; // Met à jour la position du joueur
+    switch (direction) {
+        case UP: 
+            break;
+        case DOWN: 
+            break;
+        case RIGHT:
+            p->h_position += delta_t;
+            break;
+        case LEFT: 
+            p->h_position -=  delta_t;
+            break;
     }    
 }
 
