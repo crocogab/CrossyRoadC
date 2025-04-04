@@ -110,6 +110,13 @@ void board_update(Board* b, float delta_t) {
             // update des obstacles
             obst = ground.obstacles[i]; // obst ou *obst ?????
             obstacle_update(obst, delta_t, ground.velocity);
+            //il faut mettre a jour la grille avec la nouvelle place des obstacles (comment tu gères ça ? nvlle fonction ?)
+            /*
+            Couple c  = obstacle_hitbox(obst);
+            for(int i = c.a; i<=c.b; i++){
+                comment est géré le ground
+                }
+            */
         }
     }
 }
