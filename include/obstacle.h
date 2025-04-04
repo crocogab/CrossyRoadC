@@ -4,7 +4,7 @@
 
 
 typedef struct _Obstacle {
-    int type; //macro
+    int type; //macro (voiture, camion, arbre etc)
     char model;
     float h_position;
     float length;

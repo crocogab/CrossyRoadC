@@ -110,13 +110,6 @@ void board_update(Board* b, float delta_t) {
             // update des obstacles
             obst = ground.obstacles[i]; // obst ou *obst ?????
             obstacle_update(obst, delta_t, ground.velocity);
-            //il faut mettre a jour la grille avec la nouvelle place des obstacles (comment tu gères ça ? nvlle fonction ?)
-            /*
-            Couple c  = obstacle_hitbox(obst);
-            for(int i = c.a; i<=c.b; i++){
-                comment est géré le ground
-                }
-            */
         }
     }
 }
@@ -193,30 +186,7 @@ int check_future_collision(Board *b, int direction) {
 
 
 
-/**
- * Déplace le joueur en mettant à jour sa position horizontale.
- * 
- * @param[in] p Le joueur à déplacer
- * @param[in] direction La direction du mouvement ()
- * @param[in] delta_t Le temps écoulé depuis la dernière mise à jour
- */
-void player_move(Player* p, int direction, float delta_t) {
-    if (p == NULL) {
-        return; // Si le joueur est NULL, on ne fait rien
-    }
-    switch (direction) {
-        case UP: 
-            break;
-        case DOWN: 
-            break;
-        case RIGHT:
-            p->h_position += delta_t;
-            break;
-        case LEFT: 
-            p->h_position -=  delta_t;
-            break;
-    }    
-}
+
 
 /**
  * Fait avancer le sol d'une case dans la direction donnée.
@@ -233,14 +203,17 @@ void ground_move(Board* b, int direction) {
     if (direction == UP) { // Déplacement vers le haut
         for(int i = MAP_LEN_GUI-1 ; i>0 ; i++){
             b->grid_ground[i] = b->grid_ground[i-1];
-            //Que fait on du b->ground[0] ?
         }
         b->grid_ground[0] = *ground_generate(TYPE_VIDE, 0);
+        /* la nouvelle update du haut */
+
     } else if (direction == DOWN) { // Déplacement vers le bas
         for(int i = 0 ; i<MAP_LEN_GUI-1; i++){
             b->grid_ground[i] = b->grid_ground[i+1];
             //Que fait on du b->ground[MAP_LEN_GUI-1] ?
         } 
         b->grid_ground[MAP_LEN_GUI-1] = *ground_generate(TYPE_VIDE, 0);
+        /* on met de l'herbe pour le bas */
+
     }
 }
