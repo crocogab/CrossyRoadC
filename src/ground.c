@@ -3,13 +3,14 @@
 #include "obstacle.h"
 #include "macro.h"
 
-Ground *ground_make(Obstacle **obstacles, float velocity, int type, int nb_obstacles) {
+Ground *ground_make(Obstacle *obstacles, float velocity, int type, int nb_obstacles, char model) {
     Ground *g = malloc(sizeof(Ground));
     g->obstacles = obstacles; 
     //Initialisation des vitesses des obstacles sur la ligne
     g->velocity = velocity;
     g->type = type;
     g->nb_obstacles = nb_obstacles;
+    g->model = model;
     return g;
 }
 
@@ -34,7 +35,7 @@ Ground *ground_generate(int type, float previous_velo)
     int nb = 0;
 
     //On peut avoir au maximum autant d'obstacles que la map est large
-    Obstacle **obs = malloc(sizeof(Obstacle)*MAP_WIDTH);
+    Obstacle *obs = malloc(sizeof(Obstacle)*MAP_WIDTH);
     
     //On génére les obstacles sur la ligne
     switch (type)
@@ -49,7 +50,7 @@ Ground *ground_generate(int type, float previous_velo)
         //On va maintenant générer autant d'obstacles sur la ligne
         for (int i = 0; i < nb; i++)
         {
-            obs[i] = obstacle_make(TREE_TYPE, TREE_MODEL, (rand() * MAP_WIDTH / RAND_MAX), TREE_LEN);
+            obs[i] = *obstacle_make(TREE_TYPE, TREE_MODEL, (rand() * MAP_WIDTH / RAND_MAX), TREE_LEN);
         }
 
         break;
@@ -69,7 +70,7 @@ Ground *ground_generate(int type, float previous_velo)
         nb = rand() * (MAP_WIDTH/INTER_CAR_MIN) / (RAND_MAX); //On tire au maximum des voitures espacées de 6
         for (int i = 0; i < nb; i++)
         {
-            obs[i] = obstacle_make(CAR_TYPE, CAR_MODEL, i*6, CAR_LEN);
+            obs[i] = *obstacle_make(CAR_TYPE, CAR_MODEL, i*6, CAR_LEN);
         }
 
         break;
@@ -79,6 +80,21 @@ Ground *ground_generate(int type, float previous_velo)
         break;
     }
 
-    Ground *ans = ground_make(obs, velo, type, nb);
+    Ground *ans = ground_make(obs, velo, type, nb, ground_model_of_type(type));
     return ans;
+}
+
+char ground_model_of_type(int type) {
+    switch (type) {
+        case GROUND_GRASS:
+            return MODEL_GRASS;
+        case GROUND_ROAD_CAR:
+            return MODEL_ROAD;
+        case GROUND_ROAD_TRUCKS:
+            return MODEL_ROAD;
+        case GROUND_WATER_LILY:
+            return MODEL_WATER;
+        case GROUND_WATER_LOGS:
+            return MODEL_WATER;
+    } 
 }

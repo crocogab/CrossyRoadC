@@ -4,16 +4,19 @@
 #include "obstacle.h"
 
 typedef struct _Ground {
-    Obstacle **obstacles; //Le tableau contiendra tout les obstacles présents sur la ligne
+    Obstacle *obstacles; //Le tableau contiendra tout les obstacles présents sur la ligne
     float velocity; //Vélocité algébrique pour le déplacement des obstacles
     int type;
     int nb_obstacles; //Le nombre d'obstacles sur la ligne
+    char model;
 } Ground;
 
-Ground *ground_make(Obstacle **obscacles, float velocity, int type, int nb_obstacles);
+Ground *ground_make(Obstacle *obscacles, float velocity, int type, int nb_obstacles, char model);
 
 void ground_free(Ground *g);
 
 Ground *ground_generate(int type, float previous_velo);
+
+char ground_model_of_type(int type);
 
 #endif
