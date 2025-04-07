@@ -14,6 +14,6 @@ Ground *ground_make(Obstacle **obscacles, float velocity, int type, int nb_obsta
 
 void ground_free(Ground *g);
 
-Ground *ground_generate(int type, float previous_velo);
+Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb);
 
 #endif
