@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-int main() {
+int main(void) {
 
     srand(1);
     Ground *test_ground = ground_generate(GROUND_ROAD_CAR, 0, 2, 2);
@@ -14,8 +14,8 @@ int main() {
     for (int i = 0; i < test_ground->nb_obstacles; i++)
     {
         //printf("Car nb %d  |  h_pos : %f\n", i, test_ground->obstacles[i]->h_position);
-        assert(test_ground->obstacles[i].h_position >= 0);
-        assert(test_ground->obstacles[i].h_position < MAP_WIDTH);
+        assert(test_ground->obstacles[i]->h_position >= 0);
+        assert(test_ground->obstacles[i]->h_position < MAP_WIDTH);
     }
 
     ground_free(test_ground);

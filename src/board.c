@@ -234,7 +234,7 @@ char **grid_tui_make(Board *b) {
         for (int i = 0; i < g.nb_obstacles; i++) {
             hb = obstacle_hitbox(g.obstacles+i);
             for (int j = hb.a; j<=hb.b; j++) {
-                grid[lig][j] = g.obstacles[i].model;
+                grid[lig][j] = g.obstacles[i]->model;
             }
         }
     }

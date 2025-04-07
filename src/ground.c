@@ -4,7 +4,7 @@
 #include "macro.h"
 #include "random_custom.h"
 
-Ground *ground_make(Obstacle *obstacles, float velocity, int type, int nb_obstacles, char model) {
+Ground *ground_make(Obstacle **obstacles, float velocity, int type, int nb_obstacles, char model) {
     Ground *g = malloc(sizeof(Ground));
     g->obstacles = obstacles; 
     //Initialisation des vitesses des obstacles sur la ligne
@@ -18,7 +18,7 @@ Ground *ground_make(Obstacle *obstacles, float velocity, int type, int nb_obstac
 void ground_free(Ground *g) {
     for (int i = 0; i < g->nb_obstacles; i++)
     {
-        obstacle_free(g->obstacles+i);
+        obstacle_free(g->obstacles[i]);
     }
     free(g->obstacles);
     free(g);
@@ -40,7 +40,7 @@ Ground *ground_generate(int type, float previous_velo, int max_nb, int min_nb)
     int nb = 0;
 
     //On peut avoir au maximum autant d'obstacles que la map est large
-    Obstacle *obs = malloc(sizeof(Obstacle)*MAP_WIDTH);
+    Obstacle **obs = malloc(sizeof(Obstacle *)*MAP_WIDTH);
     
     //On génére les obstacles sur la ligne
     switch (type)
@@ -56,7 +56,7 @@ Ground *ground_generate(int type, float previous_velo, int max_nb, int min_nb)
         int *obs_h_pos_array = random_int_array(0, MAP_WIDTH, nb);
         for (int i = 0; i < nb; i++)
         {
-            obs[i] = *obstacle_make(TREE_TYPE, TREE_MODEL, obs_h_pos_array[i], TREE_LEN);
+            obs[i] = obstacle_make(TREE_TYPE, TREE_MODEL, obs_h_pos_array[i], TREE_LEN);
         }
         free(obs_h_pos_array);
 
@@ -83,7 +83,7 @@ Ground *ground_generate(int type, float previous_velo, int max_nb, int min_nb)
         nb = random_int(min_nb, max_nb); //On tire au maximum des voitures espacées de INTER_CAR_MIN ou max_nb
         for (int i = 0; i < nb; i++)
         {
-            obs[i] = *obstacle_make(CAR_TYPE, CAR_MODEL, i*INTER_CAR_MIN, CAR_LEN);
+            obs[i] = obstacle_make(CAR_TYPE, CAR_MODEL, i*INTER_CAR_MIN, CAR_LEN);
         }
 
         break;
@@ -109,5 +109,8 @@ char ground_model_of_type(int type) {
             return MODEL_WATER;
         case GROUND_WATER_LOGS:
             return MODEL_WATER;
+        default:
+            return 'E';
     } 
 }
+
