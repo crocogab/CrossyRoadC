@@ -240,7 +240,7 @@ char **grid_tui_make(Board *b) {
 Ground **grid_ground_make(void) {
     Ground **grid = malloc(MAP_LEN * sizeof(Ground *));
     for (int i = 0; i < MAP_LEN; i++) {
-        grid[i] = ground_generate(GROUND_GRASS, 0, 2, 2); // Placeholder pour initialiser chaque ligne
+        grid[i] = ground_generate(GROUND_GRASS, 0, 0, 0); // Placeholder pour initialiser chaque ligne
     }
     return grid;
 }
