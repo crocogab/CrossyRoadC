@@ -14,8 +14,8 @@ int main() {
     for (int i = 0; i < test_ground->nb_obstacles; i++)
     {
         //printf("Car nb %d  |  h_pos : %f\n", i, test_ground->obstacles[i]->h_position);
-        assert(test_ground->obstacles[i]->h_position >= 0);
-        assert(test_ground->obstacles[i]->h_position < MAP_WIDTH);
+        assert(test_ground->obstacles[i].h_position >= 0);
+        assert(test_ground->obstacles[i].h_position < MAP_WIDTH);
     }
 
     ground_free(test_ground);
