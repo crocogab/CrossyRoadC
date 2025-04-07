@@ -18,7 +18,10 @@ TEST_OBSTACLE_SRCS = $(TEST_DIR)/test_obstacle.c $(SRC_DIR)/obstacle.c
 TEST_GROUND = test_ground
 TEST_GROUND_SRCS = $(TEST_DIR)/test_ground.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c
 
-TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND)
+TEST_RANDOM_CUSTOM = test_random_custom
+TEST_RANDOM_CUSTOM_SRCS = $(TEST_DIR)/test_random_custom.c $(SRC_DIR)/random_custom.c
+
+TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUSTOM)
 
 # Compilation
 CC = clang
@@ -54,6 +57,9 @@ $(TEST_OBSTACLE): $(TEST_OBSTACLE_SRCS:.c=.o)
 $(TEST_GROUND): $(TEST_GROUND_SRCS:.c=.o)
 	$(CC) $^ $(LDFLAGS) $(LIBS) -o $@
 
+$(TEST_RANDOM_CUSTOM): $(TEST_RANDOM_CUSTOM_SRCS:.c=.o)
+	$(CC) $^ $(LDFLAGS) $(LIBS) -o $@
+
 # Règles de compilation génériques
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -67,6 +73,9 @@ run_test_obstacle: $(TEST_OBSTACLE)
 run_test_ground: $(TEST_GROUND)
 	./$(TEST_GROUND)
 
+run_test_random_custom: $(TEST_RANDOM_CUSTOM)
+	./$(TEST_RANDOM_CUSTOM)
+
 # Exécuter tous les tests
 run_tests: $(TEST_TARGETS)
 	for test in $(TEST_TARGETS); do ./$$test; done
@@ -77,8 +86,8 @@ run_tui: $(TARGET)
 
 # Nettoyage
 clean:
-	rm -f $(OBJS) $(TARGET) $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND)
-	rm -f $(TEST_PLAYER_SRCS:.c=.o) $(TEST_OBSTACLE_SRCS:.c=.o) $(TEST_GROUND_SRCS:.c=.o)
+	rm -f $(OBJS) $(TARGET) $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUSTOM)
+	rm -f $(TEST_PLAYER_SRCS:.c=.o) $(TEST_OBSTACLE_SRCS:.c=.o) $(TEST_GROUND_SRCS:.c=.o) $(TEST_RANDOM_CUSTOM_SRCS:.c=.o)
 	rm -f *~ \#*\# .\#*
 
-.PHONY: all clean test run_tests run_test_player run_test_obstacle run_tui
+.PHONY: all clean test run_tests run_test_player run_test_obstacle run_tui run_test_ground run_test_random_custom
