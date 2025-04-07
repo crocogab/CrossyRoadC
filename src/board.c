@@ -204,7 +204,7 @@ void ground_move(Board* b, int direction) {
         for(int i = MAP_LEN_GUI-1 ; i>0 ; i++){
             b->grid_ground[i] = b->grid_ground[i-1];
         }
-        b->grid_ground[0] = *ground_generate(TYPE_VIDE, 0);
+        b->grid_ground[0] = *ground_generate(GROUND_GRASS, 0, 0, 0); //Placeholder pour le haut
         /* la nouvelle update du haut */
 
     } else if (direction == DOWN) { // Déplacement vers le bas
@@ -212,8 +212,7 @@ void ground_move(Board* b, int direction) {
             b->grid_ground[i] = b->grid_ground[i+1];
             //Que fait on du b->ground[MAP_LEN_GUI-1] ?
         } 
-        b->grid_ground[MAP_LEN_GUI-1] = *ground_generate(TYPE_VIDE, 0);
-        /* on met de l'herbe pour le bas */
+        b->grid_ground[MAP_LEN_GUI-1] = *ground_generate(GROUND_GRASS, 0, 0, 0); //On place de l'herbe en bas
 
     }
 }
