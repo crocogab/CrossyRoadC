@@ -58,7 +58,7 @@ void obstacle_update(Obstacle *o, float delta_t, float velocity) {
  * @return Le `Couple` des indices min et max occupés par l'obstacle dans la grille 
  */
 Couple obstacle_hitbox(Obstacle *o) {
-    // renvoie les h_indices min et max des cases où l'obstacle se trouve 
+    // renvoie les h_indices min et max INCLUS des cases où l'obstacle se trouve 
     int a = (int) o->h_position;
     int b = (int) o->h_position + o->length;
     
