@@ -11,6 +11,7 @@ int main() {
     {
         assert(random_int(0, 10) >= 0 && random_int(0, 10) <= 10); // Un des nombres int n'est pas dans l'intervalle
     }
+    assert(random_int(3, 3) == 3); //random_int ne renvoie pas le bon nombre
 
     //Random_float
     for (int i = 0; i < 10; i++)
@@ -30,5 +31,6 @@ int main() {
         assert(array[i] != array[i+1]); // Le tableau contient des doublons
         assert(array[i] < array[i+1]); // Le tableau n'est pas trié
     }
+    free(array);
     
 }

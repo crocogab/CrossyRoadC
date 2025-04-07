@@ -41,6 +41,7 @@
 #define CAR_TYPE 100
 #define CAR_MAX_SPEED 4 //Vitesse maximum de la voiture en valeur absolue
 #define CAR_MIN_SPEED 1 //Vitesse minimum de la voiture en valeur absolue
+#define CAR_MIN_NUMBER 1 //Nombre minimum de voitures sur une ligne
 
 //Définition des attributs de arbre
 #define TREE_LEN 1
@@ -66,7 +67,7 @@
 
 
 //Définition des intervalles d'obstacles
-#define INTER_CAR_MIN 6
+#define INTER_CAR_MIN 3
 
 //Définition de la taille de la map
 #define MAP_WIDTH_GUI 19 // Largeur de la map en GUI
