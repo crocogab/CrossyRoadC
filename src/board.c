@@ -10,7 +10,7 @@
  * 
  * @return Un pointeur vers le plateau créé
  */
-Board* board_make() {
+Board* board_make(void) {
     Board* b = (Board*)malloc(sizeof(Board));
     if (b == NULL) {
         return NULL; // En cas d'erreur d'allocation
@@ -108,7 +108,7 @@ void board_update(Board* b, float delta_t) {
 
         for (int i = 0; i < ground.nb_obstacles; i++) {
             // update des obstacles
-            obst = ground.obstacles[i]; // obst ou *obst ?????
+            obst = ground.obstacles+i; // obst ou *obst ?????
             obstacle_update(obst, delta_t, ground.velocity);
         }
     }
@@ -157,7 +157,7 @@ int check_future_collision(Board *b, int direction) {
     if (g.type == GROUND_GRASS) {
         for (int i = 0; i<g.nb_obstacles; i++) {
             hb = obstacle_hitbox(g.obstacles + i);
-            if (hb.a <= i && i <= b) {
+            if (hb.a <= i && i <= hb.b) {
                 return COLLIDE_HARMLESS;
             }
             return COLLIDE_NONE;
@@ -166,7 +166,7 @@ int check_future_collision(Board *b, int direction) {
     else if (g.type == GROUND_ROAD_CAR || g.type == GROUND_ROAD_TRUCKS || g.type == GROUND_TRAIN) {
         for (int i = 0; i<g.nb_obstacles; i++) {
             hb = obstacle_hitbox(g.obstacles + i);
-            if (hb.a <= i && i <= b) {
+            if (hb.a <= i && i <= hb.b) {
                 return COLLIDE_DEADLY;
             }
             return COLLIDE_NONE;
@@ -175,7 +175,7 @@ int check_future_collision(Board *b, int direction) {
     else if (g.type == GROUND_WATER_LOGS || g.type == GROUND_WATER_LILY) {
         for (int i = 0; i<g.nb_obstacles; i++) {
             hb = obstacle_hitbox(g.obstacles + i);
-            if (hb.a <= i && i <= b) {
+            if (hb.a <= i && i <= hb.b) {
                 return COLLIDE_NONE;
             }
             return COLLIDE_DEADLY;
@@ -216,4 +216,29 @@ void ground_move(Board* b, int direction) {
         /* on met de l'herbe pour le bas */
 
     }
+}
+
+
+char **grid_tui_make(Board *b) {
+    char **grid = malloc(MAP_LEN_GUI * sizeof(char *));
+    Ground g;
+    Couple hb;
+    for (int lig = 0; lig < MAP_LEN_GUI; lig++) {
+        grid[lig] = malloc(MAP_WIDTH_GUI * sizeof(char));
+        g = b->grid_ground[lig];
+        // initialisation du sol
+        for (int col = 0; col < MAP_WIDTH_GUI; col++) {
+            grid[lig][col] = g.model;
+        }
+        // ajout des abstacles
+        for (int i = 0; i < g.nb_obstacles; i++) {
+            hb = obstacle_hitbox(g.obstacles+i);
+            for (int j = hb.a; j<=hb.b; j++) {
+                grid[lig][j] = g.obstacles[i].model;
+            }
+        }
+    }
+    // ajout du poulet
+    grid[V_POS][(int) b->player->h_position] = MODEL_CHICKEN;
+    return grid;
 }

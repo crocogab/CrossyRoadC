@@ -53,6 +53,18 @@
 #define COLLIDE_HARMLESS 112
 #define COLLIDE_ERROR 113
 
+// Définition des modèles de sol
+#define MODEL_GRASS '_'
+#define MODEL_ROAD '-'
+#define MODEL_WATER '~'
+#define MODEL_RAIL '='
+
+// Définition des modèles d'objets
+#define MODEL_CHICKEN 'i'
+#define MODEL_TREE 'T'
+#define MODEL_CAR '>'
+
+
 //Définition des intervalles d'obstacles
 #define INTER_CAR_MIN 6
 

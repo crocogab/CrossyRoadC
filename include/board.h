@@ -11,7 +11,7 @@ typedef struct _Board {
     Ground *grid_ground;  
 } Board;
 
-Board* board_make();
+Board* board_make(void);
 void board_free(Board* b);
 Ground* board_get_ground(Board* b);
 void board_set_ground(Board* b, Ground* ground);
@@ -24,6 +24,8 @@ void ground_move (Board* b, int direction);
 
 Ground *grid_ground_make(void);
 void grid_ground_free(Ground *);
+
+char **grid_tui_make(Board *);
 
 #endif
 
