@@ -12,7 +12,7 @@ int main() {
     {
         assert(test_ground->velocity < CAR_MAX_SPEED);
         assert(test_ground->velocity < CAR_MIN_SPEED);
-        printf("Car nb %d  |  h_pos : %f\n", i, test_ground->obstacles[i]->h_position);
+        printf("Car nb %d  |  h_pos : %f\n", i, (test_ground->obstacles+i)->h_position);
     }
 
     ground_free(test_ground);
