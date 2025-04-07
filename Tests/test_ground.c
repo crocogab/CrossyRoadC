@@ -20,6 +20,6 @@ int main(void) {
 
     ground_free(test_ground);
     
-
+    printf("La librairie ground passe tout les tests\n");
     return 0;
 }

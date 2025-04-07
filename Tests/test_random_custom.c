@@ -32,5 +32,6 @@ int main() {
         assert(array[i] < array[i+1]); // Le tableau n'est pas trié
     }
     free(array);
+    printf("La librairie random passe tout les tests\n");
     
 }

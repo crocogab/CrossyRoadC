@@ -9,6 +9,9 @@ SRCS = main_tui.c
 OBJS = $(SRCS:.c=.o)
 
 # Fichiers de test -> rajouter à chaque nouveau test
+TEST_BOARD = test_board
+TEST_BOARD_SRCS = $(TEST_DIR)/test_board.c $(SRC_DIR)/board.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/player.c
+
 TEST_PLAYER = test_player
 TEST_PLAYER_SRCS = $(TEST_DIR)/test_player.c $(SRC_DIR)/player.c
 
@@ -48,6 +51,9 @@ $(TARGET): $(OBJS)
 	$(CC) $^ $(LDFLAGS) $(LIBS) -o $@
 
 # Compilation des tests
+$(TEST_BOARD): $(TEST_BOARD_SRCS:.c=.o)
+	$(CC) $^ $(LDFLAGS) $(LIBS) -o $@
+
 $(TEST_PLAYER): $(TEST_PLAYER_SRCS:.c=.o)
 	$(CC) $^ $(LDFLAGS) $(LIBS) -o $@
 
@@ -63,6 +69,9 @@ $(TEST_RANDOM_CUSTOM): $(TEST_RANDOM_CUSTOM_SRCS:.c=.o)
 # Règles de compilation génériques
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+run_test_board: $(TEST_BOARD)
+	./$(TEST_BOARD)
 
 run_test_player: $(TEST_PLAYER)
 	./$(TEST_PLAYER)
@@ -86,8 +95,8 @@ run_tui: $(TARGET)
 
 # Nettoyage
 clean:
-	rm -f $(OBJS) $(TARGET) $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUSTOM)
-	rm -f $(TEST_PLAYER_SRCS:.c=.o) $(TEST_OBSTACLE_SRCS:.c=.o) $(TEST_GROUND_SRCS:.c=.o) $(TEST_RANDOM_CUSTOM_SRCS:.c=.o)
+	rm -f $(OBJS) $(TARGET) $(TEST_BOARD) $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUSTOM) $(TEST_BOARD)
+	rm -f $(TEST_BOARD_SRCS:.c=.o) $(TEST_PLAYER_SRCS:.c=.o) $(TEST_OBSTACLE_SRCS:.c=.o) $(TEST_GROUND_SRCS:.c=.o) $(TEST_RANDOM_CUSTOM_SRCS:.c=.o)
 	rm -f *~ \#*\# .\#*
 
-.PHONY: all clean test run_tests run_test_player run_test_obstacle run_tui run_test_ground run_test_random_custom
+.PHONY: all clean test run_tests run_test_board run_test_player run_test_obstacle run_tui run_test_ground run_test_random_custom

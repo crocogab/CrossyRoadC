@@ -53,12 +53,14 @@ Ground *ground_generate(int type, float previous_velo, int max_nb, int min_nb)
         nb = random_int(min_nb, max_nb); //On tire un nombre d'obstacles entre min_nb et max_nb
 
         //On va maintenant générer autant d'obstacles sur la ligne
-        int *obs_h_pos_array = random_int_array(0, MAP_WIDTH, nb);
-        for (int i = 0; i < nb; i++)
-        {
-            obs[i] = obstacle_make(TREE_TYPE, TREE_MODEL, obs_h_pos_array[i], TREE_LEN);
+        if (nb > 0) {
+            int *obs_h_pos_array = random_int_array(0, MAP_WIDTH, nb);
+            for (int i = 0; i < nb; i++)
+            {
+                obs[i] = obstacle_make(TREE_TYPE, TREE_MODEL, obs_h_pos_array[i], TREE_LEN);
+            }
+            free(obs_h_pos_array);
         }
-        free(obs_h_pos_array);
 
         break;
     
@@ -113,4 +115,3 @@ char ground_model_of_type(int type) {
             return 'E';
     } 
 }
-

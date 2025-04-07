@@ -202,7 +202,7 @@ int main(void) {
                         // Déplacement de caméra sur l'axe Y
                         if (p.posi.y - cam_y > hauteur_cam - decal_cam && cam_y < hauteur_monde - hauteur_cam) {
                             cam_y++;
-                           
+
                         }
                     }
                     break;

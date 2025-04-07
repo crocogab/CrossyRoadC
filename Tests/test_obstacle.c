@@ -21,6 +21,6 @@ int main (void) {
     
     obstacle_free(voiture);
 
-    printf("Obstacle passe tout les tests\n");
+    printf("La librairie Obstacle passe tout les tests\n");
     return 0;
 }
