@@ -9,7 +9,7 @@
 #define NEUTRAL 68
 
 //Définition des tailles par défaut de la map, pour les tests uniquement
-#define DEFAULT_CELL_SIZE 10.0
+#define DEFAULT_CELL_SIZE 1.0
 #define LEFT_MAP_X 0.0
 #define RIGHT_MAP_X 100.0
 

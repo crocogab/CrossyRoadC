@@ -5,7 +5,7 @@ TEST_DIR = ./Tests
 
 # Fichiers principaux -> pour instant main_tui
 TARGET = main_tui
-SRCS = main_tui.c
+SRCS = main_tui.c $(SRC_DIR)/game.c $(SRC_DIR)/board.c $(SRC_DIR)/player.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c
 OBJS = $(SRCS:.c=.o)
 
 # Fichiers de test -> rajouter à chaque nouveau test
