@@ -14,7 +14,7 @@
  * @author : Raphaël
  * @pre : 0 <= h_position < fin_de_la_map
  */
-Player *player_make(float grid_cell_size, float h_position, int direction, bool alive, bool isJumping)
+Player *player_make(float grid_cell_size, float h_position, int direction, bool alive, bool isJumping, int score)
 {
     Player *ans = malloc(sizeof(Player));
     ans->grid_cell_width = grid_cell_size;
@@ -22,6 +22,7 @@ Player *player_make(float grid_cell_size, float h_position, int direction, bool 
     ans->direction = direction;
     ans->alive = alive;
     ans->is_jumping = isJumping;
+    ans->score = score;
     return ans;
 }
 
@@ -33,7 +34,7 @@ Player *player_make(float grid_cell_size, float h_position, int direction, bool 
  */
 Player *player_start()
 {
-    return player_make(DEFAULT_CELL_SIZE, (float)(MAP_WIDTH/2), UP, true, false);
+    return player_make(DEFAULT_CELL_SIZE, (float)(MAP_WIDTH/2), UP, true, false, 0);
 }
 
 /**

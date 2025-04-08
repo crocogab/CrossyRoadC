@@ -5,8 +5,7 @@
 
 
 typedef struct _Game {
-    Board *board; // * ou pas * ?
-    int score;
+    Board *board;
     int status; //macro
 } Game;
 

@@ -10,10 +10,11 @@ typedef struct _Player {
     float h_position;
     bool is_jumping;
     float grid_cell_width;
+    int score;
 
 } Player;
 
-Player *player_make(float grid_cell_size, float h_position, int direction, bool alive, bool isJumping);
+Player *player_make(float grid_cell_size, float h_position, int direction, bool alive, bool isJumping, int score);
 
 Player *player_start();
 

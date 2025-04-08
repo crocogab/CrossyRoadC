@@ -8,7 +8,7 @@
 
 int main() {
 
-    Player *testing_player = player_make(GRID_CELL_SIZE, 5.0, UP, true, false);
+    Player *testing_player = player_make(GRID_CELL_SIZE, 5.0, UP, true, false, 0);
     assert(testing_player != NULL); //Le player n'est pas bien initialisé
     assert(testing_player->alive == true); //Le player n'est pas bien initialisé
 

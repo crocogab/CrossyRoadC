@@ -5,7 +5,6 @@
 
 Game game_make(int status,int score){
     Game g;
-    g.score=score;
     g.status=status;
     return g;
 }
@@ -18,6 +17,5 @@ void kill_player(Game g){
 void game_start(Game g){
     Board * b= board_make();
     g.board=b;
-    g.score=0;
     g.status=PLAYING;
 }

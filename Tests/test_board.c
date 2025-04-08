@@ -39,7 +39,11 @@ int main(void) {
     print_grid(b);
     ground_move(b, UP);
     print_grid(b);
-
+    printf("Obstacles de la ligne 0 : %d\n", b->grid_ground[0]->nb_obstacles);
+    for (int i = 0; i < b->grid_ground[0]->nb_obstacles; i++)
+    {
+        printf("Obstacle %d : %f\n", i, b->grid_ground[0]->obstacles[i]->h_position);
+    }
     board_free(b);
 
     printf("La librairie board passe tout les tests\n");

@@ -197,7 +197,7 @@ void ground_move(Board* b, int direction) {
             for (int i = MAP_LEN - 1; i > 0; i--) {
                 b->grid_ground[i] = b->grid_ground[i - 1];
             }
-            b->grid_ground[0] = gen_next_ground(b, 10); //Placeholder à changer avec la modification du champ score
+            b->grid_ground[0] = gen_next_ground(b, b->player->score); //Placeholder à changer avec la modification du champ score
             ground_free(last_ground);
             break;
         }
