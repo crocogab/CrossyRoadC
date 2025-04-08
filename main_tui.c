@@ -53,20 +53,20 @@ int main(void) {
                 mvaddch(y+1,x+1,tableau[y][x]);
             }
         }
-        for (int y=0;y<(MAP_LEN);y++){
-            mvaddch(y+1,0,ACS_VLINE);
-            mvaddch(y+1,MAP_WIDTH,ACS_VLINE);
+        for (int y=0;y<(MAP_LEN+1);y++){
+            mvaddch(y,0,ACS_VLINE);
+            mvaddch(y,MAP_WIDTH+1,ACS_VLINE);
         }
 
-        for (int x=0;x<(MAP_WIDTH);x++){
+        for (int x=0;x<(MAP_WIDTH+1);x++){
             mvaddch(0,x,ACS_HLINE);
-            mvaddch(MAP_LEN,x+1,ACS_HLINE);
+            mvaddch(MAP_LEN+1,x,ACS_HLINE);
         }
 
         mvaddch(0,0,ACS_ULCORNER);
-        mvaddch(0,MAP_WIDTH,ACS_URCORNER);
-        mvaddch(MAP_LEN,0,ACS_LLCORNER);
-        mvaddch(MAP_LEN,MAP_WIDTH,ACS_LRCORNER);
+        mvaddch(0,MAP_WIDTH+1,ACS_URCORNER);
+        mvaddch(MAP_LEN+1,0,ACS_LLCORNER);
+        mvaddch(MAP_LEN+1,MAP_WIDTH+1,ACS_LRCORNER);
 
         
         refresh(); // on affiche la grille
@@ -87,25 +87,32 @@ int main(void) {
             switch(ch) {
                 
                 case KEY_UP:
-                    ground_move(g.board,UP);
                     move_player(UP,p);
+                    ground_move(g.board,UP);
+                    
                     break;
                 case KEY_DOWN:
+                    move_player(DOWN,p);
+                    ground_move(g.board,DOWN);
 
                     break;
                 case KEY_LEFT:
-                    ground_move(g.board,LEFT);
                     move_player(LEFT,p);
+                    ground_move(g.board,LEFT);
+                    
                     break;
                 case KEY_RIGHT:
-                    
+                    move_player(RIGHT,p);
+                    ground_move(g.board,RIGHT);
                     break;
             }
             
             flushinp();
         }
         
-        board_update(g.board,1); // pour instant = 1
+        board_update(g.board,0.01); // pour instant = 1
+        
+        grid_tui_free(tableau);
         tableau=grid_tui_make(g.board);
         
         // Contrôle de la vitesse
@@ -116,6 +123,7 @@ int main(void) {
     endwin();
     
     grid_tui_free(tableau);
+    
 
     board_free(g.board);
     

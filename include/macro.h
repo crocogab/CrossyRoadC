@@ -11,7 +11,7 @@
 //Définition des tailles par défaut de la map, pour les tests uniquement
 #define DEFAULT_CELL_SIZE 1.0
 #define LEFT_MAP_X 0.0
-#define RIGHT_MAP_X 100.0
+#define RIGHT_MAP_X 8.0
 
 //Définition des status de la game
 #define HOME 70 //Le menu d'acceuil est affiché
