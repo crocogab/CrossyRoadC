@@ -70,3 +70,19 @@ int *random_int_array(int min, int max, int size)
     return array;
 }
 
+/**
+ * Renvoie le minimum entre deux entiers
+ * 
+ * @param a premier entier
+ * @param b deuxième entier
+ * 
+ * @return le minimum entre a et b
+ */
+int min(int a, int b) {
+    if (a < b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+

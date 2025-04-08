@@ -36,7 +36,7 @@
 //Définition des objets
 
 //Définition des attributs de voiture
-#define CAR_LEN 2
+#define CAR_LEN 1
 #define CAR_MODEL '>'
 #define CAR_TYPE 100
 #define CAR_MAX_SPEED 4 //Vitesse maximum de la voiture en valeur absolue
@@ -44,7 +44,7 @@
 #define CAR_MIN_NUMBER 1 //Nombre minimum de voitures sur une ligne
 
 //Définition des attributs de arbre
-#define TREE_LEN 1
+#define TREE_LEN 0.5
 #define TREE_MODEL 'T'
 #define TREE_TYPE 101
 
@@ -78,7 +78,9 @@
 #define MAP_WIDTH 9 // Largeur de la map actuelle
 #define MAP_LEN 13 // Hauteur de la map actuelle
 
-#define V_POS 15 // Position verticale du joueur sur le board
+#define START_SIZE 7 // Taille de la zone de départ
+
+#define V_POS MAP_LEN-3 // Position verticale du joueur sur le board
 
 //Définition des seuils de difficulté
 #define DIFF_EASY 25 // Le jeu devient plus dur au dessus de 25 de score

@@ -33,7 +33,7 @@ Player *player_make(float grid_cell_size, float h_position, int direction, bool 
  */
 Player *player_start()
 {
-    return player_make(DEFAULT_CELL_SIZE, 0.0, UP, true, false);
+    return player_make(DEFAULT_CELL_SIZE, (float)(MAP_WIDTH/2), UP, true, false);
 }
 
 /**

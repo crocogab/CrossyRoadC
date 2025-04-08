@@ -34,7 +34,7 @@ void ground_free(Ground *g) {
  * 
  * @return : un pointeur vers un sol alloué sur le tas
  */
-Ground *ground_generate(int type, float previous_velo, int max_nb, int min_nb)
+Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
 {   
     float velo = 0.0;
     int nb = 0;
@@ -54,10 +54,10 @@ Ground *ground_generate(int type, float previous_velo, int max_nb, int min_nb)
 
         //On va maintenant générer autant d'obstacles sur la ligne
         if (nb > 0) {
-            int *obs_h_pos_array = random_int_array(0, MAP_WIDTH, nb);
+            int *obs_h_pos_array = random_int_array(0, MAP_WIDTH-1, nb);
             for (int i = 0; i < nb; i++)
             {
-                obs[i] = obstacle_make(TREE_TYPE, TREE_MODEL, obs_h_pos_array[i], TREE_LEN);
+                obs[i] = obstacle_make(TREE_TYPE, TREE_MODEL, (int)obs_h_pos_array[i], TREE_LEN);
             }
             free(obs_h_pos_array);
         }

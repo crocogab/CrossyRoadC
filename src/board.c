@@ -197,7 +197,7 @@ void ground_move(Board* b, int direction) {
             for (int i = MAP_LEN - 1; i > 0; i--) {
                 b->grid_ground[i] = b->grid_ground[i - 1];
             }
-            b->grid_ground[0] = ground_generate(GROUND_GRASS, 0, 0, 0);
+            b->grid_ground[0] = gen_next_ground(b, 10); //Placeholder à changer avec la modification du champ score
             ground_free(last_ground);
             break;
         }
@@ -228,13 +228,30 @@ char **grid_tui_make(Board *b) {
         for (int i = 0; i < g->nb_obstacles; i++) {
             hb = obstacle_hitbox(g->obstacles[i]);
             for (int j = hb.a; j<=hb.b; j++) {
-                grid[lig][j] = g->obstacles[i]->model;
+                if (!(j < 0 || j >= MAP_WIDTH)) {               
+                    grid[lig][j] = g->obstacles[i]->model;
+                }
             }
         }
     }
     // ajout du poulet
-    grid[V_POS][(int) b->player->h_position] = MODEL_CHICKEN;
+    if (b->player != NULL)
+    {
+        grid[V_POS][(int) b->player->h_position] = MODEL_CHICKEN;
+    }
     return grid;
+}
+
+/**
+ * Libère la mémoire associée à la grille de char**. 
+ * 
+ * @param[in] g La grille à libérer
+ */
+void grid_tui_free(char **g) {
+    for (int i = 0; i < MAP_LEN; i++) {
+        free(g[i]);
+    }
+    free(g);
 }
 
 Ground **grid_ground_make(void) {
@@ -245,9 +262,117 @@ Ground **grid_ground_make(void) {
     return grid;
 }
 
+/**
+ * Change les valeurs de la grille de sol pour le démarrage du jeu.
+ * i.e, crée un spawn similaire à celui du jeu
+ * 
+ * @param[in] b Le plateau contenant la grille de sol
+ */
+void grid_ground_starter_set(Board *b) {
+    for (int i = 2; i <= min(MAP_LEN, START_SIZE); i++)
+    {
+        ground_free(b->grid_ground[MAP_LEN - i]);
+        b->grid_ground[MAP_LEN - i] = ground_generate(GROUND_GRASS, 0, 0, 0);
+    }
+    ground_free(b->grid_ground[MAP_LEN - 1]);
+    b->grid_ground[MAP_LEN-1] = ground_generate(GROUND_GRASS, 0, MAP_WIDTH, MAP_WIDTH);
+}
+
 void grid_ground_free(Ground ** g){
     for (int i = 0; i<MAP_LEN; i++){
         ground_free(g[i]);
     }
     free(g);
+}
+
+/**
+ * Génère un nouveau sol en fonction du score et des sols précédents.
+ * La génération est simpliste pour l'instant.
+ * 
+ * @param[in] b Le plateau contenant la grille de sol
+ * @param[in] score Le score du joueur
+ * 
+ * @return Un pointeur vers le nouveau sol généré
+ */
+Ground *gen_next_ground(Board *b, int score)
+{
+    if (b == NULL) {
+        return NULL; // Juste au cas où
+    }
+
+    switch (b->grid_ground[0]->type)
+    {
+    case GROUND_GRASS:
+        if (score < DIFF_EASY) {
+            return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 1, 3);
+        }
+        else if (score < DIFF_NORMAL) {
+            return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 4);
+        }
+        else if (score < DIFF_MEDIUM) {
+            return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 5);
+        }
+        else if (score < DIFF_HARD) {
+            return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 6);
+        }
+        else {
+            return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 3, 7);
+        }        
+        break;
+
+    case GROUND_ROAD_CAR:
+        if (score < DIFF_EASY) {
+            if (random_int(1, 10) < 5) {
+                return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
+            }
+            else {
+                return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 1, 3);
+            }
+        }
+        else if (score < DIFF_NORMAL) {
+            if (random_int(1, 10) < 4)
+            {
+                return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
+            }
+            else {
+                return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 4);
+            }
+        }
+        else if (score < DIFF_MEDIUM) {
+            if (random_int(1, 10) < 3)
+            {
+                return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
+            }
+            else {
+                return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 5);
+            }
+        }
+        else if (score < DIFF_HARD) {
+            if (random_int(1, 10) < 2)
+            {
+                return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
+            }
+            else {
+                return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 6);
+            }
+        }
+        else
+        {
+            if (random_int(1, 10) < 1)
+            {
+                return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
+            }
+            else {
+                return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 3, 7);
+            }
+        }
+        break;            
+    
+    default:
+        break;
+    }
+    
+    
+    
+    return ground_generate(GROUND_GRASS, 0, 0, 0);
 }
