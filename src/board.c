@@ -217,6 +217,7 @@ char **grid_tui_make(Board *b) {
     char **grid = malloc(MAP_LEN * sizeof(char *));
     Ground *g;
     Couple hb;
+    int k;
     for (int lig = 0; lig < MAP_LEN; lig++) {
         grid[lig] = malloc(MAP_WIDTH * sizeof(char));
         g = b->grid_ground[lig];
@@ -227,10 +228,13 @@ char **grid_tui_make(Board *b) {
         // ajout des abstacles
         for (int i = 0; i < g->nb_obstacles; i++) {
             hb = obstacle_hitbox(g->obstacles[i]);
+            
             for (int j = hb.a; j<=hb.b; j++) {
-                if (!(j < 0 || j >= MAP_WIDTH)) {               
-                    grid[lig][j] = g->obstacles[i]->model;
+                k = j%MAP_WIDTH;
+                if (k<0) {
+                    k = k + MAP_WIDTH;
                 }
+                grid[lig][k] = g->obstacles[i]->model;
             }
         }
     }
