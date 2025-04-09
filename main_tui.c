@@ -116,6 +116,9 @@ int main(void) {
 
         mvprintw(2, MAP_WIDTH + 3, "[DEBUG] JOUEUR EN VIE: %d",p->alive);
         mvprintw(3, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (TOP): %d",check_future_collision(g.board,UP));
+        mvprintw(4, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (DOWN): %d",check_future_collision(g.board,DOWN));
+        mvprintw(5, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (LEFT): %d",check_future_collision(g.board,LEFT));
+        mvprintw(6, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (RIGHT): %d",check_future_collision(g.board,RIGHT));
 
 
         attroff(A_BOLD);
@@ -158,6 +161,7 @@ int main(void) {
                     
                     break;
                 case KEY_DOWN:
+
                     if (jump_back < 3){
                         jump_back++;
                         move_player(DOWN,p);

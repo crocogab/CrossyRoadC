@@ -42,7 +42,7 @@
 #define CAR_MIN_NUMBER 1 //Nombre minimum de voitures sur une ligne
 
 //Définition des attributs de arbre
-#define TREE_LEN 0.5
+#define TREE_LEN 1
 #define TREE_TYPE 101
 
 //Définition des attributs de rock
