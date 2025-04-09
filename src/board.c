@@ -121,10 +121,10 @@ int check_future_collision(Board *b, int direction) {
     float h = b->player->h_position;
     switch (direction) {
         case UP:
-            lig++; 
+            lig--; 
             break;
         case DOWN: 
-            lig--;
+            lig++;
             break;
         case RIGHT:
             h = h + 1;
@@ -137,27 +137,27 @@ int check_future_collision(Board *b, int direction) {
     Couple hb;
     
     if (g->type == GROUND_GRASS) {
-        for (int i = 0; i<g->nb_obstacles; i++) {
+        for (int i = 0; i < g->nb_obstacles; i++) {
             hb = obstacle_hitbox(g->obstacles[i]);
-            if (hb.a <= i && i <= hb.b) {
+            if (hb.a <= h && h <= hb.b) {
                 return COLLIDE_HARMLESS;
             }
         }
         return COLLIDE_NONE;
     }
-    else if (g->type == GROUND_ROAD_CAR || g->type == GROUND_ROAD_TRUCKS || g->type == GROUND_TRAIN) {
-        for (int i = 0; i<g->nb_obstacles; i++) {
+    else if (g->type == GROUND_ROAD_CAR || g->type == GROUND_ROAD_TRUCK || g->type == GROUND_TRAIN) {
+        for (int i = 0; i < g->nb_obstacles; i++) {
             hb = obstacle_hitbox(g->obstacles[i]);
-            if (hb.a <= i && i <= hb.b) {
+            if (hb.a <= h && h <= hb.b) {
                 return COLLIDE_DEADLY;
             }
         }    
         return COLLIDE_NONE;  
     }
-    else if (g->type == GROUND_WATER_LOGS || g->type == GROUND_WATER_LILY) {
-        for (int i = 0; i<g->nb_obstacles; i++) {
+    else if (g->type == GROUND_WATER_LOG || g->type == GROUND_WATER_LILY) {
+        for (int i = 0; i < g->nb_obstacles; i++) {
             hb = obstacle_hitbox(g->obstacles[i]);
-            if (hb.a <= i && i <= hb.b) {
+            if (hb.a <= h && h <= hb.b) {
                 return COLLIDE_NONE;
             }
         }    

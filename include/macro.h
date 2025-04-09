@@ -46,7 +46,7 @@
 #define TREE_TYPE 101
 
 //Définition des attributs de rock
-#define ROCK_LEN 0.5
+#define ROCK_LEN 1
 #define ROCK_TYPE 102
 
 //Définition des attributs de water lily

@@ -161,6 +161,7 @@ int main(void) {
                     
                     break;
                 case KEY_DOWN:
+                    
 
                     if (jump_back < 3){
                         jump_back++;
