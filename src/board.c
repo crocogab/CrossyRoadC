@@ -370,6 +370,74 @@ Ground *gen_next_ground(Board *b, int score)
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 3, 7);
             }
         }
+
+        case GROUND_ROAD_TRUCK:
+        if (score < DIFF_EASY) {
+            if (random_int(1, 10) < 5) {
+                return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
+            }
+            else {
+                return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 1, 3);
+            }
+        }
+        else if (score < DIFF_NORMAL) {
+            if (random_int(1, 10) < 4)
+            {
+                return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
+            }
+            else {
+                return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 2, 4);
+            }
+        }
+        else if (score < DIFF_MEDIUM) {
+            if (random_int(1, 10) < 3)
+            {
+                return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
+            }
+            else {
+                return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 2, 5);
+            }
+        }
+        else if (score < DIFF_HARD) {
+            if (random_int(1, 10) < 2)
+            {
+                return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
+            }
+            else {
+                return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 2, 6);
+            }
+        }
+        else
+        {
+            if (random_int(1, 10) < 1)
+            {
+                return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
+            }
+            else {
+                return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 3, 7);
+            }
+        }
+        
+        break; 
+
+        case GROUND_WATER_LILY:
+        if (score < DIFF_EASY) {
+            return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 4, 7);
+        }
+        else if (score < DIFF_NORMAL) {
+            return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 3, 6);
+        }
+        else if (score < DIFF_MEDIUM) {
+            return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 2, 4);
+        }
+        else if (score < DIFF_HARD) {
+            return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 2, 3);
+        }
+        else {
+            return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 1, 2);
+        }        
+        break;
+
         break;            
     
     default:
