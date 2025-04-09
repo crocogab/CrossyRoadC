@@ -23,14 +23,13 @@
 
 //Définition des types d'obstacles
 #define TYPE_VIDE 80
-#define TYPE_VOITURE 81
 
 //Définition des types de sols
 #define GROUND_GRASS 90
 #define GROUND_ROAD_CAR 91
-#define GROUND_ROAD_TRUCKS 92
+#define GROUND_ROAD_TRUCK 92
 #define GROUND_WATER_LILY 93
-#define GROUND_WATER_LOGS 94
+#define GROUND_WATER_LOG 94
 #define GROUND_TRAIN 95
 
 //Définition des objets
@@ -45,6 +44,21 @@
 //Définition des attributs de arbre
 #define TREE_LEN 0.5
 #define TREE_TYPE 101
+
+//Définition des attributs de rock
+#define ROCK_LEN 0.5
+#define ROCK_TYPE 102
+
+//Définition des attributs de water lily
+#define WATER_LILY_LEN 0.5
+#define WATER_LILY_TYPE 103
+
+//Définition des attributs de truck
+#define TRUCK_LEN 3
+#define TRUCK_TYPE 104
+#define TRUCK_MAX_SPEED 4 //Vitesse maximum du camion en valeur absolue
+#define TRUCK_MIN_SPEED 1 //Vitesse minimum du camion en valeur absolue
+#define TRUCK_MIN_NUMBER 1 //Nombre minimum du camion sur une ligne
 
 // Définition des types de collisions
 #define COLLIDE_NONE 110
@@ -62,10 +76,14 @@
 #define MODEL_CHICKEN '@'
 #define MODEL_TREE 'T'
 #define MODEL_CAR '>'
+#define MODEL_ROCK 'R'
+#define MODEL_WATER_LILY 'W'
+#define MODEL_TRUCK 'D'
 
 
 //Définition des intervalles d'obstacles
 #define INTER_CAR_MIN 3
+#define INTER_TRUCK_MIN 3
 
 //Définition de la taille de la map
 #define MAP_WIDTH_GUI 19 // Largeur de la map en GUI

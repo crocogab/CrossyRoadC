@@ -38,7 +38,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
 {   
     float velo = 0.0;
     int nb = 0;
-
+    int choice = 0;
     //On peut avoir au maximum autant d'obstacles que la map est large
     Obstacle **obs = malloc(sizeof(Obstacle *)*MAP_WIDTH);
     
@@ -51,13 +51,20 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
         velo = 0;
 
         nb = random_int(min_nb, max_nb); //On tire un nombre d'obstacles entre min_nb et max_nb
-
         //On va maintenant générer autant d'obstacles sur la ligne
         if (nb > 0) {
             int *obs_h_pos_array = random_int_array(0, MAP_WIDTH-1, nb);
             for (int i = 0; i < nb; i++)
             {
-                obs[i] = obstacle_make(TREE_TYPE, MODEL_TREE, (int)obs_h_pos_array[i], TREE_LEN);
+                choice = random_int(0, 1); // choix entre un arbre et un rocher
+                if (choice == 0)
+                {
+                    obs[i] = obstacle_make(TREE_TYPE, MODEL_TREE, (int)obs_h_pos_array[i], TREE_LEN);
+                }
+                else
+                {
+                    obs[i] = obstacle_make(ROCK_TYPE, MODEL_ROCK, (int)obs_h_pos_array[i], ROCK_LEN);
+                }
             }
             free(obs_h_pos_array);
         }
@@ -90,6 +97,48 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
 
         break;
 
+    case GROUND_ROAD_TRUCK :
+        
+        //On choisit une vitesse pour les camions, simpliste pour l'instant car on ne choisit que d'alterner entre les vitesses + et -
+        //On ne change pas non plus l'espacement entre les voitures
+        if (previous_velo <= 0)
+        {
+            velo = random_float((float)TRUCK_MIN_SPEED, (float)TRUCK_MAX_SPEED);
+        }
+        else
+        {
+            velo = - random_float((float)TRUCK_MIN_SPEED, (float)TRUCK_MAX_SPEED);
+        }
+
+        //On prends des précautions sur le nombre de voitures maximal
+        if (max_nb >= MAP_WIDTH/INTER_TRUCK_MIN)
+        {
+            max_nb = MAP_WIDTH/INTER_TRUCK_MIN; //On ne peut pas avoir plus de voitures que la map est large
+        }
+        nb = random_int(min_nb, max_nb); //On tire au maximum des voitures espacées de INTER_CAR_MIN ou max_nb
+        for (int i = 0; i < nb; i++)
+        {
+            obs[i] = obstacle_make(TRUCK_TYPE, MODEL_TRUCK, i*INTER_TRUCK_MIN, TRUCK_LEN);
+        }
+        
+        break;
+
+    case GROUND_WATER_LILY :
+        //On choisit une vitesse nulle pour les nénuphares (ils ne bougent pas)
+        velo = 0;
+
+        nb = random_int(min_nb, max_nb); //On tire un nombre d'obstacles entre min_nb et max_nb
+
+        //On va maintenant générer autant d'obstacles sur la ligne
+        if (nb > 0) {
+            int *obs_h_pos_array = random_int_array(0, MAP_WIDTH-1, nb);
+            for (int i = 0; i < nb; i++)
+            {
+                obs[i] = obstacle_make(WATER_LILY_TYPE, MODEL_WATER_LILY, (int)obs_h_pos_array[i], WATER_LILY_LEN);
+            }
+            free(obs_h_pos_array);
+        }
+        break;
 
     default:
         break;
@@ -105,11 +154,11 @@ char ground_model_of_type(int type) {
             return MODEL_GRASS;
         case GROUND_ROAD_CAR:
             return MODEL_ROAD;
-        case GROUND_ROAD_TRUCKS:
+        case GROUND_ROAD_TRUCK:
             return MODEL_ROAD;
         case GROUND_WATER_LILY:
             return MODEL_WATER;
-        case GROUND_WATER_LOGS:
+        case GROUND_WATER_LOG:
             return MODEL_WATER;
         default:
             return 'E';

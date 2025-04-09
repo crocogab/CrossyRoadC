@@ -31,7 +31,7 @@ int main(void) {
     init_pair(1, COLOR_YELLOW, COLOR_BLACK); // jaune sur fond noir
     init_pair(2, COLOR_GREEN, COLOR_BLACK);  // vert sur fond noir
     init_pair(3, COLOR_RED, COLOR_BLACK);    // rouge sur fond noir
-    init_color()
+    init_color();
 
     clear();
 
