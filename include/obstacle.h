@@ -1,6 +1,7 @@
 #ifndef OBSTACLE_H
 #define OBSTACLE_H
 
+#include <stdbool.h>
 
 
 typedef struct _Obstacle {
@@ -29,6 +30,7 @@ void obstacle_update(Obstacle *o, float delta_t, float velocity);
 
 Couple obstacle_hitbox(Obstacle *o);
 
+bool obstacle_is_colliding(Obstacle *o, float player_pos);
 
 #endif
 

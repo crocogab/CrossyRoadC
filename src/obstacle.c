@@ -1,6 +1,7 @@
 #include "obstacle.h"
+#include "macro.h"
 #include <stdlib.h>
-
+#include <stdbool.h>
 
 
 /**
@@ -48,6 +49,12 @@ void obstacle_update(Obstacle *o, float delta_t, float velocity) {
     // met a jour la position de l'obstacle (fonction appelée à chaque boucle)
     o->h_position = o->h_position + delta_t * velocity;
 
+    // modulo à la main parce que math.h::fmod est bizarre
+    if (o->h_position < 0) {
+        o->h_position = o->h_position + MAP_WIDTH;
+    } else if (o->h_position >= MAP_WIDTH) {
+        o->h_position = o->h_position - MAP_WIDTH;
+    }
 }
 
 /**
@@ -72,5 +79,21 @@ Couple obstacle_hitbox(Obstacle *o) {
     ab.b = b;
 
     return ab;
+}
+
+
+/**
+ * Vérifie si un obstacle donné est en collision avec la position du joueur
+ * 
+ * @param[in] o un obstacle
+ * @param[in] player_pos la position du joueur (qui a un hitbox ponctuelle ici)
+ * 
+ * @return `true` ssi il y a collision
+ */
+bool obstacle_is_colliding(Obstacle *o, float player_pos) {
+    Couple hb = obstacle_hitbox(o);
+    bool avant = hb.a <= player_pos && player_pos <= hb.b;
+    bool apres = hb.a <= player_pos - MAP_WIDTH && player_pos - MAP_WIDTH <= hb.b;
+    return avant || apres;
 }
 
