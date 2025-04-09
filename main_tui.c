@@ -26,6 +26,13 @@ int main(void) {
     cbreak();      // désactive le buffering des lignes
     raw();
     typeahead(-1);
+    start_color();
+
+    init_pair(1, COLOR_YELLOW, COLOR_BLACK); // jaune sur fond noir
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);  // vert sur fond noir
+    init_pair(3, COLOR_RED, COLOR_BLACK);    // rouge sur fond noir
+    init_color()
+
     clear();
 
     
@@ -42,31 +49,55 @@ int main(void) {
     keypad(stdscr, TRUE);
     nodelay(stdscr, TRUE);
     
+    int jump_back = 0; // on va limiter le nombre de retours en arriere 
     // Boucle principale
     while (true) {
         
         clear(); //on clean tout
         
-        // Dessiner la zone visible par la caméra
-        for (int y=0;y<(MAP_LEN);y++){
+        // Dessiner la zone visible par la caméra -> enlever les 3 premieres lignes car on a la memorisation
+        for (int y=MEMORISATION-1;y<(MAP_LEN)-MEMORISATION;y++){
             for (int x=0;x<(MAP_WIDTH);x++){
-                mvaddch(y+1,x+1,tableau[y][x]);
+                switch (tableau[y][x])
+                {
+                case MODEL_CHICKEN :
+                    attron(COLOR_PAIR(1)); // active couleur jaune
+                    mvaddch(y-MEMORISATION, x+1, tableau[y][x]);
+                    attroff(COLOR_PAIR(1)); // desactive
+                    break;
+                case MODEL_GRASS:
+                    attron(COLOR_PAIR(2)); // active couleur vert
+                    mvaddch(y-MEMORISATION, x+1, tableau[y][x]);
+                    attroff(COLOR_PAIR(2)); // desactive
+                    break;
+
+                case MODEL_CAR:
+                    attron(COLOR_PAIR(3)); // active couleur rouge
+                    mvaddch(y-MEMORISATION, x+1, tableau[y][x]);
+                    attroff(COLOR_PAIR(3)); // desactive
+                    break;
+                
+                default:
+                    mvaddch(y-MEMORISATION,x+1,tableau[y][x]);
+                    break;
+                }
+                
             }
         }
-        for (int y=0;y<(MAP_LEN+1);y++){
+        for (int y=0;y<(MAP_LEN-2*MEMORISATION);y++){ // 2*memorisatio car on a la memo en haut et en bas
             mvaddch(y,0,ACS_VLINE);
             mvaddch(y,MAP_WIDTH+1,ACS_VLINE);
         }
 
         for (int x=0;x<(MAP_WIDTH+1);x++){
             mvaddch(0,x,ACS_HLINE);
-            mvaddch(MAP_LEN+1,x,ACS_HLINE);
+            mvaddch(MAP_LEN-2*MEMORISATION,x,ACS_HLINE);
         }
 
         mvaddch(0,0,ACS_ULCORNER);
         mvaddch(0,MAP_WIDTH+1,ACS_URCORNER);
-        mvaddch(MAP_LEN+1,0,ACS_LLCORNER);
-        mvaddch(MAP_LEN+1,MAP_WIDTH+1,ACS_LRCORNER);
+        mvaddch(MAP_LEN-2*MEMORISATION,0,ACS_LLCORNER);
+        mvaddch(MAP_LEN-2*MEMORISATION,MAP_WIDTH+1,ACS_LRCORNER);
 
         
         refresh(); // on affiche la grille
@@ -87,21 +118,30 @@ int main(void) {
             switch(ch) {
                 
                 case KEY_UP:
+                    if (jump_back>0){
+                        jump_back--;
+                    }
                     move_player(UP,p);
                     ground_move(g.board,UP);
                     
                     break;
                 case KEY_DOWN:
-                    move_player(DOWN,p);
-                    ground_move(g.board,DOWN);
+                    if (jump_back < 3){
+                        jump_back++;
+                        move_player(DOWN,p);
+                        ground_move(g.board,DOWN);
+                    }
+                    
 
                     break;
                 case KEY_LEFT:
+                    
                     move_player(LEFT,p);
                     ground_move(g.board,LEFT);
                     
                     break;
                 case KEY_RIGHT:
+                    
                     move_player(RIGHT,p);
                     ground_move(g.board,RIGHT);
                     break;

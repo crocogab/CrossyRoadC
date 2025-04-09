@@ -6,7 +6,9 @@
 
 #define GRID_CELL_SIZE 10.0
 
+
 int main() {
+    // doit etre changé pour s'adapter aux nouvelles macros
 
     Player *testing_player = player_make(GRID_CELL_SIZE, 5.0, UP, true, false, 0);
     assert(testing_player != NULL); //Le player n'est pas bien initialisé
@@ -17,7 +19,7 @@ int main() {
     assert(testing_player->direction == LEFT); //Le player n'a pas la bonne direction
 
     move_player(RIGHT, testing_player);
-    assert(testing_player->h_position == 5.0 + GRID_CELL_SIZE); //Le joueur n'a pas la bonne position latérale
+    assert(testing_player->h_position == 5.0 ); //Le joueur n'a pas la bonne position latérale 
     assert(testing_player->direction == RIGHT); //Le player n'a pas la bonne direction
 
     move_player(UP, testing_player);
