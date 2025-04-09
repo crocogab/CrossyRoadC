@@ -50,7 +50,7 @@
 #define ROCK_TYPE 102
 
 //Définition des attributs de water lily
-#define WATER_LILY_LEN 0.5
+#define WATER_LILY_LEN 1
 #define WATER_LILY_TYPE 103
 
 //Définition des attributs de truck
