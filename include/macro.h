@@ -46,7 +46,7 @@
 #define TREE_TYPE 101
 
 //Définition des attributs de rock
-#define ROCK_LEN 1
+#define ROCK_LEN 0.5
 #define ROCK_TYPE 102
 
 //Définition des attributs de water lily
@@ -76,7 +76,7 @@
 #define MODEL_CHICKEN '@'
 #define MODEL_TREE 'T'
 #define MODEL_CAR '>'
-#define MODEL_ROCK 'R'
+#define MODEL_ROCK '#'
 #define MODEL_WATER_LILY 'W'
 #define MODEL_TRUCK 'D'
 
