@@ -42,15 +42,15 @@
 #define CAR_MIN_NUMBER 1 //Nombre minimum de voitures sur une ligne
 
 //Définition des attributs de arbre
-#define TREE_LEN 1
+#define TREE_LEN 0.5
 #define TREE_TYPE 101
 
 //Définition des attributs de rock
-#define ROCK_LEN 1
+#define ROCK_LEN 0.5
 #define ROCK_TYPE 102
 
 //Définition des attributs de water lily
-#define WATER_LILY_LEN 1
+#define WATER_LILY_LEN 0.5
 #define WATER_LILY_TYPE 103
 
 //Définition des attributs de truck
@@ -76,7 +76,7 @@
 #define MODEL_CHICKEN '@'
 #define MODEL_TREE 'T'
 #define MODEL_CAR '>'
-#define MODEL_ROCK 'R'
+#define MODEL_ROCK '#'
 #define MODEL_WATER_LILY 'W'
 #define MODEL_TRUCK 'D'
 
