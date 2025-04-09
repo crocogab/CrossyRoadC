@@ -57,7 +57,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
             int *obs_h_pos_array = random_int_array(0, MAP_WIDTH-1, nb);
             for (int i = 0; i < nb; i++)
             {
-                obs[i] = obstacle_make(TREE_TYPE, TREE_MODEL, (int)obs_h_pos_array[i], TREE_LEN);
+                obs[i] = obstacle_make(TREE_TYPE, MODEL_TREE, (int)obs_h_pos_array[i], TREE_LEN);
             }
             free(obs_h_pos_array);
         }
@@ -85,7 +85,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
         nb = random_int(min_nb, max_nb); //On tire au maximum des voitures espacées de INTER_CAR_MIN ou max_nb
         for (int i = 0; i < nb; i++)
         {
-            obs[i] = obstacle_make(CAR_TYPE, CAR_MODEL, i*INTER_CAR_MIN, CAR_LEN);
+            obs[i] = obstacle_make(CAR_TYPE, MODEL_CAR, i*INTER_CAR_MIN, CAR_LEN);
         }
 
         break;
