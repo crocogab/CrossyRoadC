@@ -4,7 +4,7 @@
 #include "player.h"
 #include "macro.h"
 
-#define GRID_CELL_SIZE 10.0
+#define GRID_CELL_SIZE 1.0
 
 
 int main() {
@@ -15,7 +15,7 @@ int main() {
     assert(testing_player->alive == true); //Le player n'est pas bien initialisé
 
     move_player(LEFT, testing_player);
-    assert(testing_player->h_position == 5.0); //Le player a bougé hors de la map
+    assert(testing_player->h_position == 4.0); //Le player a bougé hors de la map
     assert(testing_player->direction == LEFT); //Le player n'a pas la bonne direction
 
     move_player(RIGHT, testing_player);
