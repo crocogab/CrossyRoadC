@@ -7,9 +7,9 @@
 
 int main (void) {
 
-    Obstacle *voiture = obstacle_make(TYPE_VOITURE, 'i', 0, 2);
+    Obstacle *voiture = obstacle_make(CAR_TYPE, 'i', 0, 2);
 
-    assert (voiture->type == TYPE_VOITURE); // obstacle make initialise mal le type
+    assert (voiture->type == CAR_TYPE); // obstacle make initialise mal le type
 
     Couple hb = obstacle_hitbox(voiture);
     assert (hb.a == 0 && hb.b == 2); // la hitbox est mal calculée
