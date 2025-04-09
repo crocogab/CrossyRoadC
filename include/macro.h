@@ -11,7 +11,7 @@
 //Définition des tailles par défaut de la map, pour les tests uniquement
 #define DEFAULT_CELL_SIZE 1.0
 #define LEFT_MAP_X 0.0
-#define RIGHT_MAP_X 8.0
+#define RIGHT_MAP_X 17.0
 
 //Définition des status de la game
 #define HOME 70 //Le menu d'acceuil est affiché
@@ -45,7 +45,6 @@
 
 //Définition des attributs de arbre
 #define TREE_LEN 0.5
-#define TREE_MODEL 'T'
 #define TREE_TYPE 101
 
 // Définition des types de collisions
@@ -61,7 +60,7 @@
 #define MODEL_RAIL '='
 
 // Définition des modèles d'objets
-#define MODEL_CHICKEN 'i'
+#define MODEL_CHICKEN '@'
 #define MODEL_TREE 'T'
 #define MODEL_CAR '>'
 
@@ -75,17 +74,21 @@
 #define MAP_LEN_GUI 25 // Hauteur de la map en GUI
 #define MAP_LEN_TXT 13 // Hauteur de la map en TUI
 
-#define MAP_WIDTH 9 // Largeur de la map actuelle
-#define MAP_LEN 13 // Hauteur de la map actuelle
+#define MAP_WIDTH 18 // Largeur de la map actuelle
+#define MAP_LEN 26 // Hauteur de la map actuelle
 
 #define START_SIZE 7 // Taille de la zone de départ
 
-#define V_POS MAP_LEN-3 // Position verticale du joueur sur le board
+#define V_POS MAP_LEN-5 // Position verticale du joueur sur le board
 
 //Définition des seuils de difficulté
 #define DIFF_EASY 25 // Le jeu devient plus dur au dessus de 25 de score
 #define DIFF_NORMAL 50 // Le jeu devient plus dur au dessus de 50
 #define DIFF_MEDIUM 75 // Le jeu devient plus dur au dessus de 75
 #define DIFF_HARD 110 // Le jeu devient plus dur au dessus de 110
+
+//Définition de la "taille" de la mémorsation
+#define MEMORISATION 3
+
 
 #endif
