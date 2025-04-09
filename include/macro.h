@@ -37,7 +37,6 @@
 
 //Définition des attributs de voiture
 #define CAR_LEN 1
-#define CAR_MODEL '>'
 #define CAR_TYPE 100
 #define CAR_MAX_SPEED 4 //Vitesse maximum de la voiture en valeur absolue
 #define CAR_MIN_SPEED 1 //Vitesse minimum de la voiture en valeur absolue
