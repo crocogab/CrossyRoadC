@@ -28,10 +28,14 @@ int main(void) {
     typeahead(-1);
     start_color();
 
+    //couleurs personnalisées
+    init_color(8, 20, 255, 0); // vert_arbre
+
+
     init_pair(1, COLOR_YELLOW, COLOR_BLACK); // jaune sur fond noir
     init_pair(2, COLOR_GREEN, COLOR_BLACK);  // vert sur fond noir
     init_pair(3, COLOR_RED, COLOR_BLACK);    // rouge sur fond noir
-    init_color();
+    init_pair(4,8,COLOR_BLACK); // vert_arbre
 
     clear();
 
@@ -76,7 +80,11 @@ int main(void) {
                     mvaddch(y-MEMORISATION, x+1, tableau[y][x]);
                     attroff(COLOR_PAIR(3)); // desactive
                     break;
-                
+                case MODEL_TREE:
+                    attron(COLOR_PAIR(4)); // active couleur vert_arbre
+                    mvaddch(y-MEMORISATION, x+1, tableau[y][x]);
+                    attroff(COLOR_PAIR(4)); // desactive
+                    break;
                 default:
                     mvaddch(y-MEMORISATION,x+1,tableau[y][x]);
                     break;
@@ -104,7 +112,12 @@ int main(void) {
 
 
         attron(A_BOLD); // GRAS
-        mvprintw(1, MAP_WIDTH + 3, "POSITION JOUEUR : %f",p->h_position);
+        mvprintw(1, MAP_WIDTH + 3, "[DEBUG] POSITION JOUEUR : %f",p->h_position);
+
+        mvprintw(2, MAP_WIDTH + 3, "[DEBUG] JOUEUR EN VIE: %d",p->alive);
+        mvprintw(3, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (TOP): %d",check_future_collision(g.board,UP));
+
+
         attroff(A_BOLD);
         
         // Vérification des entrées utilisateur
@@ -118,11 +131,30 @@ int main(void) {
             switch(ch) {
                 
                 case KEY_UP:
-                    if (jump_back>0){
-                        jump_back--;
-                    }
-                    move_player(UP,p);
-                    ground_move(g.board,UP);
+                    switch (check_future_collision(g.board,UP)){
+                        case COLLIDE_NONE:
+                            if (jump_back>0){
+                                jump_back--;
+                            }
+                            move_player(UP,p);
+                            ground_move(g.board,UP);
+                            break;
+                        case COLLIDE_DEADLY:
+                            // A CHANGER -> CHARGER ECRAN MORT
+                            if (jump_back>0){
+                                jump_back--;
+                            }
+                            move_player(UP,p);
+                            ground_move(g.board,UP);
+                            p->alive=false;
+                            g.status=DEAD;
+                            break;
+                        case COLLIDE_HARMLESS:
+                            // il ne se passe rien car on ne peut pas avancer
+                            break;
+                        
+                        }
+                    
                     
                     break;
                 case KEY_DOWN:
