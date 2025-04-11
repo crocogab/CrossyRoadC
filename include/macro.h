@@ -67,6 +67,12 @@
 #define LOG_MIN_SPEED 1 
 #define LOG_MIN_NUMBER 2
 
+// Définition des attributs de train
+#define TRAIN_TYPE 106
+#define TRAIN_MIN_SPEED 5
+#define TRAIN_MAX_SPEED 7
+#define TRAIN_LEN 4 //Taille d'un wagon
+
 // Définition des types de collisions
 #define COLLIDE_NONE 110
 #define COLLIDE_DEADLY 111
@@ -87,6 +93,7 @@
 #define MODEL_WATER_LILY 'W'
 #define MODEL_TRUCK 'D'
 #define MODEL_LOG '&'
+#define MODEL_TRAIN ')'
 
 
 //Définition des intervalles d'obstacles
