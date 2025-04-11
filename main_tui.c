@@ -355,7 +355,7 @@ int main(void) {
             flushinp();
         }
         else{
-            switch (check_future_collision(g.board,NEUTRAL))
+            switch (check_future_collision(g.board,NEUTRAL)) // PROBLEME TRONC
             {
                 case COLLIDE_DEADLY:
             

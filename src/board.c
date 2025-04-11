@@ -245,13 +245,25 @@ char **grid_tui_make(Board *b) {
         for (int i = 0; i < g->nb_obstacles; i++) {
             hb = obstacle_hitbox(g->obstacles[i]);
             
-            for (int j = hb.a; j<=hb.b; j++) {
-                k = j%MAP_WIDTH;
-                if (k<0) {
-                    k = k + MAP_WIDTH;
-                }
+            if (g->obstacles[i]->type != LOG_TYPE){
+                for (int j = hb.a; j<=hb.b; j++) {
+                    k = j%MAP_WIDTH;
+                    if (k<0) {
+                        k = k + MAP_WIDTH;
+                    }
                 grid[lig][k] = g->obstacles[i]->model;
+                }
+
+            }else{
+                for (int j = hb.a; j<hb.b; j++) {
+                    k = j%MAP_WIDTH;
+                    if (k<0) {
+                        k = k + MAP_WIDTH;
+                    }
+                    grid[lig][k] = g->obstacles[i]->model;
             }
+            }
+            
         }
     }
     // ajout du poulet
