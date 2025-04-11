@@ -49,11 +49,14 @@ void obstacle_update(Obstacle *o, float delta_t, float velocity) {
     // met a jour la position de l'obstacle (fonction appelée à chaque boucle)
     o->h_position = o->h_position + delta_t * velocity;
 
-    // modulo à la main parce que math.h::fmod est bizarre
-    if (o->h_position < 0) {
-        o->h_position = o->h_position + MAP_WIDTH;
-    } else if (o->h_position >= MAP_WIDTH) {
-        o->h_position = o->h_position - MAP_WIDTH;
+    if (o->type != TRAIN_TYPE)
+    {
+        // modulo à la main parce que math.h::fmod est bizarre
+        if (o->h_position < 0) {
+            o->h_position = o->h_position + MAP_WIDTH;
+        } else if (o->h_position >= MAP_WIDTH) {
+            o->h_position = o->h_position - MAP_WIDTH;
+        }
     }
 }
 

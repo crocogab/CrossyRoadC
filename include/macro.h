@@ -69,8 +69,10 @@
 
 // Définition des attributs de train
 #define TRAIN_TYPE 106
-#define TRAIN_MIN_SPEED 5
+#define TRAIN_MIN_SPEED 7
 #define TRAIN_MAX_SPEED 7
+#define TRAIN_MIN_TIME 700
+#define TRAIN_MAX_TIME 700
 #define TRAIN_LEN 4 //Taille d'un wagon
 
 // Définition des types de collisions

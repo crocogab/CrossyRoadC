@@ -4,7 +4,7 @@
 #include "macro.h"
 #include "random_custom.h"
 
-Ground *ground_make(Obstacle **obstacles, float velocity, int type, int nb_obstacles, char model) {
+Ground *ground_make(Obstacle **obstacles, float velocity, int type, int nb_obstacles, char model, int special_attr) {
     Ground *g = malloc(sizeof(Ground));
     g->obstacles = obstacles; 
     //Initialisation des vitesses des obstacles sur la ligne
@@ -12,6 +12,7 @@ Ground *ground_make(Obstacle **obstacles, float velocity, int type, int nb_obsta
     g->type = type;
     g->nb_obstacles = nb_obstacles;
     g->model = model;
+    g->special_attr = special_attr;
     return g;
 }
 
@@ -39,6 +40,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
     float velo = 0.0;
     int nb = 0;
     int choice = 0;
+    int special_attr = 0;
     //On peut avoir au maximum autant d'obstacles que la map est large
     Obstacle **obs = malloc(sizeof(Obstacle *)*MAP_WIDTH);
     
@@ -161,11 +163,30 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
         
         break;
 
+    case GROUND_TRAIN:
+        if (previous_velo <= 0)
+        {
+            velo = random_float((float)TRUCK_MIN_SPEED, (float)TRUCK_MAX_SPEED);
+        }
+        else
+        {
+            velo = - random_float((float)TRUCK_MIN_SPEED, (float)TRUCK_MAX_SPEED);
+        }
+
+        special_attr = random_int(TRAIN_MIN_TIME, TRAIN_MAX_TIME);
+
+        obs[0] = obstacle_make(TRAIN_TYPE, MODEL_TRAIN, -1, TRAIN_LEN);
+
+        nb = 1;
+
+        break;
+        
+
     default:
         break;
     }
 
-    Ground *ans = ground_make(obs, velo, type, nb, ground_model_of_type(type));
+    Ground *ans = ground_make(obs, velo, type, nb, ground_model_of_type(type), special_attr);
     return ans;
 }
 

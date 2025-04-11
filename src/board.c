@@ -88,8 +88,36 @@ void board_update(Board* b, float delta_t) {
     for (int lig = 0; lig < MAP_LEN; lig++) {
         ground = b->grid_ground[lig];
 
-        for (int i = 0; i < ground->nb_obstacles; i++) {
-            // update des obstacles
+        /*Si le sol est un train, on vérifie si le special_attr est <= 0, 
+        si oui, on bouge le train et on repasse l'attr à un nb aléatoire
+        si non, on change l'attr et le train ne bouge pas*/
+        if (ground->type == GROUND_TRAIN && ground->special_attr <= 0)
+        {
+            if (ground->type == GROUND_TRAIN && (ground->obstacles[0]->h_position >= MAP_WIDTH || ground->obstacles[0]->h_position < 0))
+            {
+                int s = random_int(0, 1);
+                if (s == 0)
+                {
+                    ground->obstacles[0]->h_position = -TRAIN_LEN;
+                    ground->velocity = TRAIN_MAX_SPEED;
+                }
+                else
+                {
+                    ground->obstacles[0]->h_position = MAP_WIDTH + TRAIN_LEN;
+                    ground->velocity = -TRAIN_MAX_SPEED;
+                }
+                ground->special_attr = random_int(TRAIN_MIN_TIME, TRAIN_MAX_TIME);
+            }
+        }
+        else if (ground->type == GROUND_TRAIN && ground->special_attr > 0)
+        {
+            ground->velocity == 0;
+            ground->special_attr -= 1;
+        }
+
+        for (int i = 0; i < ground->nb_obstacles; i++) 
+        {
+        // update des obstacles
             obst = ground->obstacles[i]; // obst ou *obst ?????
             obstacle_update(obst, delta_t, ground->velocity);
         }
@@ -245,25 +273,35 @@ char **grid_tui_make(Board *b) {
         for (int i = 0; i < g->nb_obstacles; i++) {
             hb = obstacle_hitbox(g->obstacles[i]);
             
-            if (g->obstacles[i]->type != LOG_TYPE){
-                for (int j = hb.a; j<=hb.b; j++) {
-                    k = j%MAP_WIDTH;
-                    if (k<0) {
-                        k = k + MAP_WIDTH;
+            if (g->obstacles[i]->type == TRAIN_TYPE)
+            {
+                // Pour les trains, on affiche uniquement les parties du train qui sont dans la carte
+                for (int j = hb.a; j <= hb.b; j++) {
+                    if (j >= 0 && j < MAP_WIDTH) {
+                        grid[lig][j] = g->obstacles[i]->model;
                     }
-                grid[lig][k] = g->obstacles[i]->model;
                 }
-
-            }else{
-                for (int j = hb.a; j<hb.b; j++) {
-                    k = j%MAP_WIDTH;
-                    if (k<0) {
-                        k = k + MAP_WIDTH;
-                    }
+            }
+            else
+            {
+                if (g->obstacles[i]->type != LOG_TYPE){
+                    for (int j = hb.a; j<=hb.b; j++) {
+                        k = j%MAP_WIDTH;
+                        if (k<0) {
+                            k = k + MAP_WIDTH;
+                        }
                     grid[lig][k] = g->obstacles[i]->model;
+                    }
+                }else{
+                    for (int j = hb.a; j<hb.b; j++) {
+                        k = j%MAP_WIDTH;
+                        if (k<0) {
+                            k = k + MAP_WIDTH;
+                        }
+                        grid[lig][k] = g->obstacles[i]->model;
+                }
+                }
             }
-            }
-            
         }
     }
     // ajout du poulet

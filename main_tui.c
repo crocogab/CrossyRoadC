@@ -195,7 +195,15 @@ int main(void) {
         // mvprintw(4, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (DOWN): %d",check_future_collision(g.board,DOWN));
         // mvprintw(5, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (LEFT): %d",check_future_collision(g.board,LEFT));
         // mvprintw(6, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (RIGHT): %d",check_future_collision(g.board,RIGHT));
-
+        
+        for (int i = 0; i < MAP_LEN; i++)
+        {
+            if (g.board->grid_ground[i]->type == GROUND_TRAIN)
+            {
+                mvprintw(i, MAP_WIDTH + 3, "[DEBUG] s_attr : %d, velocity : %f, h_pos : %f", g.board->grid_ground[i]->special_attr, g.board->grid_ground[i]->velocity, g.board->grid_ground[i]->obstacles[0]->h_position);
+            }
+        }
+        
         mvprintw(1, MAP_WIDTH + 3, "SCORE : %d",score_maxi);
 
 

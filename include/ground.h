@@ -9,9 +9,10 @@ typedef struct _Ground {
     int type;
     int nb_obstacles; //Le nombre d'obstacles sur la ligne
     char model;
+    int special_attr; //Un attribut spécial pour certains types d'obstacles (les trains :/)
 } Ground;
 
-Ground *ground_make(Obstacle **obscacles, float velocity, int type, int nb_obstacles, char model);
+Ground *ground_make(Obstacle **obscacles, float velocity, int type, int nb_obstacles, char model, int special_attr);
 
 void ground_free(Ground *g);
 
