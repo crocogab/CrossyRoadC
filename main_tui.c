@@ -7,6 +7,7 @@
 #include "game.h"
 #include "macro.h"
 #include "board.h"
+#include <time.h>
 
 
 
@@ -79,7 +80,10 @@ int display_game_over(int score) {
 }
 
 int main(void) {
-    
+
+    //Initialisation de l'aléatoire
+    srand(time(NULL));
+
     // on commence par initialiser la game
     Game g = game_make(TO_LAUNCH);
     
