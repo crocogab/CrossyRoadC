@@ -319,236 +319,276 @@ Ground *gen_next_ground(Board *b, int score)
     {
     case GROUND_GRASS:
         if (score < DIFF_EASY) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 3){
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
             } else if (r <= 7) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 1, 3);
             } else if (r <= 9) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 1, 2);
-            } else {
+            } else if (r <= 11) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 4, 7);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else if (score < DIFF_NORMAL) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 2){
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 2, 4);
             } else if (r <= 6){
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 4);
             } else if (r <= 8) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 1, 3);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 3, 6);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else if (score < DIFF_MEDIUM) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 1){
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 3, 5);
             } else if (r <= 5){
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 5);
             } else if (r <= 8) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 2, 4);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 3, 4);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else if (score < DIFF_HARD) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 1){
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 4, 6);
             } else if (r <= 5){
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 6);
             } else if (r <= 8) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 2, 5);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 2, 3);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 3) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 3, 7);
             } else if (r <= 7) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 3, 6);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 1, 2);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         break;
 
     case GROUND_ROAD_CAR:
         if (score < DIFF_EASY) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 4) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
             } else if (r <= 8) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 1, 3);
             } else if (r <= 9) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 4, 7);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 1, 2);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else if (score < DIFF_NORMAL) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 3) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 2, 4);
             } else if (r <= 7) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 4);
             } else if (r <= 9) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 1, 3);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 4, 7);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else if (score < DIFF_MEDIUM) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 2) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 2, 5);
             } else if (r <= 5) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 5);
             } else if (r <= 8) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 2, 3);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 3, 6);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else if (score < DIFF_HARD) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 1) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 3, 6);
             } else if (r <= 4) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 6);
             } else if (r <= 8) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 2, 4);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 3, 4);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 4) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 3, 7);
             } else if (r <= 8) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 3, 5);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 1, 2);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         break;
 
     case GROUND_ROAD_TRUCK:
         if (score < DIFF_EASY) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 5) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
             } else if (r <= 9) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 1, 3);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 1, 2);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else if (score < DIFF_NORMAL) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 3) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 2, 4);
             } else if (r <= 7) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 4);
             } else if (r <= 9) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 1, 3);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 3, 6);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else if (score < DIFF_MEDIUM) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 2) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 2, 5);
             } else if (r <= 6) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 5);
             } else if (r <= 8) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 3, 5);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 3, 5);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else if (score < DIFF_HARD) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 1) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 3, 6);
             } else if (r <= 4) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 3, 6);
             } else if (r <= 8) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 3, 5);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 2, 4);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 1) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 2);
             } else if (r <= 4) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 3, 6);
             } else if (r <= 8) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 3, 6);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_WATER_LILY, b->grid_ground[0]->velocity, 1, 3);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         break;
 
     case GROUND_WATER_LILY:
         if (score < DIFF_EASY) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 5) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 3);
             } else if (r <= 8) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 1, 2);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 1, 2);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else if (score < DIFF_NORMAL) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 4) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 2, 3);
             } else if (r <= 8) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 1, 3);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 1, 2);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else if (score < DIFF_MEDIUM) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 3) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 2, 4);
             } else if (r <= 7) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 4);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 2, 3);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else if (score < DIFF_HARD) {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 2) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 3, 4);
             } else if (r <= 6) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 2, 5);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 2, 4);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         else {
-            int r = random_int(1, 10);
+            int r = random_int(1, 12);
             if (r <= 2) {
                 return ground_generate(GROUND_GRASS, b->grid_ground[0]->velocity, 1, 2);
             } else if (r <= 6) {
                 return ground_generate(GROUND_ROAD_CAR, b->grid_ground[0]->velocity, 3, 6);
-            } else {
+            } else if (r <= 10) {
                 return ground_generate(GROUND_ROAD_TRUCK, b->grid_ground[0]->velocity, 3, 5);
+            } else {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 5);
             }
         }
         break;
