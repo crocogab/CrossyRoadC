@@ -63,11 +63,47 @@ test-job-ground:
         echo "$OUTPUT";
         exit 1; 
       else
-        echo "Tests de grond reussis !";
+        echo "Tests de ground reussis !";
       fi
   only:
     - dev
 
+
+test-job-board:
+  stage: test
+  image: alpine:latest
+  script:
+    - apk update
+    - apk add bash make compiler-rt clang 
+    - echo "Début du test du modèle board."
+    - OUTPUT=$(make run_test_board 2>&1) || true # récupère sortie standard et sortie erreur
+    - if echo "$OUTPUT" | grep -q "Assertion failed\|assertion\|SIGABRT"; then
+        echo "Problème dans le modèle board.";
+        echo "$OUTPUT";
+        exit 1; 
+      else
+        echo "Tests de board reussis !";
+      fi
+  only:
+    - dev
+
+test-job-random-custom:
+  stage: test
+  image: alpine:latest
+  script:
+    - apk update
+    - apk add bash make compiler-rt clang 
+    - echo "Début du test du modèle random-custom."
+    - OUTPUT=$(make run_test_random_custom 2>&1) || true # récupère sortie standard et sortie erreur
+    - if echo "$OUTPUT" | grep -q "Assertion failed\|assertion\|SIGABRT"; then
+        echo "Problème dans le modèle random-custom.";
+        echo "$OUTPUT";
+        exit 1; 
+      else
+        echo "Tests de random-custom reussis !";
+      fi
+  only:
+    - dev
 
 final-test:
   stage: test
