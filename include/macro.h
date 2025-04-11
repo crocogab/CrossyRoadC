@@ -60,6 +60,13 @@
 #define TRUCK_MIN_SPEED 1 //Vitesse minimum du camion en valeur absolue
 #define TRUCK_MIN_NUMBER 1 //Nombre minimum du camion sur une ligne
 
+// Définition des attributs de log
+#define LOG_LEN 4
+#define LOG_TYPE 105
+#define LOG_MAX_SPEED 3
+#define LOG_MIN_SPEED 1 
+#define LOG_MIN_NUMBER 2
+
 // Définition des types de collisions
 #define COLLIDE_NONE 110
 #define COLLIDE_DEADLY 111
@@ -79,11 +86,13 @@
 #define MODEL_ROCK '#'
 #define MODEL_WATER_LILY 'W'
 #define MODEL_TRUCK 'D'
+#define MODEL_LOG '&'
 
 
 //Définition des intervalles d'obstacles
 #define INTER_CAR_MIN 6
 #define INTER_TRUCK_MIN 8
+#define INTER_LOG_MIN 8
 
 //Définition de la taille de la map
 #define MAP_WIDTH_GUI 19 // Largeur de la map en GUI
