@@ -54,7 +54,7 @@
 #define WATER_LILY_TYPE 103
 
 //Définition des attributs de truck
-#define TRUCK_LEN 4
+#define TRUCK_LEN 3
 #define TRUCK_TYPE 104
 #define TRUCK_MAX_SPEED 4 //Vitesse maximum du camion en valeur absolue
 #define TRUCK_MIN_SPEED 1 //Vitesse minimum du camion en valeur absolue
@@ -82,8 +82,8 @@
 
 
 //Définition des intervalles d'obstacles
-#define INTER_CAR_MIN 8
-#define INTER_TRUCK_MIN 10
+#define INTER_CAR_MIN 6
+#define INTER_TRUCK_MIN 8
 
 //Définition de la taille de la map
 #define MAP_WIDTH_GUI 19 // Largeur de la map en GUI
