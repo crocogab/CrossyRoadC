@@ -94,6 +94,14 @@ void board_update(Board* b, float delta_t) {
             obstacle_update(obst, delta_t, ground->velocity);
         }
     }
+
+    if (b->grid_ground[V_POS]->type == GROUND_WATER_LOG) { 
+        // on suit le mouvement des rondins (on suppose qu'on y est sinon le joueur meurt)
+        b->player->h_position = b->player->h_position + b->grid_ground[V_POS]->velocity * delta_t;
+    } else {
+        // hors rondin on reste sur la grille
+        b->player->h_position = round(b->player->h_position);
+    }
 }
 
 
