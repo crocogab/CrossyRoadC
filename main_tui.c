@@ -12,41 +12,37 @@
 
 
 /**
- * Affiche un écran de fin de partie avec l'option de quitter uniquement.
- * La fonction attend que l'utilisateur appuie sur 'q' pour quitter.
- * 
+ * Affiche un écran de fin de partie avec les options de rejouer ou quitter.
+ * La fonction attend que l'utilisateur appuie sur 'r' pour rejouer ou 'q' pour quitter.
+ *
  * @param score Le score final du joueur
- * @return 1 si l'utilisateur quitte, 0 sinon (bien que cette fonction ne retourne que 1)
+ * @return 0 si l'utilisateur choisit de rejouer, 1 si l'utilisateur quitte
  */
 int display_game_over(int score) {
-    
     clear();
-    
-    
     int max_y, max_x;
     getmaxyx(stdscr, max_y, max_x);
-    
-    
     int center_y = max_y / 2;
     int center_x = max_x / 2;
     
     // message de fin de partie
-    attron(A_BOLD | COLOR_PAIR(3)); 
+    attron(A_BOLD | COLOR_PAIR(3));
     mvprintw(center_y - 4, center_x - 4, "GAME OVER");
     attroff(A_BOLD | COLOR_PAIR(3));
     
     // score
     mvprintw(center_y - 2, center_x - 8, "Votre score: %d", score);
     
-    
+    // options
     attron(A_BOLD);
-    mvprintw(center_y + 2, center_x - 14, "Appuyez sur 'q' pour quitter");
+    mvprintw(center_y + 1, center_x - 14, "Appuyez sur 'r' pour rejouer");
+    mvprintw(center_y + 3, center_x - 14, "Appuyez sur 'q' pour quitter");
     attroff(A_BOLD);
     
-    // Carré autour 
-    for (int y = center_y - 6; y <= center_y + 4; y++) {
+    // Carré autour
+    for (int y = center_y - 6; y <= center_y + 5; y++) {
         for (int x = center_x - 16; x <= center_x + 16; x++) {
-            if (y == center_y - 6 || y == center_y + 4) {
+            if (y == center_y - 6 || y == center_y + 5) {
                 mvaddch(y, x, ACS_HLINE);
             }
             else if (x == center_x - 16 || x == center_x + 16) {
@@ -54,30 +50,26 @@ int display_game_over(int score) {
             }
         }
     }
-    
-    
     mvaddch(center_y - 6, center_x - 16, ACS_ULCORNER);
     mvaddch(center_y - 6, center_x + 16, ACS_URCORNER);
-    mvaddch(center_y + 4, center_x - 16, ACS_LLCORNER);
-    mvaddch(center_y + 4, center_x + 16, ACS_LRCORNER);
-    
+    mvaddch(center_y + 5, center_x - 16, ACS_LLCORNER);
+    mvaddch(center_y + 5, center_x + 16, ACS_LRCORNER);
     
     refresh();
-    
-    
     nodelay(stdscr, FALSE); // mode bloquant
-    
     
     int ch;
     do {
         ch = getch();
-    } while (ch != 'q' && ch != 'Q');
+    } while (ch != 'q' && ch != 'Q' && ch != 'r' && ch != 'R');
     
-    // no bloquanr avant de quitter
+    // mode non bloquant avant de quitter
     nodelay(stdscr, TRUE);
     
-    return 1; 
+    // retourne 0 pour rejouer, 1 pour quitter
+    return (ch == 'q' || ch == 'Q') ? 1 : 0;
 }
+
 
 int main(void) {
 
@@ -120,7 +112,7 @@ int main(void) {
     board_set_player(g.board,p);
     
     char ** tableau = grid_tui_make(g.board);
-    printf("%c",tableau[0][0]);
+    //printf("%c",tableau[0][0]);
     
     
     
@@ -132,7 +124,7 @@ int main(void) {
     int score_actu = 0;
     int score_maxi =0; 
     // Boucle principale
-    while (true) {
+    while (g.status==PLAYING) {
         
         clear(); //on clean tout
         
@@ -196,15 +188,15 @@ int main(void) {
 
 
         attron(A_BOLD); // GRAS
-        mvprintw(1, MAP_WIDTH + 3, "[DEBUG] POSITION JOUEUR : %f",p->h_position);
+        // mvprintw(1, MAP_WIDTH + 3, "[DEBUG] POSITION JOUEUR : %f",p->h_position);
 
-        mvprintw(2, MAP_WIDTH + 3, "[DEBUG] JOUEUR EN VIE: %d",p->alive);
-        mvprintw(3, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (TOP): %d",check_future_collision(g.board,UP));
-        mvprintw(4, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (DOWN): %d",check_future_collision(g.board,DOWN));
-        mvprintw(5, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (LEFT): %d",check_future_collision(g.board,LEFT));
-        mvprintw(6, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (RIGHT): %d",check_future_collision(g.board,RIGHT));
+        // mvprintw(2, MAP_WIDTH + 3, "[DEBUG] JOUEUR EN VIE: %d",p->alive);
+        // mvprintw(3, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (TOP): %d",check_future_collision(g.board,UP));
+        // mvprintw(4, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (DOWN): %d",check_future_collision(g.board,DOWN));
+        // mvprintw(5, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (LEFT): %d",check_future_collision(g.board,LEFT));
+        // mvprintw(6, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (RIGHT): %d",check_future_collision(g.board,RIGHT));
 
-        mvprintw(7, MAP_WIDTH + 3, "[DEBUG] SCORE : %d",score_maxi);
+        mvprintw(1, MAP_WIDTH + 3, "SCORE : %d",score_maxi);
 
 
         attroff(A_BOLD);
@@ -236,10 +228,26 @@ int main(void) {
                             
                             p->alive=false;
                             g.status=DEAD;
-                            if (display_game_over(score_maxi)==1){
+                            int exit_status=display_game_over(score_maxi);
+                            if (exit_status){
                                 endwin(); // fermer ncurses
                                 exit(0);
 
+                            }else{
+                                // on doit reset le score et recommencer
+                                grid_tui_free(tableau); // on clean pour éviter fuites de mémoire
+                                board_free(g.board);
+
+                                g= game_make(TO_LAUNCH); 
+                                p=player_start();
+                                game_start(&g);
+                                board_set_player(g.board,p);
+                                tableau=grid_tui_make(g.board);
+                                g.status=PLAYING;
+                                p->score=0;
+                                score_actu=0;
+                                score_maxi=0;
+                                clear();
                             }
                             break;
                         case COLLIDE_HARMLESS:
@@ -269,10 +277,26 @@ int main(void) {
                                 
                                 p->alive=false;
                                 g.status=DEAD;
-                                if (display_game_over(score_maxi)==1){
+                                int exit_status=display_game_over(score_maxi);
+                                if (exit_status){
                                     endwin(); // fermer ncurses
                                     exit(0);
 
+                                }else{
+                                    // on doit reset le score et recommencer
+                                    grid_tui_free(tableau); // on clean pour éviter fuites de mémoire
+                                    board_free(g.board);
+
+                                    g= game_make(TO_LAUNCH); 
+                                    p=player_start();
+                                    game_start(&g);
+                                    board_set_player(g.board,p);
+                                    tableau=grid_tui_make(g.board);
+                                    g.status=PLAYING;
+                                    p->score=0;
+                                    score_actu=0;
+                                    score_maxi=0;
+                                    clear();
                                 }
                                 break;
                             case COLLIDE_HARMLESS:
@@ -296,10 +320,26 @@ int main(void) {
                         
                         p->alive=false;
                         g.status=DEAD;
-                        if (display_game_over(score_maxi)==1){
+                        int exit_status=display_game_over(score_maxi);
+                        if (exit_status){
                             endwin(); // fermer ncurses
                             exit(0);
 
+                        }else{
+                            // on doit reset le score et recommencer
+                            grid_tui_free(tableau); // on clean pour éviter fuites de mémoire
+                            board_free(g.board);
+
+                            g= game_make(TO_LAUNCH); 
+                            p=player_start();
+                            game_start(&g);
+                            board_set_player(g.board,p);
+                            tableau=grid_tui_make(g.board);
+                            g.status=PLAYING;
+                            p->score=0;
+                            score_actu=0;
+                            score_maxi=0;
+                            clear();
                         }
                         break;
                     case COLLIDE_HARMLESS :
@@ -321,10 +361,26 @@ int main(void) {
                     case COLLIDE_DEADLY:
                         p->alive=false;
                         g.status=DEAD;
-                        if (display_game_over(score_maxi)==1){
+                        int exit_status=display_game_over(score_maxi);
+                        if (exit_status){
                             endwin(); // fermer ncurses
                             exit(0);
 
+                        }else{
+                            // on doit reset le score et recommencer
+                            grid_tui_free(tableau); // on clean pour éviter fuites de mémoire
+                            board_free(g.board);
+
+                            g= game_make(TO_LAUNCH); 
+                            p=player_start();
+                            game_start(&g);
+                            board_set_player(g.board,p);
+                            tableau=grid_tui_make(g.board);
+                            g.status=PLAYING;
+                            p->score=0;
+                            score_actu=0;
+                            score_maxi=0;
+                            clear();
                         }
                         break;
                     case COLLIDE_HARMLESS :
@@ -339,9 +395,26 @@ int main(void) {
             
                             p->alive=false;
                             g.status=DEAD;
-                            if (display_game_over(score_maxi)==1){
+                            int exit_status=display_game_over(score_maxi);
+                            if (exit_status){
                                 endwin(); // fermer ncurses
                                 exit(0);
+
+                            }else{
+                                // on doit reset le score et recommencer
+                                grid_tui_free(tableau); // on clean pour éviter fuites de mémoire
+                                board_free(g.board);
+
+                                g= game_make(TO_LAUNCH); 
+                                p=player_start();
+                                game_start(&g);
+                                board_set_player(g.board,p);
+                                tableau=grid_tui_make(g.board);
+                                g.status=PLAYING;
+                                p->score=0;
+                                score_actu=0;
+                                score_maxi=0;
+                                clear();
                             }
                             break;
         
@@ -361,9 +434,25 @@ int main(void) {
             
                     p->alive=false;
                     g.status=DEAD;
-                    if (display_game_over(score_maxi)==1){
+                    int exit_status=display_game_over(score_maxi);
+                    if (exit_status){
                         endwin(); // fermer ncurses
                         exit(0);
+
+                    }else{
+                                
+                        grid_tui_free(tableau); // on clean pour éviter fuites de mémoire
+                        board_free(g.board);
+                        g= game_make(TO_LAUNCH); 
+                        p=player_start();
+                        game_start(&g);
+                        board_set_player(g.board,p);
+                        tableau=grid_tui_make(g.board);
+                        g.status=PLAYING;
+                        p->score=0;
+                        score_actu=0;
+                        score_maxi=0;
+                        clear();
                     }
                     break;
         
