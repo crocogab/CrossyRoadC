@@ -209,6 +209,8 @@ int main(void) {
 
         attroff(A_BOLD);
         
+        board_update(g.board,0.01); 
+        
         // Vérification des entrées utilisateur
         int ch = getch();
         if (ch != ERR) {
@@ -330,27 +332,49 @@ int main(void) {
                         break;
                     }
                     break;
+                default:
+                    switch (check_future_collision(g.board,NEUTRAL))
+                    {
+                        case COLLIDE_DEADLY:
+            
+                            p->alive=false;
+                            g.status=DEAD;
+                            if (display_game_over(score_maxi)==1){
+                                endwin(); // fermer ncurses
+                                exit(0);
+                            }
+                            break;
+        
+                        default:
+                            break;
+                    }
+                    break;
+
             }
             
             flushinp();
         }
+        else{
+            switch (check_future_collision(g.board,NEUTRAL))
+            {
+                case COLLIDE_DEADLY:
+            
+                    p->alive=false;
+                    g.status=DEAD;
+                    if (display_game_over(score_maxi)==1){
+                        endwin(); // fermer ncurses
+                        exit(0);
+                    }
+                    break;
+        
+                default:
+                break;
+            }
+
+        }
 
         // UPDATE SI LE JOUEUR A PAS BOUGE
-        switch (check_future_collision(g.board,NEUTRAL))
-        {
-        case COLLIDE_DEADLY:
-            // A CHANGER
-            p->alive=false;
-            g.status=DEAD;
-            if (display_game_over(score_maxi)==1){
-                endwin(); // fermer ncurses
-                exit(0);
-            }
-            break;
         
-        default:
-            break;
-        }
 
         // On met a jour le score
         if (score_actu>score_maxi){
@@ -358,7 +382,7 @@ int main(void) {
         }
         
         
-        board_update(g.board,0.01); 
+        
         
         grid_tui_free(tableau);
         tableau=grid_tui_make(g.board);

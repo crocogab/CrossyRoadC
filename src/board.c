@@ -127,6 +127,11 @@ int check_future_collision(Board *b, int direction) {
     // on change virtuellement la ligne et la position du joueur en fonction du coup donné
     int lig = V_POS;
     float h = b->player->h_position;
+
+    if (h<0 ||(int) h>= MAP_WIDTH){
+        return COLLIDE_DEADLY; // hors de la map
+    }
+
     switch (direction) {
         case UP:
             lig--; 
