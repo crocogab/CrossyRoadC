@@ -123,6 +123,7 @@ void draw_board_line(int x, int type, Camera cam, Display_informations display, 
         p3d_2.x = LEFT_MAP_X;
         p3d_3.x = RIGHT_MAP_X;
         p3d_4.x = RIGHT_MAP_X;
+        
         if (x % 2 == 1)
         {
             draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.GRASS_COLOR_DARK, cam, renderer);
@@ -131,6 +132,28 @@ void draw_board_line(int x, int type, Camera cam, Display_informations display, 
         {
             draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.GRASS_COLOR_BRIGHT, cam, renderer);
         }
+        
+
+        // Special debug, on affiche les bordures des cases
+        p3d_1.x = LEFT_MAP_X;
+        p3d_2.x = LEFT_MAP_X;
+        p3d_3.x = LEFT_MAP_X+display.tile_size;
+        p3d_4.x = LEFT_MAP_X+display.tile_size;
+        for (int i = 0; i < MAP_WIDTH; i++)
+        {
+            Point3d line_start = p3d_1;
+            Point3d line_end = p3d_2;
+            line_start.z += 1; // Slightly elevate the line for visibility
+            line_end.z += 1;
+            line_start.x += 2;
+            line_end.x += 2;
+            draw_quad_from_3d(p3d_1, p3d_2, line_end, line_start, colors.DIRT_COLOR, cam, renderer);
+            p3d_1.x += display.tile_size;
+            p3d_2.x += display.tile_size;
+            p3d_3.x += display.tile_size;
+            p3d_4.x += display.tile_size;
+        }
+        
 
         // Dessin des bordures
         p3d_1.x = 0;
