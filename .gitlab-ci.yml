@@ -1,9 +1,9 @@
 build-job:
   stage: build
-  image: debian:bullseye
+  image: debian:bullseye 
   script:
-    - apk update
-    - apk add clang make compiler-rt ncurses-dev musl-dev sdl2-dev libsdl2-image-dev libjson-c-dev
+    - apt-get update
+    - apt-get install -y clang make libncurses-dev libsdl2-dev libsdl2-image-dev libjson-c-dev
     - echo "Test du Makefile"
     - make all
     - if [ -f "main_tui" ]; then echo "Makefile is compiling."; else echo "main_tui not found. " && exit 1; fi
