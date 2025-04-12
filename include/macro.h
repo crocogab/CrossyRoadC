@@ -31,6 +31,7 @@
 #define GROUND_WATER_LILY 93
 #define GROUND_WATER_LOG 94
 #define GROUND_TRAIN 95
+#define GROUND_ROAD_BORDER 96 //Utile pour gui
 
 //Définition des objets
 
@@ -126,6 +127,39 @@
 
 //Définition de la "taille" de la mémorsation
 #define MEMORISATION 3
+
+//Définition des positions de la sprite_sheet
+#define BLUE_CAR_ID 0
+#define BLUE_TRUCK_ID 1
+#define CHICKEN_ID 2
+#define COIN_ID 3
+#define GAZ_TRUCK_ID 4
+#define LILYPAD_ID 5
+#define LOG_ID 6
+#define ORANGE_CAR_ID 7
+#define PURPLE_CAR_ID 8
+#define RAIL_ID 9
+#define RED_TRUCK_ID 10
+#define ROCK_ID 11
+#define TRAIN_ID 12
+#define TRAIN_POLE_ID 13
+#define TREE_ID 14
+
+#define BLUE_CAR_NB 2
+#define BLUE_TRUCK_NB 2
+#define CHICKEN_NB 4
+#define COIN_NB 1
+#define GAZ_TRUCK_NB 2
+#define LILYPAD_NB 3
+#define LOG_NB 4
+#define ORANGE_CAR_NB 2
+#define PURPLE_CAR_NB 2
+#define RAIL_NB 1
+#define RED_TRUCK_NB 2
+#define ROCK_NB 2
+#define TRAIN_NB 1
+#define TRAIN_POLE_NB 2
+#define TREE_NB 5
 
 
 #endif
