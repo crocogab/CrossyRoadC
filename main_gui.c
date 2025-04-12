@@ -114,8 +114,12 @@ int main() {
                         ground_move(b,UP, &sprite_sheet);
                     }
                     if (event.key.keysym.sym==SDLK_DOWN){
-                        move_player(DOWN,p);
-                        ground_move(b,DOWN, &sprite_sheet);
+                        if (jump_back < 3){
+                            move_player(DOWN,p);
+                            ground_move(b,DOWN, &sprite_sheet);
+
+                        }
+                        
                     }
 
                 default:
@@ -123,6 +127,41 @@ int main() {
             }
         }
         // 2. Traiter action
+        int collision_type = check_future_collision(b, p->direction);
+
+        switch (collision_type) {
+            case COLLIDE_NONE:
+                //mouvement autorise
+                if (p->direction == UP) {
+                    score_actu++;
+                    if (jump_back > 0) {
+                        jump_back--;
+                    }
+                } else if (p->direction == DOWN) {
+                    score_actu--;
+                    jump_back++;
+                }
+            
+            
+                if (p->direction != NEUTRAL) {
+                    move_player(p->direction, p);
+                    ground_move(b, p->direction,&sprite_sheet);
+                }
+                break;
+            
+            case COLLIDE_DEADLY:
+                // Collision mortelle
+                p->alive = false;
+                g->status = DEAD;
+                break;
+            
+            case COLLIDE_HARMLESS:
+                // Collision sans effet, on ne fait rien
+                break;
+        }
+
+
+
 
         // 3 Maj des mobs. 
         board_update(b, 0.01);
@@ -149,7 +188,7 @@ int main() {
 
         
         
-        draw_board(b,cam,display,colors,renderer);
+        draw_board(b,cam,display,colors,renderer,&sprite_sheet);
         draw_chicken(p,&sprite_sheet,renderer,cam,display);
         
         SDL_RenderPresent(renderer);
