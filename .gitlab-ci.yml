@@ -1,6 +1,6 @@
 build-job:
   stage: build
-  image: alpine:latest 
+  image: debian:bullseye
   script:
     - apk update
     - apk add clang make compiler-rt ncurses-dev musl-dev sdl2-dev libsdl2-image-dev libjson-c-dev
