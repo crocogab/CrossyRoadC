@@ -69,6 +69,9 @@ int main() {
     SDL_Event event;
     int running = 1;
 
+    // On genere un board de test
+    Board *test_board = board_make();
+
     while (running)
     {
         if(SDL_PollEvent(&event))
@@ -177,8 +180,6 @@ int main() {
         }
         */
 
-        // On genere un board de test
-        Board *test_board = board_make();
         draw_board(test_board, cam, display, colors, renderer);
 
         // Switch framebuffer
@@ -189,6 +190,8 @@ int main() {
     }
 
   IMG_Quit();
+
+  board_free(test_board);
 
   unload_spritesheet(sprite_sheet);
   SDL_DestroyWindow(window);

@@ -440,7 +440,9 @@ Sprite_sheet load_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *
         {
             ans_sheet.sprites[i].lenght = (float)ans_sheet.sprites[i].sprites_coord[0].h;
         }
-    }
+        }
+        // Libération de l'objet JSON
+    json_object_put(j_file);
     return ans_sheet;
 }
 
@@ -459,4 +461,5 @@ void unload_spritesheet(Sprite_sheet sprite_sheet)
     {
         SDL_DestroyTexture(sprite_sheet.sprite_sheet);
     }
+    
 }
