@@ -377,7 +377,7 @@ void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer,
 Sprite_sheet load_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *renderer, Camera cam)
 {
     // On charge la grille de lecture en mémoire
-    int sprite_reading_grid[15] = {BLUE_CAR_NB, BLUE_TRUCK_NB, CHICKEN_NB, COIN_NB, GAZ_TRUCK_NB, LILYPAD_NB, LOG_NB, ORANGE_CAR_NB, PURPLE_CAR_NB, RAIL_NB, RED_TRUCK_NB, ROCK_NB, TRAIN_NB, TRAIN_POLE_NB, TREE_NB};
+    int sprite_reading_grid[17] = {BLUE_CAR_NB, BLUE_TRUCK_NB, CHICKEN_NB, COIN_NB, GAZ_TRUCK_NB, LILYPAD_NB, LOG_LONG_NB, LOG_MEDIUM_ID, LOG_SMALL_ID, ORANGE_CAR_NB, PURPLE_CAR_NB, RAIL_NB, RED_TRUCK_NB, ROCK_NB, TRAIN_NB, TRAIN_POLE_NB, TREE_NB};
 
     // On charge la spritesheet
     SDL_Surface *sprite_surface = IMG_Load(sheet_path);

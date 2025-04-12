@@ -116,15 +116,17 @@
 #define COIN_ID 3
 #define GAZ_TRUCK_ID 4
 #define LILYPAD_ID 5
-#define LOG_ID 6
-#define ORANGE_CAR_ID 7
-#define PURPLE_CAR_ID 8
-#define RAIL_ID 9
-#define RED_TRUCK_ID 10
-#define ROCK_ID 11
-#define TRAIN_ID 12
-#define TRAIN_POLE_ID 13
-#define TREE_ID 14
+#define LOG_LONG_ID 6
+#define LOG_MEDIUM_ID 7
+#define LOG_SMALL_ID 8
+#define ORANGE_CAR_ID 9
+#define PURPLE_CAR_ID 10
+#define RAIL_ID 11
+#define RED_TRUCK_ID 12
+#define ROCK_ID 13
+#define TRAIN_ID 14
+#define TRAIN_POLE_ID 15
+#define TREE_ID 16
 
 #define BLUE_CAR_NB 2
 #define BLUE_TRUCK_NB 2
@@ -132,7 +134,9 @@
 #define COIN_NB 1
 #define GAZ_TRUCK_NB 2
 #define LILYPAD_NB 3
-#define LOG_NB 4
+#define LOG_LONG_NB 2
+#define LOG_MEDIUM_NB 1
+#define LOG_SMALL_NB 1
 #define ORANGE_CAR_NB 2
 #define PURPLE_CAR_NB 2
 #define RAIL_NB 1

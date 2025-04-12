@@ -21,7 +21,7 @@ Obstacle *obstacle_make(
     int type, 
     int variant,
     float h_position,
-    float length
+    float lenght
 );
 
 void obstacle_free(Obstacle *o);

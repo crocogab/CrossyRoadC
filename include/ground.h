@@ -2,6 +2,7 @@
 #define GROUND_H
 
 #include "obstacle.h"
+#include "gui.h"
 
 typedef struct _Ground {
     Obstacle **obstacles; //Le tableau contiendra tout les obstacles présents sur la ligne
@@ -15,7 +16,7 @@ Ground *ground_make(Obstacle **obscacles, float velocity, int type, int nb_obsta
 
 void ground_free(Ground *g);
 
-Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb);
+Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, Sprite_sheet *sprite_sheet);
 
 char ground_model_of_type(int type);
 

@@ -16,13 +16,13 @@
  * @return Un pointeur vers le nouvel obstacle créé.
  */
 
-Obstacle *obstacle_make(int type, int variant, float h_position, Sprite_sheet *sprite_sheet) {
+Obstacle *obstacle_make(int type, int variant, float h_position, float lenght) {
     // crée et initialise un obstacle à partir des paramètres donnés
     Obstacle *obst = malloc(sizeof(Obstacle));
     obst->type = type;
     obst->variant = variant;
     obst->h_position = h_position;
-    obst->length = sprite_sheet->sprites[variant].lenght; //ajouter type_var_to_id(type, variant)
+    obst->length = lenght;
     return obst;
 }
 
