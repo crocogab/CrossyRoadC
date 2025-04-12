@@ -44,8 +44,8 @@
 //Définition des attributs de voiture
 #define CAR_LEN 1
 #define CAR_TYPE 100
-#define CAR_MAX_SPEED 10 //Vitesse maximum de la voiture en valeur absolue
-#define CAR_MIN_SPEED 6 //Vitesse minimum de la voiture en valeur absolue
+#define CAR_MAX_SPEED 9 //Vitesse maximum de la voiture en valeur absolue
+#define CAR_MIN_SPEED 5 //Vitesse minimum de la voiture en valeur absolue
 #define CAR_MIN_NUMBER 3 //Nombre minimum de voitures sur une ligne
 
 //Définition des attributs de arbre
@@ -63,16 +63,16 @@
 //Définition des attributs de truck
 #define TRUCK_LEN 3
 #define TRUCK_TYPE 104
-#define TRUCK_MAX_SPEED 9 //Vitesse maximum du camion en valeur absolue
-#define TRUCK_MIN_SPEED 5 //Vitesse minimum du camion en valeur absolue
-#define TRUCK_MIN_NUMBER 2 //Nombre minimum du camion sur une ligne
+#define TRUCK_MAX_SPEED 8 //Vitesse maximum du camion en valeur absolue
+#define TRUCK_MIN_SPEED 4 //Vitesse minimum du camion en valeur absolue
+#define TRUCK_MIN_NUMBER 1 //Nombre minimum du camion sur une ligne
 
 // Définition des attributs de log
 #define LOG_LEN 4
 #define LOG_TYPE 105
 #define LOG_MAX_SPEED 2 
 #define LOG_MIN_SPEED 1.5
-#define LOG_MIN_NUMBER 5
+#define LOG_MIN_NUMBER 2
 
 // Définition des attributs de train
 #define TRAIN_TYPE 106

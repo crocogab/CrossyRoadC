@@ -247,11 +247,11 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
         }
 
         nb = random_int(min_nb, max_nb);
-        // variant = random_int(0,3); // Supprimer cette ligne redondante
+        // variant = random_int(0,3); 
         for (int i = 0; i < nb; i++) {
-            // Générer la variante à l'intérieur de la boucle si chaque log peut avoir une variante différente
+            
             variant = random_int(0, 2); // Utilise la plage correcte (0-2)
-            // Corriger la faute de frappe: lenght -> length
+            
             obs[i] = obstacle_make(LOG_TYPE, variant, i * INTER_LOG_MIN, sprite_sheet->sprites[type_var_to_id(LOG_TYPE, variant)].lenght);
         }
         
