@@ -95,6 +95,11 @@ int main() {
     
     
     while (g.status==PLAYING){
+        if (!p->alive) {
+            g.status = DEAD;
+            break; // exit direct quand est mort
+        }
+
         int direction = NEUTRAL;
         // 1. Action du joueur           
         if (SDL_PollEvent(&event)){ 
@@ -196,6 +201,7 @@ int main() {
         
         draw_board(b,cam,display,colors,renderer,&sprite_sheet);
         draw_chicken(p,&sprite_sheet,renderer,cam,display);
+        //draw_obstacles(b,cam,display,colors,renderer,&sprite_sheet);
         
         //6. Affichage
         SDL_RenderPresent(renderer);
