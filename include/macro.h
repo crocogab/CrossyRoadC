@@ -13,10 +13,11 @@
 #define MAP_WIDTH 19 // Largeur de la map actuelle
 #define MAP_LEN 25 // Hauteur de la map actuelle
 
+#define MAP_WIDTH_CAM 10
 //Définition des tailles par défaut de la map, pour les tests uniquement
 #define DEFAULT_CELL_SIZE 121
-#define LEFT_MAP_X 0.0
-#define RIGHT_MAP_X DEFAULT_CELL_SIZE*MAP_WIDTH
+#define LEFT_MAP_X (DEFAULT_CELL_SIZE * (MAP_WIDTH - MAP_WIDTH_CAM) / 2)
+#define RIGHT_MAP_X (MAP_WIDTH * DEFAULT_CELL_SIZE - DEFAULT_CELL_SIZE * (MAP_WIDTH - MAP_WIDTH_CAM) / 2)
 
 //Définition des status de la game
 #define HOME 70 //Le menu d'acceuil est affiché

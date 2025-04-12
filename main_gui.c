@@ -98,12 +98,15 @@ int main() {
                     running=0;
                     break;
                 case SDL_KEYDOWN: // touche pressée
+                    if (event.key.keysym.sym==SDLK_q){
+                        running=0;
+                    }
                     if (event.key.keysym.sym==SDLK_RIGHT){
-                        
-                        
+                        move_player(RIGHT,p);
 
                     }
                     if (event.key.keysym.sym==SDLK_LEFT){
+                        move_player(LEFT,p);
                        
                     }
                     if (event.key.keysym.sym==SDLK_UP){
@@ -124,7 +127,7 @@ int main() {
         // 3 Maj des mobs. 
         board_update(b, 0.01);
 
-
+        //printf("Position du joueur : h_float = %f \n",p->h_position);
         
         
         // On efface l'écran
