@@ -167,10 +167,10 @@ int check_future_collision(Board *b, int direction) {
             lig++;
             break;
         case RIGHT:
-            h = h + 1;
+            h = h + DEFAULT_CELL_SIZE;
             break;
         case LEFT: 
-            h = h - 1;
+            h = h - DEFAULT_CELL_SIZE;
             break;
     }
     Ground *g = b->grid_ground[lig];
