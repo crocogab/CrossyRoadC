@@ -95,7 +95,7 @@ int type_var_to_id(int type, int variant)
     case TREE_TYPE:
         return TREE_ID;
     case ROCK_TYPE:
-        return ROCK_TYPE;  
+        return ROCK_ID;  
         
     
     default:
@@ -141,11 +141,11 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
                 choice = random_int(0, 1); // choix entre un arbre et un rocher
                 if (choice == 0)
                 {
-                    obs[i] = obstacle_make(TREE_TYPE, variant, (int)obs_h_pos_array[i], sprite_sheet->sprites[type_var_to_id(TREE_TYPE, 0)].lenght);
+                    obs[i] = obstacle_make(TREE_TYPE, variant, (int)obs_h_pos_array[i], sprite_sheet->sprites[type_var_to_id(TREE_TYPE, variant)].lenght);
                 }
                 else
                 {
-                    obs[i] = obstacle_make(ROCK_TYPE, variant, (int)obs_h_pos_array[i], sprite_sheet->sprites[type_var_to_id(ROCK_TYPE, 0)].lenght);
+                    obs[i] = obstacle_make(ROCK_TYPE, variant, (int)obs_h_pos_array[i], sprite_sheet->sprites[type_var_to_id(ROCK_TYPE, variant)].lenght);
                 }
             }
             free(obs_h_pos_array);

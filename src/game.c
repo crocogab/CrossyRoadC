@@ -26,8 +26,8 @@ void kill_player(Game *g){
  * Initialise le jeu en créant un plateau et en définissant le statut à PLAYING.
  * @param g Un pointeur vers l'instance de Game à initialiser.
  */
-void game_start(Game *g){
-    Board *b= board_make();
+void game_start(Game *g, Sprite_sheet *sprite_sheet){
+    Board *b= board_make(sprite_sheet);
     g->board=b;
     g->status=PLAYING;
 }

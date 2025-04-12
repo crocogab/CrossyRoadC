@@ -20,14 +20,6 @@ int main() {
     
     // initialisation du plateau
 
-    game_start(&g);
-    b = g.board;
-    g_board = b;
-
-    p->h_position=1000;
-    board_set_player(b, p);
-
-
     int jump_back = 0;    // Limitation des retours en arrière
     int score_actu = 0;   // Score actuel
     int score_maxi = 0;   // Score maximum
@@ -87,6 +79,13 @@ int main() {
     // On charge la sprite_sheet
     Sprite_sheet sprite_sheet = load_spritesheet("assets/spritesheet_coord.json", "assets/spritesheet.png", renderer, cam);
 
+    game_start(&g, &sprite_sheet);
+    b = g.board;
+    g_board = b;
+
+    p->h_position=1000;
+    board_set_player(b, p);
+
     SDL_Event event;
     int running = 1;
     
@@ -109,11 +108,11 @@ int main() {
                     }
                     if (event.key.keysym.sym==SDLK_UP){
                         move_player(UP,p);
-                        ground_move(b,UP);
+                        ground_move(b,UP, &sprite_sheet);
                     }
                     if (event.key.keysym.sym==SDLK_DOWN){
                         move_player(DOWN,p);
-                        ground_move(b,DOWN);
+                        ground_move(b,DOWN, &sprite_sheet);
                     }
 
                 default:

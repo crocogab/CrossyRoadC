@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "board.h"
+#include "gui.h"
 
 
 typedef struct _Game {
@@ -11,6 +12,6 @@ typedef struct _Game {
 
 Game game_make(int status);
 void kill_player(Game *g);
-void game_start(Game *g);
+void game_start(Game *g, Sprite_sheet *sprite_sheet);
 
 #endif
