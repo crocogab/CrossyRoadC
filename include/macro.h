@@ -117,7 +117,7 @@
 
 #define START_SIZE 7 // Taille de la zone de départ
 
-#define V_POS MAP_LEN-5 // Position verticale du joueur sur le board
+#define V_POS 7 // Position verticale du joueur sur le board
 
 //Définition des seuils de difficulté
 #define DIFF_EASY 25 // Le jeu devient plus dur au dessus de 25 de score

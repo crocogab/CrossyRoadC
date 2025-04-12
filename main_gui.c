@@ -148,7 +148,7 @@ int main() {
         
         
         draw_board(b,cam,display,colors,renderer);
-        draw_sprite_from_grid(p->h_position,7,CHICKEN_ID,3,&sprite_sheet,renderer,cam,display);
+        draw_chicken(p,&sprite_sheet,renderer,cam,display);
         
         SDL_RenderPresent(renderer);
         SDL_Delay(8); // ~60 FPS  
