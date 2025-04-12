@@ -125,7 +125,7 @@ void board_update(Board* b, float delta_t) {
 
     if (b->grid_ground[V_POS]->type == GROUND_WATER_LOG) { 
         // on suit le mouvement des rondins (on suppose qu'on y est sinon le joueur meurt)
-        b->player->h_position = b->player->h_position + b->grid_ground[V_POS]->velocity * delta_t;
+        b->player->h_position =b->player->h_position + b->grid_ground[V_POS]->velocity * delta_t;
     } else {
         // hors rondin on reste sur la grille
         b->player->h_position = round(b->player->h_position);
@@ -181,7 +181,7 @@ int check_future_collision(Board *b, int direction) {
         for (int i = 0; i < g->nb_obstacles; i++) {
             // hb = obstacle_hitbox(g->obstacles[i]);
             // if (hb.a <= h && h <= hb.b) {
-            if (obstacle_is_colliding(g->obstacles[i], h)) {
+            if (obstacle_is_colliding(g->obstacles[i],(int) h)) {
                 return COLLIDE_HARMLESS;
             }
         }
@@ -191,7 +191,7 @@ int check_future_collision(Board *b, int direction) {
         for (int i = 0; i < g->nb_obstacles; i++) {
             // hb = obstacle_hitbox(g->obstacles[i]);
             // if (hb.a <= h && h <= hb.b) {
-                if (obstacle_is_colliding(g->obstacles[i], h)) {
+                if (obstacle_is_colliding(g->obstacles[i],(int) h)) {
                 return COLLIDE_DEADLY;
             }
         }    
@@ -201,7 +201,7 @@ int check_future_collision(Board *b, int direction) {
         for (int i = 0; i < g->nb_obstacles; i++) {
             // hb = obstacle_hitbox(g->obstacles[i]);
             // if (hb.a <= h && h <= hb.b) {
-            if (obstacle_is_colliding(g->obstacles[i], h)) {
+            if (obstacle_is_colliding(g->obstacles[i], (int)h)) {
                 return COLLIDE_NONE;
             }
         }    

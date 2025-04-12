@@ -95,7 +95,7 @@ void reset_game(Game *g, Player **p, Board **b, char ***tableau, int *score_actu
 /**
  * Gère l'affichage de la grille de jeu
  */
-void render_grid(char **tableau, int score_maxi) {
+void render_grid(char **tableau, int score_maxi, float h_pos) {
     clear(); // On clean tout
     
     
@@ -159,7 +159,7 @@ void render_grid(char **tableau, int score_maxi) {
     // Afficher le score
     attron(A_BOLD);
     mvprintw(1, MAP_WIDTH + 3, "SCORE : %d", score_maxi);
-    
+    mvprintw(2, MAP_WIDTH + 3, "h_pos : %f", h_pos);
     // Informations de débogage
     // mvprintw(2, MAP_WIDTH + 3, "[DEBUG] JOUEUR EN VIE: %d", g_board->player->alive);
     // mvprintw(3, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (TOP): %d", check_future_collision(g_board, UP));
@@ -339,7 +339,7 @@ int main(void) {
         tableau = grid_tui_make(b);
         
         // 7. affichage
-        render_grid(tableau, score_maxi);
+        render_grid(tableau, score_maxi,p->h_position);
         
         // Contrôle de la vitesse de la boucle de jeu
         napms(5); // Pause de 5ms
