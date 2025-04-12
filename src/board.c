@@ -522,7 +522,7 @@ void draw_obstacles(Board *b, Camera cam, Display_informations display, Colors c
         Ground *ground = b->grid_ground[i];
         for (int j = 0; j < ground->nb_obstacles; j++)
         {
-            draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[i]->variant), 0, sprite_sheet, renderer, cam, display);
+            draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
         }
     }
 }
