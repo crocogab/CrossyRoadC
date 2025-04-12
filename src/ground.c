@@ -57,6 +57,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
     int nb = 0;
     int choice = 0;
     int special_attr = 0;
+    int variant = 0;
     //On peut avoir au maximum autant d'obstacles que la map est large
     Obstacle **obs = malloc(sizeof(Obstacle *)*MAP_WIDTH);
     
@@ -77,11 +78,13 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
                 choice = random_int(0, 1); // choix entre un arbre et un rocher
                 if (choice == 0)
                 {
-                    obs[i] = obstacle_make(TREE_TYPE, MODEL_TREE, (int)obs_h_pos_array[i], TREE_LEN);
+                    variant = random_int(0,ROCK_NB-1);
+                    obs[i] = obstacle_make(TREE_TYPE, variant,  MODEL_TREE, (int)obs_h_pos_array[i], TREE_LEN);
                 }
                 else
                 {
-                    obs[i] = obstacle_make(ROCK_TYPE, MODEL_ROCK, (int)obs_h_pos_array[i], ROCK_LEN);
+                    variant = random_int(0,TREE_NB-1);
+                    obs[i] = obstacle_make(ROCK_TYPE, variant, MODEL_ROCK, (int)obs_h_pos_array[i], ROCK_LEN);
                 }
             }
             free(obs_h_pos_array);
@@ -108,9 +111,10 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
             max_nb = MAP_WIDTH/INTER_CAR_MIN; //On ne peut pas avoir plus de voitures que la map est large
         }
         nb = random_int(min_nb, max_nb); //On tire au maximum des voitures espacées de INTER_CAR_MIN ou max_nb
+        variant = random_int(0,2);
         for (int i = 0; i < nb; i++)
         {
-            obs[i] = obstacle_make(CAR_TYPE, MODEL_CAR, i*INTER_CAR_MIN, CAR_LEN);
+            obs[i] = obstacle_make(CAR_TYPE, variant, MODEL_CAR, i*INTER_CAR_MIN, CAR_LEN);
         }
 
         break;
@@ -119,6 +123,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
         
         //On choisit une vitesse pour les camions, simpliste pour l'instant car on ne choisit que d'alterner entre les vitesses + et -
         //On ne change pas non plus l'espacement entre les voitures
+        variant = random_int(0,2);
         if (previous_velo <= 0)
         {
             velo = random_float((float)TRUCK_MIN_SPEED, (float)TRUCK_MAX_SPEED);
@@ -136,7 +141,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
         nb = random_int(min_nb, max_nb); //On tire au maximum des voitures espacées de INTER_CAR_MIN ou max_nb
         for (int i = 0; i < nb; i++)
         {
-            obs[i] = obstacle_make(TRUCK_TYPE, MODEL_TRUCK, i*INTER_TRUCK_MIN, TRUCK_LEN);
+            obs[i] = obstacle_make(TRUCK_TYPE, variant, MODEL_TRUCK, i*INTER_TRUCK_MIN, TRUCK_LEN);
         }
         
         break;
@@ -146,13 +151,13 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
         velo = 0;
 
         nb = random_int(min_nb, max_nb); //On tire un nombre d'obstacles entre min_nb et max_nb
-
+        variant = random_int(0,2);
         //On va maintenant générer autant d'obstacles sur la ligne
         if (nb > 0) {
             int *obs_h_pos_array = random_int_array(0, MAP_WIDTH-1, nb);
             for (int i = 0; i < nb; i++)
             {
-                obs[i] = obstacle_make(WATER_LILY_TYPE, MODEL_WATER_LILY, (int)obs_h_pos_array[i], WATER_LILY_LEN);
+                obs[i] = obstacle_make(WATER_LILY_TYPE, variant, MODEL_WATER_LILY, (int)obs_h_pos_array[i], WATER_LILY_LEN);
             }
             free(obs_h_pos_array);
         }
@@ -172,9 +177,9 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
             max_nb = MAP_WIDTH / INTER_LOG_MIN;
         }
         nb = random_int(min_nb, max_nb);
-
+        variant = random_int(0,3);
         for (int i = 0; i<nb; i++) {
-            obs[i] = obstacle_make(LOG_TYPE, MODEL_LOG, i*INTER_LOG_MIN, LOG_LEN);
+            obs[i] = obstacle_make(LOG_TYPE, variant, MODEL_LOG, i*INTER_LOG_MIN, LOG_LEN);
         }
         
         break;
@@ -191,7 +196,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
 
         special_attr = random_int(TRAIN_MIN_TIME, TRAIN_MAX_TIME);
 
-        obs[0] = obstacle_make(TRAIN_TYPE, MODEL_TRAIN, -1, TRAIN_LEN);
+        obs[0] = obstacle_make(TRAIN_TYPE, variant, MODEL_TRAIN, -1, TRAIN_LEN);
 
         nb = 1;
 

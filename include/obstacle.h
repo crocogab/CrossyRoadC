@@ -6,6 +6,7 @@
 
 typedef struct _Obstacle {
     int type; //macro (voiture, camion, arbre etc)
+    int variant;
     char model;
     float h_position;
     float length;
@@ -19,6 +20,7 @@ typedef struct _couple {
 
 Obstacle *obstacle_make(
     int type, 
+    int variant,
     char model, 
     float h_position,
     float length
