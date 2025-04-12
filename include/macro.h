@@ -10,7 +10,7 @@
 
 //Définition de la taille de la map
 
-#define MAP_WIDTH 19 // Largeur de la map actuelle
+#define MAP_WIDTH 24 // Largeur de la map actuelle
 #define MAP_LEN 25 // Hauteur de la map actuelle
 
 #define MAP_WIDTH_CAM 10
