@@ -11,18 +11,16 @@
  * @param velocity Vitesse des obstacles sur la ligne.
  * @param type Type de sol (défini dans les macros).
  * @param nb_obstacles Nombre d'obstacles sur la ligne.
- * @param model Modèle graphique du sol.
  * @param special_attr Attribut spécial associé au sol (par exemple, temps pour un train).
  * @return Un pointeur vers un objet Ground alloué dynamiquement.
  */
-Ground *ground_make(Obstacle **obstacles, float velocity, int type, int nb_obstacles, char model, int special_attr) {
+Ground *ground_make(Obstacle **obstacles, float velocity, int type, int nb_obstacles, int special_attr) {
     Ground *g = malloc(sizeof(Ground));
     g->obstacles = obstacles; 
     //Initialisation des vitesses des obstacles sur la ligne
     g->velocity = velocity;
     g->type = type;
     g->nb_obstacles = nb_obstacles;
-    g->model = model;
     g->special_attr = special_attr;
     return g;
 }
@@ -79,12 +77,12 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
                 if (choice == 0)
                 {
                     variant = random_int(0,ROCK_NB-1);
-                    obs[i] = obstacle_make(TREE_TYPE, variant,  MODEL_TREE, (int)obs_h_pos_array[i], TREE_LEN);
+                    obs[i] = obstacle_make(TREE_TYPE, variant, (int)obs_h_pos_array[i], TREE_LEN);
                 }
                 else
                 {
                     variant = random_int(0,TREE_NB-1);
-                    obs[i] = obstacle_make(ROCK_TYPE, variant, MODEL_ROCK, (int)obs_h_pos_array[i], ROCK_LEN);
+                    obs[i] = obstacle_make(ROCK_TYPE, variant, (int)obs_h_pos_array[i], ROCK_LEN);
                 }
             }
             free(obs_h_pos_array);
@@ -114,7 +112,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
         variant = random_int(0,2);
         for (int i = 0; i < nb; i++)
         {
-            obs[i] = obstacle_make(CAR_TYPE, variant, MODEL_CAR, i*INTER_CAR_MIN, CAR_LEN);
+            obs[i] = obstacle_make(CAR_TYPE, variant, i*INTER_CAR_MIN, CAR_LEN);
         }
 
         break;
@@ -141,7 +139,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
         nb = random_int(min_nb, max_nb); //On tire au maximum des voitures espacées de INTER_CAR_MIN ou max_nb
         for (int i = 0; i < nb; i++)
         {
-            obs[i] = obstacle_make(TRUCK_TYPE, variant, MODEL_TRUCK, i*INTER_TRUCK_MIN, TRUCK_LEN);
+            obs[i] = obstacle_make(TRUCK_TYPE, variant, i*INTER_TRUCK_MIN, TRUCK_LEN);
         }
         
         break;
@@ -157,7 +155,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
             int *obs_h_pos_array = random_int_array(0, MAP_WIDTH-1, nb);
             for (int i = 0; i < nb; i++)
             {
-                obs[i] = obstacle_make(WATER_LILY_TYPE, variant, MODEL_WATER_LILY, (int)obs_h_pos_array[i], WATER_LILY_LEN);
+                obs[i] = obstacle_make(WATER_LILY_TYPE, variant, (int)obs_h_pos_array[i], WATER_LILY_LEN);
             }
             free(obs_h_pos_array);
         }

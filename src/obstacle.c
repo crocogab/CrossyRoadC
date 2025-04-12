@@ -2,27 +2,27 @@
 #include "macro.h"
 #include <stdlib.h>
 #include <stdbool.h>
+#include <gui.h>
 
 
 /**
  * Crée un nouvel obstacle.
  * 
  * @param[in] type Le type d'obstacle
- * @param[in] model Le modèle tui de l'obstacle
+ * @param[in] variant La variante de l'obstacle
  * @param[in] h_position la position horizontale de l'avant de l'obstacle
  * @param[in] length La longueur de l'obstacle
  * 
  * @return Un pointeur vers le nouvel obstacle créé.
  */
 
-Obstacle *obstacle_make(int type, int variant, char model, float h_position, float length) {
+Obstacle *obstacle_make(int type, int variant, float h_position, Sprite_sheet *sprite_sheet) {
     // crée et initialise un obstacle à partir des paramètres donnés
     Obstacle *obst = malloc(sizeof(Obstacle));
     obst->type = type;
     obst->variant = variant;
-    obst->model = model;
     obst->h_position = h_position;
-    obst->length = length;
+    obst->length = sprite_sheet->sprites[variant].lenght; //ajouter type_var_to_id(type, variant)
     return obst;
 }
 
