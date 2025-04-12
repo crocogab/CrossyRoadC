@@ -61,7 +61,7 @@
 
 //Définition des attributs de truck
 #define TRUCK_TYPE 104
-#define TRUCK_MAX_SPEED 8 //Vitesse maximum du camion en valeur absolue
+#define TRUCK_MAX_SPEED 6 //Vitesse maximum du camion en valeur absolue
 #define TRUCK_MIN_SPEED 4 //Vitesse minimum du camion en valeur absolue
 #define TRUCK_MIN_NUMBER 1 //Nombre minimum du camion sur une ligne
 
