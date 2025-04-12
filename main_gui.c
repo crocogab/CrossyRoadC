@@ -85,6 +85,7 @@ int main() {
 
     p->h_position=1000;
     board_set_player(b, p);
+    
 
     SDL_Event event;
     int running = 1;
@@ -94,6 +95,7 @@ int main() {
         // 1. Action du joueur           
         if (SDL_PollEvent(&event)){ 
             switch (event.type){
+                int direction = NEUTRAL;
                 case SDL_QUIT:
                     running=0;
                     break;
@@ -102,21 +104,20 @@ int main() {
                         running=0;
                     }
                     if (event.key.keysym.sym==SDLK_RIGHT){
-                        move_player(RIGHT,p);
+                        direction = RIGHT;
 
                     }
                     if (event.key.keysym.sym==SDLK_LEFT){
-                        move_player(LEFT,p);
+                        direction = LEFT;
                        
                     }
                     if (event.key.keysym.sym==SDLK_UP){
-                        move_player(UP,p);
-                        ground_move(b,UP, &sprite_sheet);
+                        direction = UP;
                     }
                     if (event.key.keysym.sym==SDLK_DOWN){
                         if (jump_back < 3){
-                            move_player(DOWN,p);
-                            ground_move(b,DOWN, &sprite_sheet);
+                            direction = DOWN;
+                            //ground_move(b,DOWN, &sprite_sheet);
 
                         }
                         
@@ -128,7 +129,7 @@ int main() {
         }
         // 2. Traiter action
         int collision_type = check_future_collision(b, p->direction);
-
+        //printf("COLLISION UP : %d\n",collision_type);
         switch (collision_type) {
             case COLLIDE_NONE:
                 //mouvement autorise
