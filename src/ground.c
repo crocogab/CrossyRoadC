@@ -132,25 +132,51 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
         //On choisit une vitesse pour les obstacles
         velo = 0;
 
+        //On génére un max d'obstacles avant la ligne
+        int pre_nb = random_int(((MAP_WIDTH-MAP_WIDTH_CAM)/2)-3, (MAP_WIDTH-MAP_WIDTH_CAM)/2);
+        if (pre_nb > 0) {
+            int *obs_h_pos_array = random_int_array(0, (MAP_WIDTH-MAP_WIDTH_CAM)/2-1, pre_nb);
+            for (int i = 0; i < pre_nb; i++)
+            {
+                obs[i] = obstacle_make(TREE_TYPE, random_int(0, TREE_NB-1), (int)(obs_h_pos_array[i]*DEFAULT_CELL_SIZE), TREE_LEN);
+            }
+            free(obs_h_pos_array);
+        }
+
         nb = random_int(min_nb, max_nb); //On tire un nombre d'obstacles entre min_nb et max_nb
         //On va maintenant générer autant d'obstacles sur la ligne
         if (nb > 0) {
-            int *obs_h_pos_array = random_int_array(0, MAP_WIDTH-1, nb);
+            int *obs_h_pos_array = random_int_array((MAP_WIDTH-MAP_WIDTH_CAM)/2, (MAP_WIDTH-MAP_WIDTH_CAM)/2 + MAP_WIDTH_CAM, nb);
             for (int i = 0; i < nb; i++)
             {
                 choice = random_int(0, 1); // choix entre un arbre et un rocher
                 if (choice == 0)
                 {
-                    obs[i] = obstacle_make(TREE_TYPE, random_int(0, TREE_NB-1), (int)(obs_h_pos_array[i]*DEFAULT_CELL_SIZE), TREE_LEN);
+                    obs[i+pre_nb] = obstacle_make(TREE_TYPE, random_int(0, TREE_NB-1), (int)(obs_h_pos_array[i]*DEFAULT_CELL_SIZE), TREE_LEN);
                 }
                 else
                 {
-                    obs[i] = obstacle_make(ROCK_TYPE, variant, (int)(obs_h_pos_array[i]*DEFAULT_CELL_SIZE), ROCK_LEN);
+                    obs[i+pre_nb] = obstacle_make(ROCK_TYPE, random_int(0, ROCK_NB-1), (int)(obs_h_pos_array[i]*DEFAULT_CELL_SIZE), ROCK_LEN);
                 }
             }
             free(obs_h_pos_array);
         }
 
+        //On génére un max d'obstacles après la ligne
+        int post_nb = random_int(((MAP_WIDTH-MAP_WIDTH_CAM)/2)-3, (MAP_WIDTH-MAP_WIDTH_CAM)/2);
+        if (pre_nb + nb + post_nb >= MAP_WIDTH) {
+            post_nb = MAP_WIDTH - pre_nb - nb - 1; // Garder une marge de sécurité
+        }
+        if (post_nb > 0) {
+            int *obs_h_pos_array = random_int_array((MAP_WIDTH-MAP_WIDTH_CAM)/2+MAP_WIDTH_CAM, MAP_WIDTH-1, post_nb);
+            for (int i = 0; i < post_nb; i++)
+            {
+                obs[i+nb+pre_nb] = obstacle_make(TREE_TYPE, random_int(0, TREE_NB-1), (int)(obs_h_pos_array[i]*DEFAULT_CELL_SIZE), TREE_LEN);
+            }
+            free(obs_h_pos_array);
+        }
+
+        nb = pre_nb + nb + post_nb;
         break;
     
     case GROUND_ROAD_CAR:
@@ -217,10 +243,10 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
         variant = random_int(0,2);
         //On va maintenant générer autant d'obstacles sur la ligne
         if (nb > 0) {
-            int *obs_h_pos_array = random_int_array(0, MAP_WIDTH-1, nb);
+            int *obs_h_pos_array = random_int_array((MAP_WIDTH-MAP_WIDTH_CAM)/2, (MAP_WIDTH-MAP_WIDTH_CAM)/2 + MAP_WIDTH_CAM, nb);
             for (int i = 0; i < nb; i++)
             {
-                obs[i] = obstacle_make(WATER_LILY_TYPE, variant, (int)(obs_h_pos_array[i]*DEFAULT_CELL_SIZE), WATER_LILY_LEN);
+                obs[i] = obstacle_make(WATER_LILY_TYPE, random_int(0, LILYPAD_NB-1), (int)(obs_h_pos_array[i]*DEFAULT_CELL_SIZE), WATER_LILY_LEN);
             }
             free(obs_h_pos_array);
         }
