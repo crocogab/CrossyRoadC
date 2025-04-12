@@ -11,6 +11,7 @@ typedef struct _Player {
     bool is_jumping;
     float grid_cell_width;
     int score;
+    int previous_direction;
 
 } Player;
 

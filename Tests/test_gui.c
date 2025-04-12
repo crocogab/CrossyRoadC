@@ -71,6 +71,9 @@ int main() {
 
     // On genere un board de test
     Board *test_board = board_make();
+    // On genere un joueur de test
+    Player *p = player_start();
+    test_board->player = p;
 
     while (running)
     {
@@ -181,6 +184,7 @@ int main() {
         */
 
         draw_board(test_board, cam, display, colors, renderer);
+        draw_chicken(test_board->player, &sprite_sheet, renderer, cam, display);
 
         // Switch framebuffer
         SDL_RenderPresent(renderer);

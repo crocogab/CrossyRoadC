@@ -29,6 +29,7 @@ Player *player_make(float grid_cell_size, float h_position, int direction, bool 
     ans->grid_cell_width = grid_cell_size;
     ans->h_position = h_position;
     ans->direction = direction;
+    ans->previous_direction = direction;
     ans->alive = alive;
     ans->is_jumping = isJumping;
     ans->score = score;
@@ -83,6 +84,7 @@ void move_player(int direction, Player *player)
             player->h_position -= player->grid_cell_width;
         }
         player->direction = LEFT;
+        player->previous_direction = LEFT;
         break;
 
     case RIGHT:
@@ -95,14 +97,17 @@ void move_player(int direction, Player *player)
             player->h_position += player->grid_cell_width;
         }
         player->direction = RIGHT;
+        player->previous_direction = RIGHT;
         break;
 
     case UP:
         player->direction = UP;
+        player->previous_direction = UP;
         break;
 
     case DOWN:
         player->direction = DOWN;
+        player->previous_direction = DOWN;
         break;
     
     default:
