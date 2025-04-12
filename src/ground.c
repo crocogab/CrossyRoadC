@@ -166,11 +166,11 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
     case GROUND_TRAIN:
         if (previous_velo <= 0)
         {
-            velo = random_float((float)TRUCK_MIN_SPEED, (float)TRUCK_MAX_SPEED);
+            velo = random_float((float)TRAIN_MIN_SPEED, (float)TRAIN_MAX_SPEED);
         }
         else
         {
-            velo = - random_float((float)TRUCK_MIN_SPEED, (float)TRUCK_MAX_SPEED);
+            velo = - random_float((float)TRAIN_MIN_SPEED, (float)TRAIN_MAX_SPEED);
         }
 
         special_attr = random_int(TRAIN_MIN_TIME, TRAIN_MAX_TIME);
