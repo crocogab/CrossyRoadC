@@ -1,5 +1,10 @@
 #include "macro.h"
 #include "gui.h"
+#include "board.h"
+#include "ground.h"
+#include "obstacle.h"
+#include "random_custom.h"
+#include "player.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -151,6 +156,7 @@ int main() {
             exit(-1);
         }
 
+        /*
         // On affiche une grille de test avec tout les types de sol et tout les sprites possibles
         int sprite_reading_grid[15] = {BLUE_CAR_NB, BLUE_TRUCK_NB, CHICKEN_NB, COIN_NB, GAZ_TRUCK_NB, LILYPAD_NB, LOG_NB, ORANGE_CAR_NB, PURPLE_CAR_NB, RAIL_NB, RED_TRUCK_NB, ROCK_NB, TRAIN_NB, TRAIN_POLE_NB, TREE_NB};
 
@@ -169,7 +175,11 @@ int main() {
                 draw_sprite_from_grid(j*4*display.tile_size, i*2+3, i, j, &sprite_sheet, renderer, cam, display);
             }
         }
+        */
 
+        // On genere un board de test
+        Board *test_board = board_make();
+        draw_board(test_board, cam, display, colors, renderer);
 
         // Switch framebuffer
         SDL_RenderPresent(renderer);

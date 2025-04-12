@@ -32,7 +32,7 @@ TEST_RANDOM_CUSTOM = test_random_custom
 TEST_RANDOM_CUSTOM_SRCS = $(TEST_DIR)/test_random_custom.c $(SRC_DIR)/random_custom.c
 
 TEST_GUI = test_gui
-TEST_GUI_SRCS = $(TEST_DIR)/test_gui.c $(SRC_DIR)/gui.c
+TEST_GUI_SRCS = $(TEST_DIR)/test_gui.c $(SRC_DIR)/gui.c $(SRC_DIR)/board.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/player.c
 
 TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUSTOM) $(TEST_BOARD) $(TEST_GUI)
 
