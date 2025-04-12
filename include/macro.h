@@ -42,19 +42,21 @@
 //Définition des objets
 
 //Définition des attributs de voiture
-#define CAR_LEN 1
 #define CAR_TYPE 100
 #define CAR_MAX_SPEED 9 //Vitesse maximum de la voiture en valeur absolue
 #define CAR_MIN_SPEED 5 //Vitesse minimum de la voiture en valeur absolue
 #define CAR_MIN_NUMBER 3 //Nombre minimum de voitures sur une ligne
 
 //Définition des attributs de arbre
+#define TREE_LEN 1*DEFAULT_CELL_SIZE
 #define TREE_TYPE 101
 
 //Définition des attributs de rock
+#define ROCK_LEN 1*DEFAULT_CELL_SIZE
 #define ROCK_TYPE 102
 
 //Définition des attributs de water lily
+#define WATER_LILY_LEN 1*DEFAULT_CELL_SIZE
 #define WATER_LILY_TYPE 103
 
 //Définition des attributs de truck
