@@ -2,6 +2,7 @@ build-job:
   stage: build
   image: debian:bullseye 
   script:
+    - export DEBIAN_FRONTEND=noninteractive 
     - apt-get update
     - apt-get upgrade libsdl2-dev
     - apt-get install -y clang make libncurses-dev libsdl2-image-dev libjson-c-dev
