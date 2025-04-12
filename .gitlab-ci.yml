@@ -1,11 +1,10 @@
 build-job:
   stage: build
-  image: debian:bullseye 
+  image: debian:bullseye
   script:
-    - export DEBIAN_FRONTEND=noninteractive 
-    - apt-get update
-    - apt-get upgrade libsdl2-dev
-    - apt-get install -y clang make libncurses-dev libsdl2-image-dev libjson-c-dev
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update -y
+    - apt-get install -y clang make libncurses-dev libsdl2-dev libsdl2-image-dev libjson-c-dev
     - echo "Test du Makefile"
     - make all
     - if [ -f "main_tui" ]; then echo "Makefile is compiling."; else echo "main_tui not found. " && exit 1; fi
