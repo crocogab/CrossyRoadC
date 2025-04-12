@@ -152,7 +152,7 @@ int main() {
             case COLLIDE_DEADLY:
                 // Collision mortelle
                 p->alive = false;
-                g->status = DEAD;
+                g.status = DEAD;
                 break;
             
             case COLLIDE_HARMLESS:
