@@ -76,7 +76,6 @@ void board_set_player(Board* b, Player* player) {
  * @param[in] b Le plateau à mettre à jour
  * @param[in] delta_t le temps qui s'est écoulé
  */
-/*parler ordre des arguments, update puis on voit l'erreur ou autre sens ?*/
 void board_update(Board* b, float delta_t) {
     if (b == NULL || b->player == NULL) {
         return; // Si le plateau ou le joueur est NULL, on ne fait rien
@@ -145,7 +144,7 @@ void board_update(Board* b, float delta_t) {
  * 
  * @return COLLIDE_NONE | COLLIDE_DEADLY | COLLIDE_HARMLESS
  * 
- * tomber dans l'eau renvoie COLLIDE_DEADLY et marcher sur un rondin COLLIDE_NONE
+ * @note tomber dans l'eau renvoie COLLIDE_DEADLY et marcher sur un rondin COLLIDE_NONE
  */
 int check_future_collision(Board *b, int direction) {
     if (b == NULL) {
@@ -256,6 +255,21 @@ void ground_move(Board* b, int direction) {
     }
 }
 
+/**
+ * Génère une représentation textuelle (TUI) du plateau de jeu.
+ *
+ * Cette fonction crée une grille 2D de caractères représentant l'état actuel du plateau de jeu.
+ * Elle initialise la grille avec les modèles de sol, ajoute les obstacles (comme les trains et les rondins),
+ * et place le personnage du joueur (poulet) sur la grille.
+ *
+ * @param b Pointeur vers la structure Board contenant l'état du jeu.
+ *          - `b->grid_ground` : Tableau de structures Ground représentant chaque ligne du plateau.
+ *          - `b->player` : Pointeur vers la structure Player représentant le poulet.
+ *
+ * @return Un tableau 2D de caractères alloué dynamiquement (`char **`) représentant la grille TUI.
+ *         Chaque cellule contient un caractère correspondant au sol, aux obstacles ou au joueur.
+ *         L'appelant est responsable de libérer la mémoire allouée.
+ */
 
 char **grid_tui_make(Board *b) {
     char **grid = malloc(MAP_LEN * sizeof(char *));
@@ -330,10 +344,19 @@ void grid_tui_free(char **g) {
     free(g);
 }
 
+
+/**
+ * Alloue et initialise un tableau 2D de pointeurs vers des structures Ground
+ * Chaque ligne de la grille est initialisée à l'aide de la fonction `ground_generate`
+ * avec des valeurs par défaut.
+ *
+ * @return Ground** Un pointeur vers la grille 2D allouée de structures Ground.
+ *         L'appelant est responsable de libérer la mémoire allouée.
+ */
 Ground **grid_ground_make(void) {
     Ground **grid = malloc(MAP_LEN * sizeof(Ground *));
     for (int i = 0; i < MAP_LEN; i++) {
-        grid[i] = ground_generate(GROUND_GRASS, 0, 0, 0); // Placeholder pour initialiser chaque ligne
+        grid[i] = ground_generate(GROUND_GRASS, 0, 0, 0); // Valeurs par défaut pour initialiser chaque ligne
     }
     return grid;
 }
@@ -354,6 +377,10 @@ void grid_ground_starter_set(Board *b) {
     b->grid_ground[MAP_LEN-1] = ground_generate(GROUND_GRASS, 0, MAP_WIDTH, MAP_WIDTH);
 }
     
+/**
+ * Libère la mémoire allouée pour une grille de type Ground.
+ * @param g Un pointeur vers un tableau de pointeurs de type Ground à libérer.
+ */
 void grid_ground_free(Ground ** g){
     for (int i = 0; i<MAP_LEN; i++){
         ground_free(g[i]);
@@ -466,6 +493,13 @@ Ground *gen_road(int score, float previous_velo)
 /**
  * Génère un nouveau sol en fonction du score et des sols précédents.
  * La génération est simpliste pour l'instant.
+ *
+ * @param b Pointeur vers la structure Board contenant les informations du plateau de jeu.
+ *          Doit contenir un tableau de sols (grid_ground) non nul.
+ * @param score Le score actuel du joueur, utilisé pour ajuster la génération.
+ * 
+ * @return Un pointeur vers une structure Ground représentant le nouveau sol généré.
+ *         Retourne NULL si le pointeur Board ou grid_ground est nul.
  */
 Ground *gen_next_ground(Board *b, int score) {
     if (b == NULL || b->grid_ground == NULL) {
