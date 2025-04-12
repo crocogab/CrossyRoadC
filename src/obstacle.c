@@ -54,9 +54,9 @@ void obstacle_update(Obstacle *o, float delta_t, float velocity) {
     {
         // modulo à la main parce que math.h::fmod est bizarre
         if (o->h_position < 0) {
-            o->h_position = o->h_position + MAP_WIDTH;
-        } else if (o->h_position >= MAP_WIDTH) {
-            o->h_position = o->h_position - MAP_WIDTH;
+            o->h_position = o->h_position + MAP_WIDTH*DEFAULT_CELL_SIZE;
+        } else if (o->h_position >= MAP_WIDTH*DEFAULT_CELL_SIZE) {
+            o->h_position = o->h_position - MAP_WIDTH*DEFAULT_CELL_SIZE;
         }
     }
 }

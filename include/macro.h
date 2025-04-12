@@ -44,9 +44,9 @@
 //Définition des attributs de voiture
 #define CAR_LEN 1
 #define CAR_TYPE 100
-#define CAR_MAX_SPEED 4*DEFAULT_CELL_SIZE //Vitesse maximum de la voiture en valeur absolue
-#define CAR_MIN_SPEED DEFAULT_CELL_SIZE //Vitesse minimum de la voiture en valeur absolue
-#define CAR_MIN_NUMBER DEFAULT_CELL_SIZE //Nombre minimum de voitures sur une ligne
+#define CAR_MAX_SPEED 20 //Vitesse maximum de la voiture en valeur absolue
+#define CAR_MIN_SPEED 10 //Vitesse minimum de la voiture en valeur absolue
+#define CAR_MIN_NUMBER 3 //Nombre minimum de voitures sur une ligne
 
 //Définition des attributs de arbre
 #define TREE_LEN 0.5
@@ -63,9 +63,9 @@
 //Définition des attributs de truck
 #define TRUCK_LEN 3
 #define TRUCK_TYPE 104
-#define TRUCK_MAX_SPEED 4 //Vitesse maximum du camion en valeur absolue
-#define TRUCK_MIN_SPEED 1 //Vitesse minimum du camion en valeur absolue
-#define TRUCK_MIN_NUMBER 1 //Nombre minimum du camion sur une ligne
+#define TRUCK_MAX_SPEED (1/4)*DEFAULT_CELL_SIZE //Vitesse maximum du camion en valeur absolue
+#define TRUCK_MIN_SPEED (1/8)*DEFAULT_CELL_SIZE //Vitesse minimum du camion en valeur absolue
+#define TRUCK_MIN_NUMBER 2 //Nombre minimum du camion sur une ligne
 
 // Définition des attributs de log
 #define LOG_LEN 4
@@ -93,7 +93,7 @@
 //Définition des intervalles d'obstacles
 #define INTER_CAR_MIN 6
 #define INTER_TRUCK_MIN 8
-#define INTER_LOG_MIN 8
+#define INTER_LOG_MIN 8 
 
 
 

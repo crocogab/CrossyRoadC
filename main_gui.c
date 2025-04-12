@@ -173,7 +173,7 @@ int main() {
 
         //printf("Position du joueur : h_float = %f \n",p->h_position);
         
-        
+        // PROBLEME DE TRAIN A ECRAN
         // On efface l'écran
         SDL_Color const BACKGROUND_COLOR = {.r = 0xD0, .g = 0xD0, .b = 0xD0, .a = SDL_ALPHA_OPAQUE};
         if (SDL_SetRenderDrawColor(renderer, BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, BACKGROUND_COLOR.a))
@@ -195,8 +195,10 @@ int main() {
         //5. Maj de etat graphique
         
         draw_board(b,cam,display,colors,renderer,&sprite_sheet);
-        draw_chicken(p,&sprite_sheet,renderer,cam,display);
+        
         draw_obstacles(b,cam,display,colors,renderer,&sprite_sheet);
+
+        draw_chicken(p,&sprite_sheet,renderer,cam,display);
         
         //6. Affichage
         SDL_RenderPresent(renderer);
