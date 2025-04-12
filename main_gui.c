@@ -49,6 +49,7 @@ int main() {
         // Les sols
         .GRASS_COLOR_DARK = {181, 236, 93, SDL_ALPHA_OPAQUE},
         .GRASS_COLOR_BRIGHT = {189, 244, 101, SDL_ALPHA_OPAQUE},
+        .GRASS_COLOR_SHADOW = {134, 185, 58, SDL_ALPHA_OPAQUE},
         .GRASS_BORDER_COLOR = {86, 110, 50, SDL_ALPHA_OPAQUE},
         .DIRT_COLOR = {100, 56, 71, SDL_ALPHA_OPAQUE},
         .WATER_COLOR = {130, 244, 255, SDL_ALPHA_OPAQUE},
@@ -91,11 +92,11 @@ int main() {
     int running = 1;
     
     while (running){
-        
+        int direction = NEUTRAL;
         // 1. Action du joueur           
         if (SDL_PollEvent(&event)){ 
             switch (event.type){
-                int direction = NEUTRAL;
+                
                 case SDL_QUIT:
                     running=0;
                     break;
@@ -133,20 +134,20 @@ int main() {
         switch (collision_type) {
             case COLLIDE_NONE:
                 //mouvement autorise
-                if (p->direction == UP) {
+                if (direction== UP) {
                     score_actu++;
                     if (jump_back > 0) {
                         jump_back--;
                     }
-                } else if (p->direction == DOWN) {
+                } else if (direction == DOWN) {
                     score_actu--;
                     jump_back++;
                 }
             
             
-                if (p->direction != NEUTRAL) {
-                    move_player(p->direction, p);
-                    ground_move(b, p->direction,&sprite_sheet);
+                if (direction != NEUTRAL) {
+                    move_player(direction, p);
+                    ground_move(b, direction,&sprite_sheet);
                 }
                 break;
             
