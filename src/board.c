@@ -350,7 +350,7 @@ Ground *gen_water(int score, float previous_velo, Sprite_sheet *sprite_sheet)
     {
         type = GROUND_WATER_LOG;
         mini = 2;
-        maxi = 5;
+        maxi = 4;
     }
     return ground_generate(type, previous_velo, mini, maxi, sprite_sheet);
 }
