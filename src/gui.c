@@ -265,7 +265,7 @@ void draw_board(Board *b, Camera cam, Display_informations display, Colors color
     for (int i = 0; i < display.board_length; i++)
     {
         //Si on a une route avant on dessine une ROAD_BORDER
-        if (i >= 0 && (b->grid_ground[i]->type == GROUND_ROAD_CAR || b->grid_ground[i]->type == GROUND_ROAD_TRUCK) && (b->grid_ground[i-1]->type == GROUND_ROAD_CAR || b->grid_ground[i-1]->type == GROUND_ROAD_TRUCK))
+        if (i > 0 && (b->grid_ground[i]->type == GROUND_ROAD_CAR || b->grid_ground[i]->type == GROUND_ROAD_TRUCK) && (b->grid_ground[i-1]->type == GROUND_ROAD_CAR || b->grid_ground[i-1]->type == GROUND_ROAD_TRUCK))
         {
             draw_board_line(i, GROUND_ROAD_BORDER, cam, display, colors, renderer);
         }

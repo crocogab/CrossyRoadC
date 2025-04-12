@@ -91,8 +91,8 @@ int main() {
     
     while (running){
         
-                   
-        if (SDL_PollEvent(&event)){
+        // 1. Action du joueur           
+        if (SDL_PollEvent(&event)){ 
             switch (event.type){
                 case SDL_QUIT:
                     running=0;
@@ -100,18 +100,32 @@ int main() {
                 case SDL_KEYDOWN: // touche pressée
                     if (event.key.keysym.sym==SDLK_RIGHT){
                         
-                        move_player(RIGHT,p);
+                        
 
                     }
                     if (event.key.keysym.sym==SDLK_LEFT){
-                       move_player(LEFT,p);
+                       
                     }
-                    
+                    if (event.key.keysym.sym==SDLK_UP){
+                        move_player(UP,p);
+                        ground_move(b,UP);
+                    }
+                    if (event.key.keysym.sym==SDLK_DOWN){
+                        move_player(DOWN,p);
+                        ground_move(b,DOWN);
+                    }
 
                 default:
                     break;
             }
         }
+        // 2. Traiter action
+
+        // 3 Maj des mobs. 
+        board_update(b, 0.01);
+
+
+        
         
         // On efface l'écran
         SDL_Color const BACKGROUND_COLOR = {.r = 0xD0, .g = 0xD0, .b = 0xD0, .a = SDL_ALPHA_OPAQUE};
@@ -128,13 +142,13 @@ int main() {
         }
 
         // affichage
-        draw_board_line(0, GROUND_GRASS, cam, display, colors, renderer);
-        draw_board_line(1, GROUND_WATER_LILY, cam, display, colors, renderer);
-        draw_board_line(2, GROUND_ROAD_CAR, cam, display, colors, renderer);
-
-        draw_sprite_from_grid(p->h_position,3,CHICKEN_ID,3,&sprite_sheet,renderer,cam,display);
         
 
+        
+        
+        draw_board(b,cam,display,colors,renderer);
+        draw_sprite_from_grid(p->h_position,3,CHICKEN_ID,3,&sprite_sheet,renderer,cam,display);
+        
         SDL_RenderPresent(renderer);
         SDL_Delay(8); // ~60 FPS  
     }
