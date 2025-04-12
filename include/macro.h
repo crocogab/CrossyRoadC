@@ -8,10 +8,15 @@
 #define DOWN 67
 #define NEUTRAL 68
 
+//Définition de la taille de la map
+
+#define MAP_WIDTH 19 // Largeur de la map actuelle
+#define MAP_LEN 25 // Hauteur de la map actuelle
+
 //Définition des tailles par défaut de la map, pour les tests uniquement
-#define DEFAULT_CELL_SIZE 1.0
+#define DEFAULT_CELL_SIZE 121
 #define LEFT_MAP_X 0.0
-#define RIGHT_MAP_X 17.0
+#define RIGHT_MAP_X DEFAULT_CELL_SIZE*MAP_WIDTH
 
 //Définition des status de la game
 #define HOME 70 //Le menu d'acceuil est affiché
@@ -83,37 +88,13 @@
 #define COLLIDE_HARMLESS 112
 #define COLLIDE_ERROR 113
 
-// Définition des modèles de sol
-#define MODEL_GRASS '_'
-#define MODEL_ROAD '-'
-#define MODEL_WATER '~'
-#define MODEL_RAIL '='
-
-// Définition des modèles d'objets
-#define MODEL_CHICKEN '@'
-#define MODEL_TREE 'T'
-#define MODEL_CAR '>'
-#define MODEL_ROCK '#'
-#define MODEL_WATER_LILY 'W'
-#define MODEL_TRUCK 'D'
-#define MODEL_LOG '&'
-#define MODEL_TRAIN ')'
-#define MODEL_INCOMING_TRAIN '}'
-
 
 //Définition des intervalles d'obstacles
 #define INTER_CAR_MIN 6
 #define INTER_TRUCK_MIN 8
 #define INTER_LOG_MIN 8
 
-//Définition de la taille de la map
-#define MAP_WIDTH_GUI 19 // Largeur de la map en GUI
-#define MAP_WIDTH_TXT 9 // Largeur de la map en TUI
-#define MAP_LEN_GUI 25 // Hauteur de la map en GUI
-#define MAP_LEN_TXT 13 // Hauteur de la map en TUI
 
-#define MAP_WIDTH 18 // Largeur de la map actuelle
-#define MAP_LEN 26 // Hauteur de la map actuelle
 
 #define START_SIZE 7 // Taille de la zone de départ
 
