@@ -511,18 +511,32 @@ void draw_board(Board *b, Camera cam, Display_informations display, Colors color
  * @param renderer le renderer
  * 
  */
-void draw_obstacles(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet)
+void draw_entities(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet)
 {
     if (b == NULL || b->grid_ground == NULL) {
         return; // Si le plateau ou la grille du sol est NULL, on ne fait rien
     }
+
+    // On a un flag pour savoir si le joueur a déjà été affiché
+    bool displayed = false;
 
     for (int i = 0; i < MAP_LEN; i++)
     {
         Ground *ground = b->grid_ground[i];
         for (int j = 0; j < ground->nb_obstacles; j++)
         {
+            // Il ne faut pas oublier de dessiner le joueur
+            if (!displayed && i == V_POS && (ground->nb_obstacles == 0 || ground->obstacles[j]->h_position > b->player->h_position))
+            {
+                displayed = true;
+                draw_chicken(b->player, sprite_sheet, renderer, cam, display);
+            }
             draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
         }
+        if (!displayed && i == V_POS)
+        {
+            draw_chicken(b->player, sprite_sheet, renderer, cam, display);
+        }
+        
     }
 }

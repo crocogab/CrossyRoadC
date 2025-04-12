@@ -196,9 +196,9 @@ int main() {
         
         draw_board(b,cam,display,colors,renderer,&sprite_sheet);
         
-        draw_obstacles(b,cam,display,colors,renderer,&sprite_sheet);
+        draw_entities(b,cam,display,colors,renderer,&sprite_sheet);
 
-        draw_chicken(p,&sprite_sheet,renderer,cam,display);
+        //draw_chicken(p,&sprite_sheet,renderer,cam,display);
         
         //6. Affichage
         SDL_RenderPresent(renderer);

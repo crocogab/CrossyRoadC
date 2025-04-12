@@ -168,7 +168,7 @@ int main() {
         int sprite_reading_grid[17] = {BLUE_CAR_NB, BLUE_TRUCK_NB, CHICKEN_NB, COIN_NB, GAZ_TRUCK_NB, LILYPAD_NB, LOG_LONG_NB, LOG_MEDIUM_NB, LOG_SMALL_NB, ORANGE_CAR_NB, PURPLE_CAR_NB, RAIL_NB, RED_TRUCK_NB, ROCK_NB, TRAIN_NB, TRAIN_POLE_NB, TREE_NB};
 
 
-
+        /*
         draw_board_line(0, GROUND_GRASS, cam, display, colors, renderer, &sprite_sheet);
         draw_board_line(1, GROUND_WATER_LILY, cam, display, colors, renderer, &sprite_sheet);
         draw_board_line(2, GROUND_ROAD_CAR, cam, display, colors, renderer, &sprite_sheet);
@@ -182,11 +182,13 @@ int main() {
                 draw_sprite_from_grid(j*4*display.tile_size, i*2+3, i, j, &sprite_sheet, renderer, cam, display);
             }
         }
-        
-        /*
-        draw_board(test_board, cam, display, colors, renderer);
-        draw_chicken(test_board->player, &sprite_sheet, renderer, cam, display);
         */
+        
+        draw_board(test_board, cam, display, colors, renderer, &sprite_sheet);
+        test_board->player->h_position = 0;
+        draw_chicken(test_board->player, &sprite_sheet, renderer, cam, display);
+        draw_entities(test_board, cam, display, colors, renderer, &sprite_sheet);
+        
         // Switch framebuffer
         SDL_RenderPresent(renderer);
 
