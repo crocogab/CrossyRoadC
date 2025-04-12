@@ -159,7 +159,6 @@ void render_grid(char **tableau, int score_maxi, float h_pos) {
     // Afficher le score
     attron(A_BOLD);
     mvprintw(1, MAP_WIDTH + 3, "SCORE : %d", score_maxi);
-    mvprintw(2, MAP_WIDTH + 3, "h_pos : %f", h_pos);
     // Informations de débogage
     // mvprintw(2, MAP_WIDTH + 3, "[DEBUG] JOUEUR EN VIE: %d", g_board->player->alive);
     // mvprintw(3, MAP_WIDTH + 3, "[DEBUG] CHECK_FUTURE_COLLISION (TOP): %d", check_future_collision(g_board, UP));
