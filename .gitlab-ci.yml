@@ -11,6 +11,7 @@ build-job:
     - if [ -f "main_tui.o" ] || [ -f "main_tui" ]; then echo "Makefile is not cleaning well." && exit 1; else echo "Makefile is cleaning well."; fi
   only:
     - dev
+    - new_dev
 
 test-job-player:
   stage: test
@@ -31,6 +32,7 @@ test-job-player:
       fi
   only:
     - dev
+    - new_dev
 
 test-job-obstacle:
   stage: test
@@ -49,6 +51,7 @@ test-job-obstacle:
       fi
   only:
     - dev
+    - new_dev
 
 test-job-ground:
   stage: test
@@ -67,6 +70,7 @@ test-job-ground:
       fi
   only:
     - dev
+    - new_dev
 
 
 test-job-board:
@@ -86,6 +90,7 @@ test-job-board:
       fi
   only:
     - dev
+    - new_dev 
 
 test-job-random-custom:
   stage: test
@@ -104,6 +109,7 @@ test-job-random-custom:
       fi
   only:
     - dev
+    - new_dev
 
 final-test:
   stage: test
@@ -128,3 +134,4 @@ final-test:
     - test-job-ground
   only:
     - dev
+    - new_dev
