@@ -72,6 +72,9 @@ void player_free(Player *player)
 
 void move_player(int direction, Player *player)
 {
+    int current_cell_x;
+    int new_cell_x;
+    int wrapped_cell_x;
     switch (direction)
     {
     case LEFT:
@@ -81,7 +84,14 @@ void move_player(int direction, Player *player)
         }
         else
         {
-            player->h_position -= player->grid_cell_width;
+            // POUR ETRE TOUJOURS SUR LA BONNE PARTIE DE LA CASE -> EVITE d ETRE AU MILIEU DE 2 CASES
+            current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
+            new_cell_x = current_cell_x - 1;
+            
+            wrapped_cell_x = (new_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
+            
+            player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
+
         }
         player->direction = LEFT;
         player->previous_direction = LEFT;
@@ -94,18 +104,34 @@ void move_player(int direction, Player *player)
         }
         else
         {
-            player->h_position += player->grid_cell_width;
+            current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
+            new_cell_x = current_cell_x + 1;
+            
+            wrapped_cell_x = (new_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
+            
+            player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
         }
         player->direction = RIGHT;
         player->previous_direction = RIGHT;
         break;
 
     case UP:
+        current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
+                    
+        wrapped_cell_x = (current_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
+            
+        player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
+        
         player->direction = UP;
         player->previous_direction = UP;
         break;
 
     case DOWN:
+        current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
+                    
+        wrapped_cell_x = (current_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
+            
+        player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
         player->direction = DOWN;
         player->previous_direction = DOWN;
         break;

@@ -208,7 +208,7 @@ int main() {
         
         draw_entities(b,cam,display,colors,renderer,&sprite_sheet);
 
-
+        printf("PLAYER POS hpos : %f\n",p->h_position);
     
         //draw_chicken(p,&sprite_sheet,renderer,cam,display);
         
