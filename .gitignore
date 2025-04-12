@@ -60,6 +60,7 @@ Thumbs.db
 # on enleve les executables du projet
 main
 main_tui
+main_gui
 test_*
 !test_*.c
 
