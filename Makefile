@@ -3,17 +3,12 @@ HEADER_DIR = ./include
 SRC_DIR = ./src
 TEST_DIR = ./Tests
 
-# cibles (GUI et TUI)
+# cible GUI uniquement
 TARGET_GUI = main_gui
-TARGET_TUI = main_tui
 
 # fichiers source GUI
 SRCS_GUI = main_gui.c $(SRC_DIR)/gui.c $(SRC_DIR)/game.c $(SRC_DIR)/board.c $(SRC_DIR)/player.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c
 OBJS_GUI = $(SRCS_GUI:.c=.o)
-
-# fichiers sources TUI
-SRCS_TUI = main_tui.c $(SRC_DIR)/game.c $(SRC_DIR)/board.c $(SRC_DIR)/player.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c
-OBJS_TUI = $(SRCS_TUI:.c=.o)
 
 # Tests
 TEST_BOARD = test_board
@@ -40,43 +35,36 @@ TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUST
 CC = clang
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -g3 -I$(HEADER_DIR)
 
-# sanityzer
+# sanitizers
 CFLAGS += -fsanitize=address -fno-omit-frame-pointer
 LDFLAGS = -fsanitize=address
 
 # libs
-LIBS_TUI = -lncurses
 LIBS_GUI = $(shell pkg-config --libs sdl2 SDL2_image json-c)
 CFLAGS_GUI = $(shell pkg-config --cflags sdl2 SDL2_image json-c)
 
 # Cible par défaut : GUI
 all: $(TARGET_GUI)
 
-# ---------- Compilation des cibles ----------
-
-# GUI
+# ---------- Compilation de la cible ----------
 $(TARGET_GUI): $(OBJS_GUI)
 	$(CC) $(OBJS_GUI) $(LDFLAGS) $(LIBS_GUI) -o $@
 
-# TUI
-$(TARGET_TUI): $(OBJS_TUI)
-	$(CC) $(OBJS_TUI) $(LDFLAGS) $(LIBS_TUI) -o $@
-
 # ---------- Compilation des tests ----------
 $(TEST_BOARD): $(TEST_BOARD_SRCS:.c=.o)
-	$(CC) $^ $(LDFLAGS) $(LIBS_TUI) -o $@
+	$(CC) $^ $(LDFLAGS) -o $@
 
 $(TEST_PLAYER): $(TEST_PLAYER_SRCS:.c=.o)
-	$(CC) $^ $(LDFLAGS) $(LIBS_TUI) -o $@
+	$(CC) $^ $(LDFLAGS) -o $@
 
 $(TEST_OBSTACLE): $(TEST_OBSTACLE_SRCS:.c=.o)
-	$(CC) $^ $(LDFLAGS) $(LIBS_TUI) -o $@
+	$(CC) $^ $(LDFLAGS) -o $@
 
 $(TEST_GROUND): $(TEST_GROUND_SRCS:.c=.o)
-	$(CC) $^ $(LDFLAGS) $(LIBS_TUI) -o $@
+	$(CC) $^ $(LDFLAGS) -o $@
 
 $(TEST_RANDOM_CUSTOM): $(TEST_RANDOM_CUSTOM_SRCS:.c=.o)
-	$(CC) $^ $(LDFLAGS) $(LIBS_TUI) -o $@
+	$(CC) $^ $(LDFLAGS) -o $@
 
 $(TEST_GUI): $(TEST_GUI_SRCS:.c=.o)
 	$(CC) $^ $(LDFLAGS) $(LIBS_GUI) -o $@
@@ -88,9 +76,6 @@ $(TEST_GUI): $(TEST_GUI_SRCS:.c=.o)
 # ---------- Exécution ----------
 run_gui: $(TARGET_GUI)
 	./$(TARGET_GUI)
-
-run_tui: $(TARGET_TUI)
-	./$(TARGET_TUI)
 
 test: $(TEST_TARGETS)
 
@@ -117,8 +102,8 @@ run_tests: $(TEST_TARGETS)
 
 # ---------- Nettoyage ----------
 clean:
-	rm -f $(OBJS_GUI) $(OBJS_TUI) $(TARGET_GUI) $(TARGET_TUI) $(TEST_TARGETS)
+	rm -f $(OBJS_GUI) $(TARGET_GUI) $(TEST_TARGETS)
 	rm -f $(TEST_BOARD_SRCS:.c=.o) $(TEST_PLAYER_SRCS:.c=.o) $(TEST_OBSTACLE_SRCS:.c=.o) $(TEST_GROUND_SRCS:.c=.o) $(TEST_RANDOM_CUSTOM_SRCS:.c=.o) $(TEST_GUI_SRCS:.c=.o)
 	rm -f *~ \#*\# .\#*
 
-.PHONY: all clean test run_tests run_tui run_gui run_test_* 
+.PHONY: all clean test run_tests run_gui run_test_*

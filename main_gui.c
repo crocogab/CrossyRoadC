@@ -24,6 +24,7 @@ int main() {
     b = g.board;
     g_board = b;
 
+    p->h_position=1000;
     board_set_player(b, p);
 
 
@@ -41,11 +42,11 @@ int main() {
     //Il faudra aussi inclure les autres bibliotheques SDL
 
     // Creation de la fenetre
-    int const width = 1000;
-    int const height = 800;
+    int const width = 1500;
+    int const height = 1000;
 
     // Variables de la caméra
-    Camera cam = {1.25f, 150, -65, 0.25f};
+    Camera cam = {1.25f, 150-400, -350-65, 0.25f};
 
     // Variables de la grille
     Display_informations display = {121, 14, 50, 1, 25};
@@ -147,7 +148,7 @@ int main() {
         
         
         draw_board(b,cam,display,colors,renderer);
-        draw_sprite_from_grid(p->h_position,3,CHICKEN_ID,3,&sprite_sheet,renderer,cam,display);
+        draw_sprite_from_grid(p->h_position,7,CHICKEN_ID,3,&sprite_sheet,renderer,cam,display);
         
         SDL_RenderPresent(renderer);
         SDL_Delay(8); // ~60 FPS  
@@ -156,4 +157,5 @@ int main() {
     unload_spritesheet(sprite_sheet);
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+    board_free(b);
 }
