@@ -547,7 +547,7 @@ void draw_entities(Board *b, Camera cam, Display_informations display, Colors co
                 break;
 
             case TREE_TYPE:
-                draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), random_int(0, TREE_NB-1), sprite_sheet, renderer, cam, display);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, display);
                 break;
 
             default:

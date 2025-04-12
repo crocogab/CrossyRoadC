@@ -141,7 +141,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
                 choice = random_int(0, 1); // choix entre un arbre et un rocher
                 if (choice == 0)
                 {
-                    obs[i] = obstacle_make(TREE_TYPE, variant, (int)(obs_h_pos_array[i]*DEFAULT_CELL_SIZE), sprite_sheet->sprites[type_var_to_id(TREE_TYPE, variant)].lenght);
+                    obs[i] = obstacle_make(TREE_TYPE, random_int(0, TREE_NB-1), (int)(obs_h_pos_array[i]*DEFAULT_CELL_SIZE), sprite_sheet->sprites[type_var_to_id(TREE_TYPE, variant)].lenght);
                 }
                 else
                 {
