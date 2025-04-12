@@ -229,11 +229,11 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
     case GROUND_WATER_LOG:
         if (previous_velo <= 0)
         {
-            velo = random_float((float)TRUCK_MIN_SPEED, (float)TRUCK_MAX_SPEED);
+            velo = random_float((float)LOG_MIN_SPEED, (float)LOG_MAX_SPEED);
         }
         else
         {
-            velo = - random_float((float)TRUCK_MIN_SPEED, (float)TRUCK_MAX_SPEED);
+            velo = - random_float((float)LOG_MIN_NUMBER, (float)LOG_MAX_SPEED);
         }
 
         if (max_nb >= MAP_WIDTH / INTER_LOG_MIN) {
