@@ -53,6 +53,7 @@ typedef struct Colors_t
 {
     SDL_Color GRASS_COLOR_DARK;
     SDL_Color GRASS_COLOR_BRIGHT;
+    SDL_Color GRASS_COLOR_SHADOW;
     SDL_Color GRASS_BORDER_COLOR;
     SDL_Color DIRT_COLOR;
     SDL_Color WATER_COLOR;

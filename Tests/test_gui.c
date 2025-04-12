@@ -35,6 +35,7 @@ int main() {
         // Les sols
         .GRASS_COLOR_DARK = {181, 236, 93, SDL_ALPHA_OPAQUE},
         .GRASS_COLOR_BRIGHT = {189, 244, 101, SDL_ALPHA_OPAQUE},
+        .GRASS_COLOR_SHADOW = {134, 185, 58, SDL_ALPHA_OPAQUE},
         .GRASS_BORDER_COLOR = {86, 110, 50, SDL_ALPHA_OPAQUE},
         .DIRT_COLOR = {100, 56, 71, SDL_ALPHA_OPAQUE},
         .WATER_COLOR = {130, 244, 255, SDL_ALPHA_OPAQUE},
@@ -168,7 +169,7 @@ int main() {
 
 
 
-        draw_board_line(0, GROUND_TRAIN, cam, display, colors, renderer, &sprite_sheet);
+        draw_board_line(0, GROUND_GRASS, cam, display, colors, renderer, &sprite_sheet);
         draw_board_line(1, GROUND_WATER_LILY, cam, display, colors, renderer, &sprite_sheet);
         draw_board_line(2, GROUND_ROAD_CAR, cam, display, colors, renderer, &sprite_sheet);
 

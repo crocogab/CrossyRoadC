@@ -113,7 +113,16 @@ void draw_board_line(int x, int type, Camera cam, Display_informations display, 
     Point3d p3d_4 = {display.line_length*display.tile_size, x * display.line_width*display.tile_size, 0};   
     switch (type)
     {
-    case GROUND_GRASS:
+    case GROUND_GRASS:    
+
+        // On pose la zone ombragée
+        draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.GRASS_COLOR_SHADOW, cam, renderer);
+        
+        // Dessin du sol
+        p3d_1.x = LEFT_MAP_X;
+        p3d_2.x = LEFT_MAP_X;
+        p3d_3.x = RIGHT_MAP_X;
+        p3d_4.x = RIGHT_MAP_X;
         if (x % 2 == 1)
         {
             draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.GRASS_COLOR_DARK, cam, renderer);
@@ -122,8 +131,12 @@ void draw_board_line(int x, int type, Camera cam, Display_informations display, 
         {
             draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.GRASS_COLOR_BRIGHT, cam, renderer);
         }
-        
-        // Dessin du sol
+
+        // Dessin des bordures
+        p3d_1.x = 0;
+        p3d_2.x = 0;
+        p3d_3.x = display.line_length*display.tile_size;
+        p3d_4.x = display.line_length*display.tile_size;
                
         // On met le plan à la verticale et aligné avec le sol précedemment tracé
         p3d_2.z -= display.border_gap;
