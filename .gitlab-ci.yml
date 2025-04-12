@@ -1,13 +1,11 @@
 build-job:
   stage: build
-  image: debian:bullseye
+  image: alpine:latest 
   script:
-    - export DEBIAN_FRONTEND=noninteractive
-    - apt-get update -y
-    - apt-get upgrade -y libsdl2-dev
-    - apt-get install -y clang make libncurses-dev libsdl2-dev libsdl2-image-dev libjson-c-dev
+    - apk update
+    - apk add clang make compiler-rt ncurses-dev musl-dev
     - echo "Test du Makefile"
-    - make all
+    - make run_tui
     - if [ -f "main_tui" ]; then echo "Makefile is compiling."; else echo "main_tui not found. " && exit 1; fi
     - make clean
     - if [ -f "main_tui.o" ] || [ -f "main_tui" ]; then echo "Makefile is not cleaning well." && exit 1; else echo "Makefile is cleaning well."; fi
