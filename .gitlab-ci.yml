@@ -3,7 +3,7 @@ build-job:
   image: alpine:latest 
   script:
     - apk update
-    - apk add clang make compiler-rt ncurses-dev musl-dev
+    - apk add clang make compiler-rt ncurses-dev musl-dev sdl2-dev libsdl2-image-dev libjson-c-dev
     - echo "Test du Makefile"
     - make all
     - if [ -f "main_tui" ]; then echo "Makefile is compiling."; else echo "main_tui not found. " && exit 1; fi
