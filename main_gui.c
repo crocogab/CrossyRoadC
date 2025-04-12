@@ -178,7 +178,7 @@ int main() {
             // update si on est mort
         } else {
             
-            board_update(b, 1);
+            board_update(b, 1, &sprite_sheet);
         }
 
         //printf("Position du joueur : h_float = %f \n",p->h_position);

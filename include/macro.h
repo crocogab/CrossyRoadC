@@ -49,38 +49,32 @@
 #define CAR_MIN_NUMBER 3 //Nombre minimum de voitures sur une ligne
 
 //Définition des attributs de arbre
-#define TREE_LEN 0.5
 #define TREE_TYPE 101
 
 //Définition des attributs de rock
-#define ROCK_LEN 0.5
 #define ROCK_TYPE 102
 
 //Définition des attributs de water lily
-#define WATER_LILY_LEN 0.5
 #define WATER_LILY_TYPE 103
 
 //Définition des attributs de truck
-#define TRUCK_LEN 3
 #define TRUCK_TYPE 104
 #define TRUCK_MAX_SPEED 8 //Vitesse maximum du camion en valeur absolue
 #define TRUCK_MIN_SPEED 4 //Vitesse minimum du camion en valeur absolue
 #define TRUCK_MIN_NUMBER 1 //Nombre minimum du camion sur une ligne
 
 // Définition des attributs de log
-#define LOG_LEN 4
 #define LOG_TYPE 105
-#define LOG_MAX_SPEED 2 
+#define LOG_MAX_SPEED 2
 #define LOG_MIN_SPEED 1.5
 #define LOG_MIN_NUMBER 2
 
 // Définition des attributs de train
 #define TRAIN_TYPE 106
-#define TRAIN_MIN_SPEED 40
-#define TRAIN_MAX_SPEED 40
+#define TRAIN_MIN_SPEED 50
+#define TRAIN_MAX_SPEED 50
 #define TRAIN_MIN_TIME 700
 #define TRAIN_MAX_TIME 700
-#define TRAIN_LEN MAP_WIDTH*2 //Taille d'un wagon
 #define TRAIN_ALERT_TIME 250 // temps pour lequel on avertit de l'arrivée d'un train
 
 // Définition des types de collisions
@@ -91,11 +85,9 @@
 
 
 //Définition des intervalles d'obstacles
-#define INTER_CAR_MIN 8*DEFAULT_CELL_SIZE
-#define INTER_TRUCK_MIN 9*DEFAULT_CELL_SIZE
-#define INTER_LOG_MIN 10*DEFAULT_CELL_SIZE
-
-
+#define INTER_CAR_MIN 2*DEFAULT_CELL_SIZE
+#define INTER_TRUCK_MIN 3*DEFAULT_CELL_SIZE
+#define INTER_LOG_MIN 1*DEFAULT_CELL_SIZE
 
 #define START_SIZE 7 // Taille de la zone de départ
 

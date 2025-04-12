@@ -76,7 +76,7 @@ void board_set_player(Board* b, Player* player) {
  * @param[in] b Le plateau à mettre à jour
  * @param[in] delta_t le temps qui s'est écoulé
  */
-void board_update(Board* b, float delta_t) {
+void board_update(Board* b, float delta_t, Sprite_sheet *sprite_sheet) {
     if (b == NULL || b->player == NULL) {
         return; // Si le plateau ou le joueur est NULL, on ne fait rien
     }
@@ -97,12 +97,12 @@ void board_update(Board* b, float delta_t) {
                 int s = random_int(0, 1);
                 if (s == 0)
                 {
-                    ground->obstacles[0]->h_position = -TRAIN_LEN;
+                    ground->obstacles[0]->h_position = -sprite_sheet->sprites[TRAIN_ID].lenght;
                     ground->velocity = TRAIN_MAX_SPEED;
                 }
                 else
                 {
-                    ground->obstacles[0]->h_position = MAP_WIDTH + TRAIN_LEN;
+                    ground->obstacles[0]->h_position = MAP_WIDTH + sprite_sheet->sprites[TRAIN_ID].lenght;
                     ground->velocity = -TRAIN_MAX_SPEED;
                 }
                 ground->special_attr = random_int(TRAIN_MIN_TIME, TRAIN_MAX_TIME);
