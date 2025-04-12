@@ -526,7 +526,7 @@ void draw_entities(Board *b, Camera cam, Display_informations display, Colors co
         for (int j = 0; j < ground->nb_obstacles; j++)
         {
             // Il ne faut pas oublier de dessiner le joueur
-            if (!displayed && i == V_POS && (ground->nb_obstacles == 0 || ground->obstacles[j]->h_position > b->player->h_position))
+            if (!displayed && i == V_POS && !(ground->type == GROUND_WATER_LILY || ground->type == GROUND_WATER_LOG) && (ground->nb_obstacles == 0 || ground->obstacles[j]->h_position > b->player->h_position))
             {
                 displayed = true;
                 draw_chicken(b->player, sprite_sheet, renderer, cam, display);
@@ -553,6 +553,12 @@ void draw_entities(Board *b, Camera cam, Display_informations display, Colors co
             default:
                 draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
                 break;
+            }
+
+            if (!displayed && i == V_POS && (ground->type == GROUND_WATER_LILY || ground->type == GROUND_WATER_LOG))
+            {
+                displayed = true;
+                draw_chicken(b->player, sprite_sheet, renderer, cam, display);
             }
 
 
