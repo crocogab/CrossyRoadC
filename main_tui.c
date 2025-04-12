@@ -160,6 +160,11 @@ int main(void) {
                     mvaddch(y-MEMORISATION, x+1, tableau[y][x]);
                     attroff(COLOR_PAIR(5)); // desactive
                     break;
+                case MODEL_INCOMING_TRAIN:
+                    attron(COLOR_PAIR(3)); // active couleur roche
+                    mvaddch(y-MEMORISATION, x+1, MODEL_RAIL);
+                    attroff(COLOR_PAIR(3)); // desactive
+                    break;
 
                 default:
                     mvaddch(y-MEMORISATION,x+1,tableau[y][x]);

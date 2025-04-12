@@ -111,7 +111,7 @@ void board_update(Board* b, float delta_t) {
         }
         else if (ground->type == GROUND_TRAIN && ground->special_attr > 0)
         {
-            ground->velocity == 0;
+            
             ground->special_attr -= 1;
         }
 
@@ -175,7 +175,7 @@ int check_future_collision(Board *b, int direction) {
             break;
     }
     Ground *g = b->grid_ground[lig];
-    Couple hb;
+    
     
     if (g->type == GROUND_GRASS) {
         for (int i = 0; i < g->nb_obstacles; i++) {
@@ -280,6 +280,12 @@ char **grid_tui_make(Board *b) {
                     if (j >= 0 && j < MAP_WIDTH) {
                         grid[lig][j] = g->obstacles[i]->model;
                     }
+                }
+                if (g->special_attr <= 200 && g->special_attr>0){
+                    for (int j = 0;j < MAP_WIDTH;j++) {
+                        grid[lig][j] = MODEL_INCOMING_TRAIN;
+                    }
+                    
                 }
             }
             else

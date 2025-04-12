@@ -74,6 +74,7 @@
 #define TRAIN_MIN_TIME 700
 #define TRAIN_MAX_TIME 700
 #define TRAIN_LEN MAP_WIDTH*2 //Taille d'un wagon
+#define TRAIN_ALERT_TIME 250 // temps pour lequel on avertit de l'arrivée d'un train
 
 // Définition des types de collisions
 #define COLLIDE_NONE 110
@@ -96,6 +97,7 @@
 #define MODEL_TRUCK 'D'
 #define MODEL_LOG '&'
 #define MODEL_TRAIN ')'
+#define MODEL_INCOMING_TRAIN '}'
 
 
 //Définition des intervalles d'obstacles
