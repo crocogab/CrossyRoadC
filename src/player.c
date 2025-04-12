@@ -5,14 +5,23 @@
 
 
 /**
- * Crée un pointeur vers un nouveau joueur
- * initialisé avec les paramètres donnés.
- * Cette structure représente le personnage
- * contrôlé par le joueur
- * La structure est allouée sur le tas.
+ * Crée un pointeur vers un nouveau joueur initialisé avec les paramètres donnés.
  * 
- * @author : Raphaël
- * @pre : 0 <= h_position < fin_de_la_map
+ * Cette fonction alloue dynamiquement une structure Player sur le tas et
+ * l'initialise avec les valeurs fournies. Cette structure représente le 
+ * personnage contrôlé par le joueur dans le jeu.
+ * 
+ * @param grid_cell_size La taille (largeur) d'une cellule de la grille, utilisée pour le joueur.
+ * @param h_position La position horizontale initiale du joueur sur la grille.
+ * @param direction La direction initiale du joueur (par exemple, 1 pour droite, -1 pour gauche).
+ * @param alive L'état initial de vie du joueur (true si vivant, false sinon).
+ * @param isJumping L'état initial de saut du joueur (true si en train de sauter, false sinon).
+ * @param score Le score initial du joueur.
+ * 
+ * @return Player* Un pointeur vers la structure Player nouvellement créée et initialisée. 
+ *         Retourne NULL si l'allocation mémoire échoue. (Note: le code actuel ne gère pas l'échec de malloc).
+ * 
+ * @pre 0 <= h_position < fin_de_la_map (La position horizontale doit être dans les limites de la carte).
  */
 Player *player_make(float grid_cell_size, float h_position, int direction, bool alive, bool isJumping, int score)
 {
@@ -27,10 +36,12 @@ Player *player_make(float grid_cell_size, float h_position, int direction, bool 
 }
 
 /**
- * Crée un nouveau personnage au joueur initialisé
- * avec les paramètres nécessaires au début de la partie.
- * 
- * @author : Raphaël
+ * @brief Crée un nouveau personnage joueur initialisé pour le début de partie.
+ *
+ * Initialise un joueur avec les paramètres par défaut nécessaires
+ * au commencement d'une partie (taille, position centrale, direction UP, etc.).
+ *
+ * @return Player* Un pointeur vers la structure Player nouvellement créée et initialisée.
  */
 Player *player_start()
 {
@@ -38,11 +49,9 @@ Player *player_start()
 }
 
 /**
- * Libère la mémoire associée à l'entité player.
- * 
- * @param[in] player L'entité dont on veut libérer la mémoire
- * 
- * @author : Raphaël
+ * Libère la mémoire allouée pour une structure Player.
+ *
+ * @param player Pointeur vers la structure Player à libérer.
  */
 void player_free(Player *player)
 {
@@ -59,6 +68,7 @@ void player_free(Player *player)
  * 
  * @author : Raphaël
  */
+
 void move_player(int direction, Player *player)
 {
     switch (direction)

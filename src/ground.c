@@ -4,6 +4,17 @@
 #include "macro.h"
 #include "random_custom.h"
 
+/**
+ * Crée un objet Ground avec les paramètres spécifiés.
+ * 
+ * @param obstacles Tableau de pointeurs vers les obstacles associés au sol.
+ * @param velocity Vitesse des obstacles sur la ligne.
+ * @param type Type de sol (défini dans les macros).
+ * @param nb_obstacles Nombre d'obstacles sur la ligne.
+ * @param model Modèle graphique du sol.
+ * @param special_attr Attribut spécial associé au sol (par exemple, temps pour un train).
+ * @return Un pointeur vers un objet Ground alloué dynamiquement.
+ */
 Ground *ground_make(Obstacle **obstacles, float velocity, int type, int nb_obstacles, char model, int special_attr) {
     Ground *g = malloc(sizeof(Ground));
     g->obstacles = obstacles; 
@@ -16,6 +27,11 @@ Ground *ground_make(Obstacle **obstacles, float velocity, int type, int nb_obsta
     return g;
 }
 
+/**
+ * @brief Libère la mémoire associée à un objet Ground.
+ * 
+ * @param g Pointeur vers l'objet Ground à libérer.
+ */
 void ground_free(Ground *g) {
     for (int i = 0; i < g->nb_obstacles; i++)
     {
@@ -25,15 +41,15 @@ void ground_free(Ground *g) {
     free(g);
 }
 
+
 /**
- * Génére un sol d'un type donné en fonction du type donné (cf macro.h).
- * La mémoire est allouée par cette fonction
- * Ne fonctionne que pour les voitures et les arbres
+ * Génère un sol d'un type donné avec des obstacles et des paramètres spécifiques.
  * 
- * @param [type] le type de sol (macro.h)
- * @param [previous_velo] la velocité du sol précédent pour éviter les conflits (sans vitesse = 0)
- * 
- * @return : un pointeur vers un sol alloué sur le tas
+ * @param type Type de sol à générer (défini dans les macros).
+ * @param previous_velo Vitesse du sol précédent pour éviter les conflits.
+ * @param min_nb Nombre minimum d'obstacles à générer.
+ * @param max_nb Nombre maximum d'obstacles à générer.
+ * @return Un pointeur vers un objet Ground alloué dynamiquement.
  */
 Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
 {   
@@ -190,6 +206,12 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb)
     return ans;
 }
 
+/**
+ * Retourne le modèle graphique associé à un type de sol donné.
+ * 
+ * @param type Type de sol (défini dans les macros).
+ * @return Le caractère représentant le modèle graphique du sol.
+ */
 char ground_model_of_type(int type) {
     switch (type) {
         case GROUND_GRASS:
