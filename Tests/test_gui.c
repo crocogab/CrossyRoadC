@@ -168,14 +168,14 @@ int main() {
 
 
 
-        draw_board_line(0, GROUND_GRASS, cam, display, colors, renderer);
-        draw_board_line(1, GROUND_WATER_LILY, cam, display, colors, renderer);
-        draw_board_line(2, GROUND_ROAD_CAR, cam, display, colors, renderer);
+        draw_board_line(0, GROUND_TRAIN, cam, display, colors, renderer, &sprite_sheet);
+        draw_board_line(1, GROUND_WATER_LILY, cam, display, colors, renderer, &sprite_sheet);
+        draw_board_line(2, GROUND_ROAD_CAR, cam, display, colors, renderer, &sprite_sheet);
 
         for (int i = 0; i < 15; i++)
         {
-            draw_board_line(i*2+3, GROUND_ROAD_BORDER, cam, display, colors, renderer);
-            draw_board_line(i*2+4, GROUND_ROAD_BORDER, cam, display, colors, renderer);
+            draw_board_line(i*2+3, GROUND_ROAD_BORDER, cam, display, colors, renderer, &sprite_sheet);
+            draw_board_line(i*2+4, GROUND_ROAD_BORDER, cam, display, colors, renderer, &sprite_sheet);
             for (int j = 0; j < sprite_reading_grid[i]; j++)
             {
                 draw_sprite_from_grid(j*4*display.tile_size, i*2+3, i, j, &sprite_sheet, renderer, cam, display);

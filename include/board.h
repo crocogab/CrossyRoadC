@@ -29,7 +29,7 @@ Ground **grid_ground_make(Sprite_sheet *sprite_sheet);
 void grid_ground_free(Ground **);
 Ground *gen_next_ground(Board *b, int score, Sprite_sheet *sprite_sheet);
 
-void draw_board(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer);
+void draw_board(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet);
 
 #endif
 

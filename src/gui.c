@@ -105,7 +105,7 @@ void draw_quad_from_3d(Point3d p1, Point3d p2, Point3d p3, Point3d p4, SDL_Color
  * @param colors couleurs
  * @param renderer le renderer
  */
-void draw_board_line(int x, int type, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer)
+void draw_board_line(int x, int type, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet)
 {
     Point3d p3d_1 = {0, x * display.line_width*display.tile_size, 0};
     Point3d p3d_2 = {0, (x + 1) * display.line_width*display.tile_size, 0};
@@ -201,8 +201,11 @@ void draw_board_line(int x, int type, Camera cam, Display_informations display, 
         draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.ROAD_BORDER_COLOR, cam, renderer);
 
         // On dessine les rails TODO
-
-
+        for (int i = 0; i < display.line_length; i++)
+        {
+            draw_sprite((Point3d){i*display.tile_size, (x+1)*display.tile_size, 0}, RAIL_ID, 0, sprite_sheet, renderer, cam);
+        }
+        
         break;
     
     case GROUND_ROAD_BORDER:
