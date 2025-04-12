@@ -95,11 +95,6 @@ int main() {
     
     
     while (g.status==PLAYING){
-        if (!p->alive) {
-            g.status = DEAD;
-            break; // exit direct quand est mort
-        }
-
         int direction = NEUTRAL;
         // 1. Action du joueur           
         if (SDL_PollEvent(&event)){ 
