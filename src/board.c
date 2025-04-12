@@ -501,3 +501,28 @@ void draw_board(Board *b, Camera cam, Display_informations display, Colors color
         }
     }
 }
+
+/**
+ * Fonction qui dessine les obstacles
+ * @param b le plateau de jeu
+ * @param cam la caméra
+ * @param display les informations d'affichage
+ * @param colors les couleurs
+ * @param renderer le renderer
+ * 
+ */
+void draw_obstacles(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet)
+{
+    if (b == NULL || b->grid_ground == NULL) {
+        return; // Si le plateau ou la grille du sol est NULL, on ne fait rien
+    }
+
+    for (int i = 0; i < MAP_LEN; i++)
+    {
+        Ground *ground = b->grid_ground[i];
+        for (int j = 0; j < ground->nb_obstacles; j++)
+        {
+            draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[i]->variant), 0, sprite_sheet, renderer, cam, display);
+        }
+    }
+}

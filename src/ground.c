@@ -274,3 +274,4 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
     Ground *ans = ground_make(obs, velo, type, nb, special_attr);
     return ans;
 }
+
