@@ -109,3 +109,45 @@ void move_player(int direction, Player *player)
         printf("Invalid input : direction invalide : %d\n", direction);
     }
 }
+
+
+void move_player_gui(int direction, Player *player)
+{
+    switch (direction)
+    {
+    case LEFT:
+        if (player->h_position - player->grid_cell_width < LEFT_MAP_X)
+        {
+            printf("Invalid move: direction %s\n", "left");
+        }
+        else
+        {
+            player->h_position -= player->grid_cell_width;
+        }
+        player->direction = LEFT;
+        break;
+
+    case RIGHT:
+        if (player->h_position + player->grid_cell_width > RIGHT_MAP_X)
+        {
+            printf("Invalid move: direction %s\n", "right");
+        }
+        else
+        {
+            player->h_position += player->grid_cell_width;
+        }
+        player->direction = RIGHT;
+        break;
+
+    case UP:
+        player->direction = UP;
+        break;
+
+    case DOWN:
+        player->direction = DOWN;
+        break;
+    
+    default:
+        printf("Invalid input : direction invalide : %d\n", direction);
+    }
+}

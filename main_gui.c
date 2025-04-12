@@ -17,7 +17,7 @@ int main() {
     Board *b;
     g_board = NULL;
 
-
+    
     // initialisation du plateau
 
     game_start(&g);
@@ -49,7 +49,8 @@ int main() {
 
     // Variables de la grille
     Display_informations display = {121, 14, 50, 1, 25};
-
+    
+    p->grid_cell_width=display.tile_size;
     // Couleurs de Crossy_road
     Colors colors = {
         // Les sols
@@ -87,17 +88,58 @@ int main() {
 
     SDL_Event event;
     int running = 1;
+    
     while (running){
+        
+                   
         if (SDL_PollEvent(&event)){
             switch (event.type){
                 case SDL_QUIT:
                     running=0;
                     break;
                 case SDL_KEYDOWN: // touche pressée
-                    draw_board_line(0,GROUND_GRASS,cam,display,colors,renderer);
+                    if (event.key.keysym.sym==SDLK_RIGHT){
+                        
+                        move_player(RIGHT,p);
 
+                    }
+                    if (event.key.keysym.sym==SDLK_LEFT){
+                       move_player(LEFT,p);
+                    }
+                    
+
+                default:
+                    break;
             }
         }
+        
+        // On efface l'écran
+        SDL_Color const BACKGROUND_COLOR = {.r = 0xD0, .g = 0xD0, .b = 0xD0, .a = SDL_ALPHA_OPAQUE};
+        if (SDL_SetRenderDrawColor(renderer, BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, BACKGROUND_COLOR.a))
+        {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to set render draw color: %s", SDL_GetError());
+            exit(-1);
+        }
 
+        if (SDL_RenderClear(renderer))
+        {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to clear renderer: %s", SDL_GetError());
+            exit(-1);
+        }
+
+        // affichage
+        draw_board_line(0, GROUND_GRASS, cam, display, colors, renderer);
+        draw_board_line(1, GROUND_WATER_LILY, cam, display, colors, renderer);
+        draw_board_line(2, GROUND_ROAD_CAR, cam, display, colors, renderer);
+
+        draw_sprite_from_grid(p->h_position,3,CHICKEN_ID,3,&sprite_sheet,renderer,cam,display);
+        
+
+        SDL_RenderPresent(renderer);
+        SDL_Delay(8); // ~60 FPS  
     }
+    IMG_Quit();
+    unload_spritesheet(sprite_sheet);
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
 }
