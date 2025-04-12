@@ -95,6 +95,12 @@ int main() {
     
     
     while (g.status==PLAYING){
+        
+        if (!p->alive) {
+            g.status = DEAD;
+            break; // Exit the game loop immediately when player is dead
+        }
+
         int direction = NEUTRAL;
         // 1. Action du joueur           
         if (SDL_PollEvent(&event)){ 
@@ -168,8 +174,12 @@ int main() {
 
 
 
-        // 3. Maj des mobs. 
-        board_update(b, 1);
+        if (!p->alive) {
+            // update si on est mort
+        } else {
+            
+            board_update(b, 1);
+        }
 
         //printf("Position du joueur : h_float = %f \n",p->h_position);
         

@@ -70,7 +70,7 @@
 // Définition des attributs de log
 #define LOG_LEN 4
 #define LOG_TYPE 105
-#define LOG_MAX_SPEED 2
+#define LOG_MAX_SPEED 2 
 #define LOG_MIN_SPEED 1.5
 #define LOG_MIN_NUMBER 5
 
@@ -91,9 +91,9 @@
 
 
 //Définition des intervalles d'obstacles
-#define INTER_CAR_MIN 6
-#define INTER_TRUCK_MIN 8
-#define INTER_LOG_MIN 8 
+#define INTER_CAR_MIN 8*DEFAULT_CELL_SIZE
+#define INTER_TRUCK_MIN 9*DEFAULT_CELL_SIZE
+#define INTER_LOG_MIN 10*DEFAULT_CELL_SIZE
 
 
 
