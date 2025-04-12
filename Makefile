@@ -8,7 +8,7 @@ TARGET_GUI = main_gui
 TARGET_TUI = main_tui
 
 # fichiers source GUI
-SRCS_GUI = main_gui.c $(SRC_DIR)/gui.c
+SRCS_GUI = main_gui.c $(SRC_DIR)/gui.c $(SRC_DIR)/game.c $(SRC_DIR)/board.c $(SRC_DIR)/player.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c
 OBJS_GUI = $(SRCS_GUI:.c=.o)
 
 # fichiers sources TUI

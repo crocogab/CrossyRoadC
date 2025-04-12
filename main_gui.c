@@ -5,9 +5,32 @@
 #include <assert.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include "game.h"
+#include "player.h"
+
+Board *g_board;
 
 int main() {
 
+    Game g = game_make(TO_LAUNCH);
+    Player *p = player_start();
+    Board *b;
+    g_board = NULL;
+
+
+    // initialisation du plateau
+
+    game_start(&g);
+    b = g.board;
+    g_board = b;
+
+    board_set_player(b, p);
+
+
+    int jump_back = 0;    // Limitation des retours en arrière
+    int score_actu = 0;   // Score actuel
+    int score_maxi = 0;   // Score maximum
+    int quit_game = 0;    // Signal pour quitter le jeu
 
     // Initialisation de la SDL
     if (SDL_Init(SDL_INIT_EVERYTHING)) {
@@ -40,4 +63,41 @@ int main() {
         .ROAD_LINE_COLOR = {110, 118, 141, SDL_ALPHA_OPAQUE}
     };
 
+    SDL_Window *window; // création de la fenêtre
+    window = SDL_CreateWindow("SDL2 Window",
+                                SDL_WINDOWPOS_UNDEFINED,
+                                SDL_WINDOWPOS_UNDEFINED,
+                                width, height,
+                                SDL_WINDOW_SHOWN);
+    if (!window) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window: %s", SDL_GetError());
+        exit(-1);
+    }
+    
+    SDL_Renderer *renderer;
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (!renderer) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create renderer: %s", SDL_GetError());
+        exit(-1);
+    } // render de SDL
+
+
+    // On charge la sprite_sheet
+    Sprite_sheet sprite_sheet = load_spritesheet("assets/spritesheet_coord.json", "assets/spritesheet.png", renderer, cam);
+
+    SDL_Event event;
+    int running = 1;
+    while (running){
+        if (SDL_PollEvent(&event)){
+            switch (event.type){
+                case SDL_QUIT:
+                    running=0;
+                    break;
+                case SDL_KEYDOWN: // touche pressée
+                    draw_board_line(0,GROUND_GRASS,cam,display,colors,renderer);
+
+            }
+        }
+
+    }
 }
