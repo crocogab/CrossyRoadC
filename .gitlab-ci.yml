@@ -1,0 +1,137 @@
+build-job:
+  stage: build
+  image: alpine:latest 
+  script:
+    - apk update
+    - apk add clang make compiler-rt ncurses-dev musl-dev
+    - echo "Test du Makefile"
+    - make all
+    - if [ -f "main_tui" ]; then echo "Makefile is compiling."; else echo "main_tui not found. " && exit 1; fi
+    - make clean
+    - if [ -f "main_tui.o" ] || [ -f "main_tui" ]; then echo "Makefile is not cleaning well." && exit 1; else echo "Makefile is cleaning well."; fi
+  only:
+    - dev
+    - new_dev
+
+test-job-player:
+  stage: test
+  image: alpine:latest
+  script:
+    - apk update
+    - apk add bash make compiler-rt clang ncurses-dev
+    - make all 
+    - echo "Début du test du modèle player."
+    - OUTPUT=$(make run_test_player 2>&1)
+    - echo "$OUTPUT"
+    - LAST_LINE=$(echo "$OUTPUT" | tail -n 1)
+    - if echo "$LAST_LINE" | grep -q "La librairie player passe tout les tests"; then
+        echo "Test réussi! La librairie player passe tous les tests.";
+      else
+        echo "Test échoué! La dernière ligne ne contient pas le message attendu.";
+        exit 1;
+      fi
+  only:
+    - dev
+    - new_dev
+
+test-job-obstacle:
+  stage: test
+  image: alpine:latest
+  script:
+    - apk update
+    - apk add bash make compiler-rt clang 
+    - echo "Début du test du modèle obstacle."
+    - OUTPUT=$(make run_test_obstacle 2>&1) || true 
+    - if echo "$OUTPUT" | grep -q "Assertion failed\|assertion\|SIGABRT"; then
+        echo "Problème dans le modèle obstacle.";
+        echo "$OUTPUT";
+        exit 1; 
+      else
+        echo "Tests de obstacle reussis !";
+      fi
+  only:
+    - dev
+    - new_dev
+
+test-job-ground:
+  stage: test
+  image: alpine:latest
+  script:
+    - apk update
+    - apk add bash make compiler-rt clang 
+    - echo "Début du test du modèle ground."
+    - OUTPUT=$(make run_test_ground 2>&1) || true # récupère sortie standard et sortie erreur
+    - if echo "$OUTPUT" | grep -q "Assertion failed\|assertion\|SIGABRT"; then
+        echo "Problème dans le modèle ground.";
+        echo "$OUTPUT";
+        exit 1; 
+      else
+        echo "Tests de ground reussis !";
+      fi
+  only:
+    - dev
+    - new_dev
+
+
+test-job-board:
+  stage: test
+  image: alpine:latest
+  script:
+    - apk update
+    - apk add bash make compiler-rt clang 
+    - echo "Début du test du modèle board."
+    - OUTPUT=$(make run_test_board 2>&1) || true # récupère sortie standard et sortie erreur
+    - if echo "$OUTPUT" | grep -q "Assertion failed\|assertion\|SIGABRT"; then
+        echo "Problème dans le modèle board.";
+        echo "$OUTPUT";
+        exit 1; 
+      else
+        echo "Tests de board reussis !";
+      fi
+  only:
+    - dev
+    - new_dev 
+
+test-job-random-custom:
+  stage: test
+  image: alpine:latest
+  script:
+    - apk update
+    - apk add bash make compiler-rt clang 
+    - echo "Début du test du modèle random-custom."
+    - OUTPUT=$(make run_test_random_custom 2>&1) || true # récupère sortie standard et sortie erreur
+    - if echo "$OUTPUT" | grep -q "Assertion failed\|assertion\|SIGABRT"; then
+        echo "Problème dans le modèle random-custom.";
+        echo "$OUTPUT";
+        exit 1; 
+      else
+        echo "Tests de random-custom reussis !";
+      fi
+  only:
+    - dev
+    - new_dev
+
+final-test:
+  stage: test
+  image: alpine:latest
+  script:
+    - apk update
+    - apk add bash make compiler-rt clang ncurses-dev musl-dev
+    - echo "Exécution de tous les tests ensemble"
+    - make test
+    - OUTPUT=$(make run_tests 2>&1) || true
+    - |
+      if echo "$OUTPUT" | grep -q "Assertion failed\|assertion\|SIGABRT"; then
+        echo "Problème détecté dans l'exécution groupée des tests"
+        echo "$OUTPUT"
+        exit 1 
+      else
+        echo "Tous les tests ont réussi avec succès!"
+      fi
+  needs:
+    - test-job-player
+    - test-job-obstacle
+    - test-job-ground
+  only:
+    - dev
+    - new_dev
