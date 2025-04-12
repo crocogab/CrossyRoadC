@@ -100,11 +100,11 @@ int main() {
                 case SDL_KEYDOWN: // touche pressée
                     if (event.key.keysym.sym==SDLK_RIGHT){
                         
-                        move_player(RIGHT,p);
+                        move_player_gui(RIGHT,p);
 
                     }
                     if (event.key.keysym.sym==SDLK_LEFT){
-                       move_player(LEFT,p);
+                       move_player_gui(LEFT,p);
                     }
                     
 
