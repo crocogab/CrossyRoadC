@@ -5,13 +5,12 @@ build-job:
     - apk update
     - apk add clang make compiler-rt ncurses-dev musl-dev
     - echo "Test du Makefile"
-    - make run_tui
+    - make all
     - if [ -f "main_tui" ]; then echo "Makefile is compiling."; else echo "main_tui not found. " && exit 1; fi
     - make clean
     - if [ -f "main_tui.o" ] || [ -f "main_tui" ]; then echo "Makefile is not cleaning well." && exit 1; else echo "Makefile is cleaning well."; fi
   only:
     - dev
-    - new_dev
 
 test-job-player:
   stage: test
