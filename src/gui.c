@@ -328,7 +328,7 @@ void draw_sprite(Point3d p, int sprite_id, int sprite_index, Sprite_sheet *sprit
 void draw_sprite_from_grid(float h_pos, int y, int sprite_id, int sprite_index, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display)
 {
     // On transforme le point 3D en 2D en corrigeant la position légérement
-    Point3d p = {h_pos, y * display.line_width*display.tile_size-22, 2};
+    Point3d p = {h_pos, (y+1) * display.line_width*display.tile_size-22, 2};
     draw_sprite(p, sprite_id, sprite_index, sprite_sheet, renderer, cam);
 }
 
