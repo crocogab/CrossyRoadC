@@ -42,7 +42,7 @@ void ground_free(Ground *g) {
 /**
  * Renvoie l'id (macro gui) d'un objet en fonction de son type
  */
-int type_var_to_id(type, variant)
+int type_var_to_id(int type, int variant)
 {
     switch (type)
     {
@@ -99,6 +99,7 @@ int type_var_to_id(type, variant)
         
     
     default:
+        return 0;
         break;
     }
 }
@@ -272,30 +273,4 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
 
     Ground *ans = ground_make(obs, velo, type, nb, special_attr);
     return ans;
-}
-
-/**
- * Retourne le modèle graphique associé à un type de sol donné.
- * 
- * @param type Type de sol (défini dans les macros).
- * @return Le caractère représentant le modèle graphique du sol.
- */
-char ground_model_of_type(int type) {
-    switch (type) {
-        case GROUND_GRASS:
-            return MODEL_GRASS;
-        case GROUND_ROAD_CAR:
-            return MODEL_ROAD;
-        case GROUND_ROAD_TRUCK:
-            return MODEL_ROAD;
-        case GROUND_WATER_LILY:
-            return MODEL_WATER;
-        case GROUND_WATER_LOG:
-            return MODEL_WATER;
-        case GROUND_TRAIN:
-            return MODEL_RAIL;
-
-        default:
-            return 'E';
-    } 
 }

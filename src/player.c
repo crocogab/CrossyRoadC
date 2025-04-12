@@ -114,3 +114,27 @@ void move_player(int direction, Player *player)
         printf("Invalid input : direction invalide : %d\n", direction);
     }
 }
+
+void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display)
+{
+    int sprite_index = 0;
+    switch (p->previous_direction)
+    {
+    case LEFT:
+        sprite_index = 2;
+        break;
+    case RIGHT:
+        sprite_index = 0;
+        break;
+    case UP:
+        sprite_index = 3;
+        break;
+    case DOWN:
+        sprite_index = 1;
+        break;
+    
+    default:
+        break;
+    } 
+    draw_sprite_from_grid(p->h_position, V_POS, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display);
+}

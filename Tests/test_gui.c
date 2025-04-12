@@ -70,7 +70,7 @@ int main() {
     int running = 1;
 
     // On genere un board de test
-    Board *test_board = board_make();
+    Board *test_board = board_make(&sprite_sheet);
     // On genere un joueur de test
     Player *p = player_start();
     test_board->player = p;
@@ -162,9 +162,9 @@ int main() {
             exit(-1);
         }
 
-        /*
+        
         // On affiche une grille de test avec tout les types de sol et tout les sprites possibles
-        int sprite_reading_grid[15] = {BLUE_CAR_NB, BLUE_TRUCK_NB, CHICKEN_NB, COIN_NB, GAZ_TRUCK_NB, LILYPAD_NB, LOG_NB, ORANGE_CAR_NB, PURPLE_CAR_NB, RAIL_NB, RED_TRUCK_NB, ROCK_NB, TRAIN_NB, TRAIN_POLE_NB, TREE_NB};
+        int sprite_reading_grid[17] = {BLUE_CAR_NB, BLUE_TRUCK_NB, CHICKEN_NB, COIN_NB, GAZ_TRUCK_NB, LILYPAD_NB, LOG_LONG_NB, LOG_MEDIUM_NB, LOG_SMALL_NB, ORANGE_CAR_NB, PURPLE_CAR_NB, RAIL_NB, RED_TRUCK_NB, ROCK_NB, TRAIN_NB, TRAIN_POLE_NB, TREE_NB};
 
 
 
@@ -181,11 +181,11 @@ int main() {
                 draw_sprite_from_grid(j*4*display.tile_size, i*2+3, i, j, &sprite_sheet, renderer, cam, display);
             }
         }
-        */
-
+        
+        /*
         draw_board(test_board, cam, display, colors, renderer);
         draw_chicken(test_board->player, &sprite_sheet, renderer, cam, display);
-
+        */
         // Switch framebuffer
         SDL_RenderPresent(renderer);
 

@@ -11,12 +11,12 @@
  * 
  * @return Un pointeur vers le plateau créé
  */
-Board* board_make(void) {
+Board* board_make(Sprite_sheet *sprite_sheet) {
     Board* b = (Board*)malloc(sizeof(Board));
     if (b == NULL) {
         return NULL; // En cas d'erreur d'allocation
     }
-    b->grid_ground = grid_ground_make(); // Fonction qui initialise le sol
+    b->grid_ground = grid_ground_make(sprite_sheet); // Fonction qui initialise le sol
     b->player = NULL; // Initialiser à NULL ou ajouter un joueur si nécessaire
     return b;
 }
@@ -219,7 +219,7 @@ int check_future_collision(Board *b, int direction) {
  * @param[in] b Le plateau contenant la grille de sol
  * @param[in] direction La direction du mouvement du joueur
  */
-void ground_move(Board* b, int direction) {
+void ground_move(Board* b, int direction, Sprite_sheet *sprite_sheet) {
     if (b == NULL || b->grid_ground == NULL) {
         return; // Si le plateau ou la grille du sol est NULL, on ne fait rien
     }
@@ -230,7 +230,7 @@ void ground_move(Board* b, int direction) {
             for (int i = 0; i < MAP_LEN - 1; i++) {
                 b->grid_ground[i] = b->grid_ground[i + 1];
             }
-            b->grid_ground[MAP_LEN - 1] = ground_generate(GROUND_GRASS, 0, 0, 0);
+            b->grid_ground[MAP_LEN - 1] = ground_generate(GROUND_GRASS, 0, 0, 0, sprite_sheet);
             ground_free(first_ground);
             break;
         }
@@ -240,7 +240,7 @@ void ground_move(Board* b, int direction) {
             for (int i = MAP_LEN - 1; i > 0; i--) {
                 b->grid_ground[i] = b->grid_ground[i - 1];
             }
-            b->grid_ground[0] = gen_next_ground(b, b->player->score); //Placeholder à changer avec la modification du champ score
+            b->grid_ground[0] = gen_next_ground(b, b->player->score, sprite_sheet); //Placeholder à changer avec la modification du champ score
             ground_free(last_ground);
             break;
         }
@@ -253,83 +253,6 @@ void ground_move(Board* b, int direction) {
             break;
         
     }
-}
-
-/**
- * Génère une représentation textuelle (TUI) du plateau de jeu.
- *
- * Cette fonction crée une grille 2D de caractères représentant l'état actuel du plateau de jeu.
- * Elle initialise la grille avec les modèles de sol, ajoute les obstacles (comme les trains et les rondins),
- * et place le personnage du joueur (poulet) sur la grille.
- *
- * @param b Pointeur vers la structure Board contenant l'état du jeu.
- *          - `b->grid_ground` : Tableau de structures Ground représentant chaque ligne du plateau.
- *          - `b->player` : Pointeur vers la structure Player représentant le poulet.
- *
- * @return Un tableau 2D de caractères alloué dynamiquement (`char **`) représentant la grille TUI.
- *         Chaque cellule contient un caractère correspondant au sol, aux obstacles ou au joueur.
- *         L'appelant est responsable de libérer la mémoire allouée.
- */
-
-char **grid_tui_make(Board *b) {
-    char **grid = malloc(MAP_LEN * sizeof(char *));
-    Ground *g;
-    Couple hb;
-    int k;
-    for (int lig = 0; lig < MAP_LEN; lig++) {
-        grid[lig] = malloc(MAP_WIDTH * sizeof(char));
-        g = b->grid_ground[lig];
-        // initialisation du sol
-        for (int col = 0; col < MAP_WIDTH; col++) {
-            grid[lig][col] = g->model;
-        }
-        // ajout des abstacles
-        for (int i = 0; i < g->nb_obstacles; i++) {
-            hb = obstacle_hitbox(g->obstacles[i]);
-            
-            if (g->obstacles[i]->type == TRAIN_TYPE)
-            {
-                // Pour les trains, on affiche uniquement les parties du train qui sont dans la carte
-                for (int j = hb.a; j <= hb.b; j++) {
-                    if (j >= 0 && j < MAP_WIDTH) {
-                        grid[lig][j] = g->obstacles[i]->model;
-                    }
-                }
-                if (g->special_attr <= 200 && g->special_attr>0){
-                    for (int j = 0;j < MAP_WIDTH;j++) {
-                        grid[lig][j] = MODEL_INCOMING_TRAIN;
-                    }
-                    
-                }
-            }
-            else
-            {
-                if (g->obstacles[i]->type != LOG_TYPE){
-                    for (int j = hb.a; j<=hb.b; j++) {
-                        k = j%MAP_WIDTH;
-                        if (k<0) {
-                            k = k + MAP_WIDTH;
-                        }
-                    grid[lig][k] = g->obstacles[i]->model;
-                    }
-                }else{
-                    for (int j = hb.a; j<hb.b; j++) {
-                        k = j%MAP_WIDTH;
-                        if (k<0) {
-                            k = k + MAP_WIDTH;
-                        }
-                        grid[lig][k] = g->obstacles[i]->model;
-                }
-                }
-            }
-        }
-    }
-    // ajout du poulet
-    if (b->player != NULL)
-    {
-        grid[V_POS][(int) b->player->h_position] = MODEL_CHICKEN;
-    }
-    return grid;
 }
 
 /**
@@ -353,10 +276,10 @@ void grid_tui_free(char **g) {
  * @return Ground** Un pointeur vers la grille 2D allouée de structures Ground.
  *         L'appelant est responsable de libérer la mémoire allouée.
  */
-Ground **grid_ground_make(void) {
+Ground **grid_ground_make(Sprite_sheet *sprite_sheet) {
     Ground **grid = malloc(MAP_LEN * sizeof(Ground *));
     for (int i = 0; i < MAP_LEN; i++) {
-        grid[i] = ground_generate(GROUND_GRASS, 0, 0, 0); // Valeurs par défaut pour initialiser chaque ligne
+        grid[i] = ground_generate(GROUND_GRASS, 0, 0, 0, sprite_sheet); // Valeurs par défaut pour initialiser chaque ligne
     }
     return grid;
 }
@@ -367,14 +290,14 @@ Ground **grid_ground_make(void) {
  * 
  * @param[in] b Le plateau contenant la grille de sol
  */
-void grid_ground_starter_set(Board *b) {
+void grid_ground_starter_set(Board *b, Sprite_sheet *sprite_sheet) {
     for (int i = 2; i <= min(MAP_LEN, START_SIZE); i++)
     {
         ground_free(b->grid_ground[MAP_LEN - i]);
-        b->grid_ground[MAP_LEN - i] = ground_generate(GROUND_GRASS, 0, 0, 0);
+        b->grid_ground[MAP_LEN - i] = ground_generate(GROUND_GRASS, 0, 0, 0, sprite_sheet);
     }
     ground_free(b->grid_ground[MAP_LEN - 1]);
-    b->grid_ground[MAP_LEN-1] = ground_generate(GROUND_GRASS, 0, MAP_WIDTH, MAP_WIDTH);
+    b->grid_ground[MAP_LEN-1] = ground_generate(GROUND_GRASS, 0, MAP_WIDTH, MAP_WIDTH, sprite_sheet);
 }
     
 /**
@@ -394,7 +317,7 @@ void grid_ground_free(Ground ** g){
  * @param previous_velo vélocité du sol précédent
  * 
  */
-Ground *gen_water(int score, float previous_velo)
+Ground *gen_water(int score, float previous_velo, Sprite_sheet *sprite_sheet)
 {
     int s = random_int(1, 3);
     int mini, maxi;
@@ -426,7 +349,7 @@ Ground *gen_water(int score, float previous_velo)
         mini = 2;
         maxi = 5;
     }
-    return ground_generate(type, previous_velo, mini, maxi);
+    return ground_generate(type, previous_velo, mini, maxi, sprite_sheet);
 }
 
 /**
@@ -435,7 +358,7 @@ Ground *gen_water(int score, float previous_velo)
  * @param previous_velo vélocité du sol précédent
  * 
  */
-Ground *gen_road(int score, float previous_velo)
+Ground *gen_road(int score, float previous_velo, Sprite_sheet *sprite_sheet)
 {
     int s = random_int(1, 4);
     int mini, maxi;
@@ -487,7 +410,7 @@ Ground *gen_road(int score, float previous_velo)
         mini = 1;
         maxi = 1;
     }
-    return ground_generate(type, previous_velo, mini, maxi);
+    return ground_generate(type, previous_velo, mini, maxi, sprite_sheet);
 }
 
 /**
@@ -501,7 +424,7 @@ Ground *gen_road(int score, float previous_velo)
  * @return Un pointeur vers une structure Ground représentant le nouveau sol généré.
  *         Retourne NULL si le pointeur Board ou grid_ground est nul.
  */
-Ground *gen_next_ground(Board *b, int score) {
+Ground *gen_next_ground(Board *b, int score, Sprite_sheet *sprite_sheet) {
     if (b == NULL || b->grid_ground == NULL) {
         return NULL; // Juste au cas où
     }
@@ -517,35 +440,61 @@ Ground *gen_next_ground(Board *b, int score) {
     switch (b->grid_ground[0]->type) {
         case GROUND_GRASS:
             if (s == 1) {
-                return ground_generate(GROUND_GRASS, 0, 1, 4);
+                return ground_generate(GROUND_GRASS, 0, 1, 4, sprite_sheet);
             } else if (s <= 3) {
-                return gen_water(score, b->grid_ground[0]->velocity);
+                return gen_water(score, b->grid_ground[0]->velocity, sprite_sheet);
             } else {
-                return gen_road(score, b->grid_ground[0]->velocity);
+                return gen_road(score, b->grid_ground[0]->velocity, sprite_sheet);
             }
 
         case GROUND_ROAD_CAR:
         case GROUND_ROAD_TRUCK:
         case GROUND_TRAIN:
             if (s <= 4) {
-                return gen_road(score, b->grid_ground[0]->velocity);
+                return gen_road(score, b->grid_ground[0]->velocity, sprite_sheet);
             } else if (s <= 6) {
-                return ground_generate(GROUND_GRASS, 0, 1, 4);
+                return ground_generate(GROUND_GRASS, 0, 1, 4, sprite_sheet);
             } else {
-                return gen_water(score, b->grid_ground[0]->velocity);
+                return gen_water(score, b->grid_ground[0]->velocity, sprite_sheet);
             }
 
         case GROUND_WATER_LOG:
         case GROUND_WATER_LILY:
             if (s <= 3) {
-                return gen_water(score, b->grid_ground[0]->velocity);
+                return gen_water(score, b->grid_ground[0]->velocity, sprite_sheet);
             } else if (s == 4) {
-                return gen_road(score, b->grid_ground[0]->velocity);
+                return gen_road(score, b->grid_ground[0]->velocity, sprite_sheet);
             } else {
-                return ground_generate(GROUND_GRASS, 0, 1, 4);
+                return ground_generate(GROUND_GRASS, 0, 1, 4, sprite_sheet);
             }
             
         default:
-            return ground_generate(GROUND_GRASS, 0, 0, 0);
+            return ground_generate(GROUND_GRASS, 0, 0, 0, sprite_sheet);
+    }
+}
+
+/**
+ * Fonction qui dessine le plateau de jeu
+ * @param b le plateau de jeu
+ * @param cam la caméra
+ * @param display les informations d'affichage
+ * @param colors les couleurs
+ * @param renderer le renderer
+ * 
+ */
+void draw_board(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer)
+{
+    // On dessine le sol
+    for (int i = 0; i < display.board_length; i++)
+    {
+        //Si on a une route avant on dessine une ROAD_BORDER
+        if (i > 0 && (b->grid_ground[i]->type == GROUND_ROAD_CAR || b->grid_ground[i]->type == GROUND_ROAD_TRUCK) && (b->grid_ground[i-1]->type == GROUND_ROAD_CAR || b->grid_ground[i-1]->type == GROUND_ROAD_TRUCK))
+        {
+            draw_board_line(i, GROUND_ROAD_BORDER, cam, display, colors, renderer);
+        }
+        else
+        {
+            draw_board_line(i, b->grid_ground[i]->type, cam, display, colors, renderer);
+        }
     }
 }

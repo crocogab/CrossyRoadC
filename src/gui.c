@@ -251,32 +251,6 @@ void draw_board_line(int x, int type, Camera cam, Display_informations display, 
 }
 
 /**
- * Fonction qui dessine le plateau de jeu
- * @param b le plateau de jeu
- * @param cam la caméra
- * @param display les informations d'affichage
- * @param colors les couleurs
- * @param renderer le renderer
- * 
- */
-void draw_board(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer)
-{
-    // On dessine le sol
-    for (int i = 0; i < display.board_length; i++)
-    {
-        //Si on a une route avant on dessine une ROAD_BORDER
-        if (i > 0 && (b->grid_ground[i]->type == GROUND_ROAD_CAR || b->grid_ground[i]->type == GROUND_ROAD_TRUCK) && (b->grid_ground[i-1]->type == GROUND_ROAD_CAR || b->grid_ground[i-1]->type == GROUND_ROAD_TRUCK))
-        {
-            draw_board_line(i, GROUND_ROAD_BORDER, cam, display, colors, renderer);
-        }
-        else
-        {
-            draw_board_line(i, b->grid_ground[i]->type, cam, display, colors, renderer);
-        }
-    }
-}
-
-/**
  * Fonction dessinant un sprite à un point donné de l'espace après transformation iso.
  * On dessinera le sprite_index donné.
  * @param p Point bas gauche de dessin du sprite
@@ -342,30 +316,6 @@ void draw_sprite_from_grid(float h_pos, int y, int sprite_id, int sprite_index, 
     draw_sprite(p, sprite_id, sprite_index, sprite_sheet, renderer, cam);
 }
 
-void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display)
-{
-    int sprite_index = 0;
-    switch (p->previous_direction)
-    {
-    case LEFT:
-        sprite_index = 2;
-        break;
-    case RIGHT:
-        sprite_index = 0;
-        break;
-    case UP:
-        sprite_index = 3;
-        break;
-    case DOWN:
-        sprite_index = 1;
-        break;
-    
-    default:
-        break;
-    } 
-    draw_sprite_from_grid(p->h_position, V_POS, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display);
-}
-
 /**
  * Charge une spritesheet dont le chemin est en argument selon les coordonnées en format JSON array
  * contenues dans le fichier de chemin coord_path
@@ -377,7 +327,7 @@ void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer,
 Sprite_sheet load_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *renderer, Camera cam)
 {
     // On charge la grille de lecture en mémoire
-    int sprite_reading_grid[17] = {BLUE_CAR_NB, BLUE_TRUCK_NB, CHICKEN_NB, COIN_NB, GAZ_TRUCK_NB, LILYPAD_NB, LOG_LONG_NB, LOG_MEDIUM_ID, LOG_SMALL_ID, ORANGE_CAR_NB, PURPLE_CAR_NB, RAIL_NB, RED_TRUCK_NB, ROCK_NB, TRAIN_NB, TRAIN_POLE_NB, TREE_NB};
+    int sprite_reading_grid[17] = {BLUE_CAR_NB, BLUE_TRUCK_NB, CHICKEN_NB, COIN_NB, GAZ_TRUCK_NB, LILYPAD_NB, LOG_LONG_NB, LOG_MEDIUM_NB, LOG_SMALL_NB, ORANGE_CAR_NB, PURPLE_CAR_NB, RAIL_NB, RED_TRUCK_NB, ROCK_NB, TRAIN_NB, TRAIN_POLE_NB, TREE_NB};
 
     // On charge la spritesheet
     SDL_Surface *sprite_surface = IMG_Load(sheet_path);

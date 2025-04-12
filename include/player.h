@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include <stdbool.h>
+#include "gui.h"
 
 typedef struct _Player {
     // Skin *skin;
@@ -22,5 +23,7 @@ Player *player_start();
 void player_free(Player *player);
 
 void move_player(int direction, Player *player);
+
+void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display);
 
 #endif
