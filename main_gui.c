@@ -169,7 +169,7 @@ int main() {
 
 
         // 3. Maj des mobs. 
-        board_update(b, 0.01);
+        board_update(b, 1);
 
         //printf("Position du joueur : h_float = %f \n",p->h_position);
         
@@ -196,7 +196,7 @@ int main() {
         
         draw_board(b,cam,display,colors,renderer,&sprite_sheet);
         draw_chicken(p,&sprite_sheet,renderer,cam,display);
-        //draw_obstacles(b,cam,display,colors,renderer,&sprite_sheet);
+        draw_obstacles(b,cam,display,colors,renderer,&sprite_sheet);
         
         //6. Affichage
         SDL_RenderPresent(renderer);
