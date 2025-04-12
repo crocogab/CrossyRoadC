@@ -322,11 +322,11 @@ void grid_ground_free(Ground ** g){
  */
 Ground *gen_water(int score, float previous_velo, Sprite_sheet *sprite_sheet)
 {
-    int s = random_int(1, 3);
+    int s = random_int(1, 5);
     int mini, maxi;
     int type;
     
-    if (s <= 2) // GROUND_WATER_LILY
+    if (s <= 1) // GROUND_WATER_LILY
     {
         type = GROUND_WATER_LILY;
         if (score < DIFF_EASY) {
@@ -438,7 +438,7 @@ Ground *gen_next_ground(Board *b, int score, Sprite_sheet *sprite_sheet) {
      * L'automate suivi pour la génération sera :
      * Herbe -> (1/7 : herbe, 2/7 : eau, 4/7 : route)
      * Route -> (4/7 : route, 2/7 : herbe, 1/7 : eau)
-     * Eau -> (3/7 : eau, 1/7 : route, 3/7 : herbe)
+     * Eau -> (2/7 : eau, 1/7 : route, 4/7 : herbe)
      */
     switch (b->grid_ground[0]->type) {
         case GROUND_GRASS:
@@ -463,9 +463,9 @@ Ground *gen_next_ground(Board *b, int score, Sprite_sheet *sprite_sheet) {
 
         case GROUND_WATER_LOG:
         case GROUND_WATER_LILY:
-            if (s <= 3) {
+            if (s <= 1) {
                 return gen_water(score, b->grid_ground[0]->velocity, sprite_sheet);
-            } else if (s == 4) {
+            } else if (s == 1) {
                 return gen_road(score, b->grid_ground[0]->velocity, sprite_sheet);
             } else {
                 return ground_generate(GROUND_GRASS, 0, 1, 4, sprite_sheet);
