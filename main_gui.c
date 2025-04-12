@@ -7,11 +7,14 @@
 #include <SDL2/SDL_image.h>
 #include "game.h"
 #include "player.h"
+#include <time.h>
 
 Board *g_board;
 
 int main() {
-
+    srand(time(NULL)); // nouvelle graine
+    
+    
     Game g = game_make(TO_LAUNCH);
     Player *p = player_start();
     Board *b;
@@ -89,20 +92,20 @@ int main() {
     
 
     SDL_Event event;
-    int running = 1;
     
-    while (running){
+    
+    while (g.status==PLAYING){
         int direction = NEUTRAL;
         // 1. Action du joueur           
         if (SDL_PollEvent(&event)){ 
             switch (event.type){
                 
                 case SDL_QUIT:
-                    running=0;
+                    g.status=DEAD;
                     break;
                 case SDL_KEYDOWN: // touche pressée
                     if (event.key.keysym.sym==SDLK_q){
-                        running=0;
+                        g.status=DEAD;
                     }
                     if (event.key.keysym.sym==SDLK_RIGHT){
                         direction = RIGHT;
@@ -129,7 +132,7 @@ int main() {
             }
         }
         // 2. Traiter action
-        int collision_type = check_future_collision(b, p->direction);
+        int collision_type = check_future_collision(b, direction);
         //printf("COLLISION UP : %d\n",collision_type);
         switch (collision_type) {
             case COLLIDE_NONE:
@@ -165,7 +168,7 @@ int main() {
 
 
 
-        // 3 Maj des mobs. 
+        // 3. Maj des mobs. 
         board_update(b, 0.01);
 
         //printf("Position du joueur : h_float = %f \n",p->h_position);
@@ -185,14 +188,16 @@ int main() {
             exit(-1);
         }
 
-        // affichage
-        
-
-        
+        //4. MAJ du score
+        if (score_actu > score_maxi) {
+            score_maxi = score_actu;
+        }
+        //5. Maj de etat graphique
         
         draw_board(b,cam,display,colors,renderer,&sprite_sheet);
         draw_chicken(p,&sprite_sheet,renderer,cam,display);
         
+        //6. Affichage
         SDL_RenderPresent(renderer);
         SDL_Delay(8); // ~60 FPS  
     }
