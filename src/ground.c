@@ -221,6 +221,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
             for (int i = 0; i < nb; i++)
             {
                 obs[i] = obstacle_make(WATER_LILY_TYPE, variant, (int)(obs_h_pos_array[i]*DEFAULT_CELL_SIZE), WATER_LILY_LEN);
+                
             }
             free(obs_h_pos_array);
         }
