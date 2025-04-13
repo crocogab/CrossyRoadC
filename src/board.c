@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "macro.h"
+#include "debugKit.h"
 
 /**
  * Crée un nouveau plateau.
@@ -501,7 +502,7 @@ Ground *gen_next_ground(Board *b, int score, Sprite_sheet *sprite_sheet) {
  * @param renderer le renderer
  * 
  */
-void draw_board(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet)
+void draw_board(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit)
 {
     // On dessine le sol
     for (int i = 0; i < display.board_length; i++)
@@ -509,11 +510,11 @@ void draw_board(Board *b, Camera cam, Display_informations display, Colors color
         //Si on a une route avant on dessine une ROAD_BORDER
         if (i > 0 && (b->grid_ground[i]->type == GROUND_ROAD_CAR || b->grid_ground[i]->type == GROUND_ROAD_TRUCK) && (b->grid_ground[i-1]->type == GROUND_ROAD_CAR || b->grid_ground[i-1]->type == GROUND_ROAD_TRUCK))
         {
-            draw_board_line(i, GROUND_ROAD_BORDER, cam, display, colors, renderer, sprite_sheet);
+            draw_board_line(i, GROUND_ROAD_BORDER, cam, display, colors, renderer, sprite_sheet, debug_kit);
         }
         else
         {
-            draw_board_line(i, b->grid_ground[i]->type, cam, display, colors, renderer, sprite_sheet);
+            draw_board_line(i, b->grid_ground[i]->type, cam, display, colors, renderer, sprite_sheet, debug_kit);
         }
     }
 }

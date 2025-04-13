@@ -105,7 +105,7 @@ void draw_quad_from_3d(Point3d p1, Point3d p2, Point3d p3, Point3d p4, SDL_Color
  * @param colors couleurs
  * @param renderer le renderer
  */
-void draw_board_line(int x, int type, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet)
+void draw_board_line(int x, int type, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit)
 {
     Point3d p3d_1 = {0, x * display.line_width*display.tile_size, 0};
     Point3d p3d_2 = {0, (x + 1) * display.line_width*display.tile_size, 0};
@@ -135,26 +135,28 @@ void draw_board_line(int x, int type, Camera cam, Display_informations display, 
         
 
         // Special debug, on affiche les bordures des cases
-        p3d_1.x = LEFT_MAP_X;
-        p3d_2.x = LEFT_MAP_X;
-        p3d_3.x = LEFT_MAP_X+display.tile_size;
-        p3d_4.x = LEFT_MAP_X+display.tile_size;
-        for (int i = 0; i < MAP_WIDTH; i++)
+        if (debug_kit->display_grid_lines)
         {
-            Point3d line_start = p3d_1;
-            Point3d line_end = p3d_2;
-            line_start.z += 1; // Slightly elevate the line for visibility
-            line_end.z += 1;
-            line_start.x += 2;
-            line_end.x += 2;
-            draw_quad_from_3d(p3d_1, p3d_2, line_end, line_start, colors.DIRT_COLOR, cam, renderer);
-            p3d_1.x += display.tile_size;
-            p3d_2.x += display.tile_size;
-            p3d_3.x += display.tile_size;
-            p3d_4.x += display.tile_size;
+            p3d_1.x = LEFT_MAP_X;
+            p3d_2.x = LEFT_MAP_X;
+            p3d_3.x = LEFT_MAP_X+display.tile_size;
+            p3d_4.x = LEFT_MAP_X+display.tile_size;
+            for (int i = 0; i < MAP_WIDTH; i++)
+            {
+                Point3d line_start = p3d_1;
+                Point3d line_end = p3d_2;
+                line_start.z += 1; // Slightly elevate the line for visibility
+                line_end.z += 1;
+                line_start.x += 2;
+                line_end.x += 2;
+                draw_quad_from_3d(p3d_1, p3d_2, line_end, line_start, colors.DIRT_COLOR, cam, renderer);
+                p3d_1.x += display.tile_size;
+                p3d_2.x += display.tile_size;
+                p3d_3.x += display.tile_size;
+                p3d_4.x += display.tile_size;
+            }
         }
-        
-
+    
         // Dessin des bordures
         p3d_1.x = 0;
         p3d_2.x = 0;
@@ -239,7 +241,7 @@ void draw_board_line(int x, int type, Camera cam, Display_informations display, 
         // On dessine les rails TODO
         for (int i = 0; i < display.line_length; i++)
         {
-            draw_sprite((Point3d){i*display.tile_size, (x+1)*display.tile_size, 0}, RAIL_ID, 0, sprite_sheet, renderer, cam);
+            draw_sprite((Point3d){i*display.tile_size, (x+1)*display.tile_size, 0}, RAIL_ID, 0, sprite_sheet, renderer, cam, debug_kit);
         }
         break;
     case GROUND_ROAD_BORDER:
@@ -296,7 +298,7 @@ void draw_board_line(int x, int type, Camera cam, Display_informations display, 
  * @param renderer le renderer
  * @param cam les paramètres de caméra
  */
-void draw_sprite(Point3d p, int sprite_id, int sprite_index, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam)
+void draw_sprite(Point3d p, int sprite_id, int sprite_index, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, debugKit *debug_kit)
 {
     if (sprite_id >= sprite_sheet->sprites_nb)
     {
@@ -322,8 +324,11 @@ void draw_sprite(Point3d p, int sprite_id, int sprite_index, Sprite_sheet *sprit
     SDL_Rect src_rect = {sprite.sprites_coord[sprite_index].x, sprite.sprites_coord[sprite_index].y, sprite.sprites_coord[sprite_index].w, sprite.sprites_coord[sprite_index].h};
     SDL_Rect dst_rect = {p2d.x, p2d.y - sprite.sprites_coord[sprite_index].h, sprite.sprites_coord[sprite_index].w, sprite.sprites_coord[sprite_index].h};
 
-    SDL_RenderDrawRect(renderer, &dst_rect);
-    
+    // Pour le debug
+    if (debug_kit->display_sprites)
+    {
+        SDL_RenderDrawRect(renderer, &dst_rect);
+    }
 
 
     if (SDL_RenderCopy(renderer, sprite_sheet->sprite_sheet, &src_rect, &dst_rect) != 0)
@@ -346,11 +351,11 @@ void draw_sprite(Point3d p, int sprite_id, int sprite_index, Sprite_sheet *sprit
  * @param display les informations de l'affichage
  * 
  */
-void draw_sprite_from_grid(float h_pos, int y, int sprite_id, int sprite_index, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display)
+void draw_sprite_from_grid(float h_pos, int y, int sprite_id, int sprite_index, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit)
 {
     // On transforme le point 3D en 2D en corrigeant la position légérement
     Point3d p = {h_pos, (y+1) * display.line_width*display.tile_size-22, 2};
-    draw_sprite(p, sprite_id, sprite_index, sprite_sheet, renderer, cam);
+    draw_sprite(p, sprite_id, sprite_index, sprite_sheet, renderer, cam, debug_kit);
 }
 
 /**
