@@ -650,10 +650,10 @@ int draw_entities(Board *b, float anim_time, Animation anim_x, Animation anim_z,
                 draw_sprite_from_grid(ground->obstacles[j]->h_position, (float)i+anim_incr, 0, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, display, debug_kit);
                 break;
             case WATER_LILY_TYPE:
-                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/5, 0, (float)i+anim_incr, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/5, (float)i+anim_incr, 0, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
                 break;
             case LOG_TYPE:
-                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/4, 0, (float)i+anim_incr, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/4, (float)i+anim_incr, 0, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
                 break;
             case TRAIN_POLE_TYPE:
                 // On fait à la main car le poteau volait
