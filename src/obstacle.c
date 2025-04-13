@@ -53,6 +53,9 @@ void obstacle_update(Obstacle *o, float delta_t, float velocity) {
     {
         o->h_position += delta_t * velocity;
     }
+    if (o->type==TRAIN_POLE_TYPE ){
+        o->h_position -=delta_t * velocity;
+    }
 
 
     // met a jour la position de l'obstacle (fonction appelée à chaque boucle)

@@ -96,7 +96,8 @@ int type_var_to_id(int type, int variant)
         return TREE_ID;
     case ROCK_TYPE:
         return ROCK_ID;  
-        
+    case TRAIN_POLE_TYPE:
+        return TRAIN_POLE_ID;
     
     default:
         return 0;
@@ -295,8 +296,14 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
         special_attr = random_int(TRAIN_MIN_TIME, TRAIN_MAX_TIME);
 
         obs[0] = obstacle_make(TRAIN_TYPE, variant, -1, sprite_sheet->sprites[type_var_to_id(TRAIN_TYPE, 0)].lenght);
-
-        nb = 1;
+        // variance = 0 / 1 allumé / eteint
+        if (MAP_WIDTH%2==0){
+            obs[1]= obstacle_make(TRAIN_POLE_TYPE,0,(MAP_WIDTH/2)*DEFAULT_CELL_SIZE+DEFAULT_CELL_SIZE/2,TRAIN_POLE_LEN);// DOIT ETRE AU MILIEU DE 2 CASES
+        }else{
+            obs[1]= obstacle_make(TRAIN_POLE_TYPE,0,(MAP_WIDTH/2)*DEFAULT_CELL_SIZE,TRAIN_POLE_LEN);
+        }
+        
+        nb = 2;
 
         break;
         

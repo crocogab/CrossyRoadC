@@ -566,6 +566,10 @@ void draw_entities(Board *b, Camera cam, Display_informations display, Colors co
             case LOG_TYPE:
                 draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/4, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
                 break;
+            case TRAIN_POLE_TYPE:
+                
+                draw_sprite_from_grid(ground->obstacles[j]->h_position-DEFAULT_CELL_SIZE, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
+                break;
             default:
                 draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
                 break;

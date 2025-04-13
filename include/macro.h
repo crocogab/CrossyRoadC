@@ -55,6 +55,9 @@
 #define ROCK_LEN 1*DEFAULT_CELL_SIZE
 #define ROCK_TYPE 102
 
+#define TRAIN_POLE_TYPE 107
+#define TRAIN_POLE_LEN 0
+
 //Définition des attributs de water lily
 #define WATER_LILY_LEN 1*DEFAULT_CELL_SIZE
 #define WATER_LILY_TYPE 103
