@@ -262,10 +262,9 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
             velo = - random_float((float)LOG_MIN_NUMBER, (float)LOG_MAX_SPEED);
         }
 
-        int max_possible_nb = MAP_WIDTH / INTER_LOG_MIN;
-        // S'assurer que max_nb ne dépasse pas le maximum possible
-        if (max_nb > max_possible_nb) {
-            max_nb = max_possible_nb;
+        if (max_nb >= MAP_WIDTH/INTER_LOG_MIN)
+        {
+            max_nb = MAP_WIDTH/INTER_LOG_MIN; //On ne peut pas avoir plus de voitures que la map est large
         }
         // S'assurer que min_nb est valide (inférieur ou égal à max_nb)
         if (min_nb > max_nb) {

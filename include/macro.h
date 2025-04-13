@@ -89,7 +89,7 @@
 //Définition des intervalles d'obstacles
 #define INTER_CAR_MIN 5*DEFAULT_CELL_SIZE
 #define INTER_TRUCK_MIN 6*DEFAULT_CELL_SIZE
-#define INTER_LOG_MIN 3*DEFAULT_CELL_SIZE
+#define INTER_LOG_MIN 5*DEFAULT_CELL_SIZE
 
 #define START_SIZE 7 // Taille de la zone de départ
 
