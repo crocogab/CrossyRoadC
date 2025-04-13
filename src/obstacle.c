@@ -47,6 +47,14 @@ void obstacle_free(Obstacle *o) {
  * 
  */
 void obstacle_update(Obstacle *o, float delta_t, float velocity) {
+
+    // On fait accélerer les rondins s'ils sont en dehors de la zone jouable
+    if (o->type == LOG_TYPE && (o->h_position + o->length < LEFT_MAP_X - DEFAULT_CELL_SIZE || o->h_position > RIGHT_MAP_X + DEFAULT_CELL_SIZE))
+    {
+        o->h_position += delta_t * velocity;
+    }
+
+
     // met a jour la position de l'obstacle (fonction appelée à chaque boucle)
     o->h_position = o->h_position + delta_t * velocity;
 
