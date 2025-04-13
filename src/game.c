@@ -38,9 +38,20 @@ void game_debug(Game *g, TTF_Font *font, SDL_Renderer *renderer)
     // Première zone : affichage des informations joueurs
     write_text("Player : ", 5, 5, -1, 0, 2, white, renderer, font);
     char player_info[256];
-    snprintf(player_info, sizeof(player_info), "Position: (%d, %d) | Alive: %s | Score: %d",
+    snprintf(player_info, sizeof(player_info), "Position: (%.2f, %d) | Alive: %s | Score: %d",
             g->board->player->h_position, V_POS,
             g->board->player->alive ? "Yes" : "No",
             g->board->player->score);
     write_text(player_info, 5, 25, -1, 0, 2, white, renderer, font);
+
+    // Deuxième zone : affichage des informations de la ligne suivante
+    write_text("Next line : ", 5, 45, -1, 0, 2, white, renderer, font);
+    char next_line_info[256];
+    snprintf(next_line_info, sizeof(next_line_info), "Nb. Obsta.: %d | Type: %d | Special: %d | Velocity: %f",
+            g->board->grid_ground[V_POS - 1]->nb_obstacles,
+            g->board->grid_ground[V_POS - 1]->type,
+            g->board->grid_ground[V_POS - 1]->special_attr,
+            g->board->grid_ground[V_POS - 1]->velocity);
+    write_text(next_line_info, 5, 65, -1, 0, 2, white, renderer, font);
+
 }
