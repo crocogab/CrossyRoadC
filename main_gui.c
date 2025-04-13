@@ -23,8 +23,8 @@ int main() {
     debug.display_grid_lines=0;
     debug.game_speed=1;
     debug.god_mode=0;
-    debug.display_sprites=1;
-    debug.display_information=1;
+    debug.display_sprites=0;
+    debug.display_information=0;
     debug.display_information_sprites=0;
     
     Game g = game_make(TO_LAUNCH);
@@ -96,7 +96,7 @@ int main() {
         exit(-1);
     } // render de SDL
 
-    TTF_Font *debug_font = font_load("assets/editundo.ttf", 11);
+    TTF_Font *debug_font = font_load("assets/editundo.ttf", 20);
 
     // On charge la sprite_sheet
     Sprite_sheet sprite_sheet = load_spritesheet("assets/spritesheet_coord.json", "assets/spritesheet.png", renderer, cam);
@@ -162,6 +162,17 @@ int main() {
                     }
                     if (event.key.keysym.sym==SDLK_F6){
                         debug.game_speed = debug.game_speed*2;
+                    }
+
+                    if (event.key.keysym.sym==SDLK_F2){ // ACTIVE OU PAS LES LIGNES
+                        debug.display_grid_lines= debug.display_grid_lines ? 0 : 1;
+                    }
+
+                    if (event.key.keysym.sym==SDLK_F4){ // ACTIVE OU PAS LES sprites
+                        debug.display_sprites= debug.display_sprites ? 0 : 1;
+                    }
+                    if (event.key.keysym.sym==SDLK_F3){ // ACTIVE OU PAS le debug
+                        debug.display_information= debug.display_information ? 0 : 1;
                     }
 
 
@@ -245,8 +256,11 @@ int main() {
         draw_board(b,cam,display,colors,renderer,&sprite_sheet, &debug);
         
         draw_entities(b,cam,display,colors,renderer,&sprite_sheet, &debug);
-
-        game_debug(&g, debug_font, renderer);
+        
+        if (debug.display_information){
+            game_debug(&g, debug_font, renderer);
+        }
+        
     
         //draw_chicken(p,&sprite_sheet,renderer,cam,display);
         

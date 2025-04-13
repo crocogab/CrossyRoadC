@@ -75,6 +75,8 @@ void game_debug(Game *g, TTF_Font *font, SDL_Renderer *renderer)
         }
         
     }
+
+    write_text("Controls: F1=God Mode | F2=Display lines | F3 = Debug informations | F4 = Display sprites | F5=Slow Time | F6=Speed Time", 5, 555, -1, 0, 2, white, renderer, font);
     
 
 }
