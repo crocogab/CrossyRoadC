@@ -302,6 +302,13 @@ void grid_ground_starter_set(Board *b, Sprite_sheet *sprite_sheet) {
         b->grid_ground[i] = gen_next_ground(b,0,sprite_sheet);
         
     }
+
+    ground_free(b->grid_ground[4]);
+    b->grid_ground[4] = ground_generate(GROUND_TRAIN, 0, 0, 0, sprite_sheet);
+
+    ground_free(b->grid_ground[3]);
+    b->grid_ground[3] = ground_generate(GROUND_WATER_LILY, 0, 3, 5, sprite_sheet);
+
     ground_free(b->grid_ground[MAP_LEN - 1]);
     b->grid_ground[MAP_LEN-1] = ground_generate(GROUND_GRASS, 0, 0, 0, sprite_sheet);
 }
