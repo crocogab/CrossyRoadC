@@ -461,10 +461,18 @@ Ground *gen_next_ground(Board *b, int score, Sprite_sheet *sprite_sheet) {
                 return gen_water(score, b->grid_ground[0]->velocity, sprite_sheet);
             }
 
-        case GROUND_WATER_LOG:
-        case GROUND_WATER_LILY:
+        case GROUND_WATER_LOG:            
             if (s <= 1) {
                 return gen_water(score, b->grid_ground[0]->velocity, sprite_sheet);
+            } else if (s == 1) {
+                return gen_road(score, b->grid_ground[0]->velocity, sprite_sheet);
+            } else {
+                return ground_generate(GROUND_GRASS, 0, 1, 4, sprite_sheet);
+            }
+
+        case GROUND_WATER_LILY:
+            if (s <= 1) {
+                return ground_generate(GROUND_WATER_LOG, b->grid_ground[0]->velocity, 2, 4 ,sprite_sheet);
             } else if (s == 1) {
                 return gen_road(score, b->grid_ground[0]->velocity, sprite_sheet);
             } else {
