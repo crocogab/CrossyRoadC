@@ -7,7 +7,7 @@ TEST_DIR = ./Tests
 TARGET_GUI = main_gui
 
 # fichiers source GUI
-SRCS_GUI = main_gui.c $(SRC_DIR)/gui.c $(SRC_DIR)/game.c $(SRC_DIR)/board.c $(SRC_DIR)/player.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c
+SRCS_GUI = main_gui.c $(SRC_DIR)/gui.c $(SRC_DIR)/game.c $(SRC_DIR)/board.c $(SRC_DIR)/player.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/ttf.c
 OBJS_GUI = $(SRCS_GUI:.c=.o)
 
 # Tests

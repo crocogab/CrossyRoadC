@@ -31,3 +31,16 @@ void game_start(Game *g, Sprite_sheet *sprite_sheet){
     g->board=b;
     g->status=PLAYING;
 }
+
+void game_debug(Game *g, TTF_Font *font, SDL_Renderer *renderer)
+{
+    SDL_Color white = {255, 255, 255, SDL_ALPHA_OPAQUE};
+    // Première zone : affichage des informations joueurs
+    write_text("Player : ", 5, 5, -1, 0, 2, white, renderer, font);
+    char player_info[256];
+    snprintf(player_info, sizeof(player_info), "Position: (%d, %d) | Alive: %s | Score: %d",
+            g->board->player->h_position, V_POS,
+            g->board->player->alive ? "Yes" : "No",
+            g->board->player->score);
+    write_text(player_info, 5, 25, -1, 0, 2, white, renderer, font);
+}

@@ -5,10 +5,12 @@
 #include <assert.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include "game.h"
 #include "player.h"
 #include <time.h>
 #include "ground.h"
+#include "ttf.h"
 
 Board *g_board;
 
@@ -35,7 +37,12 @@ int main() {
         exit(-1);
     }
     atexit(SDL_Quit);
-    //Il faudra aussi inclure les autres bibliotheques SDL
+
+    if (TTF_Init() == -1) {
+        printf("Erreur d'initialisation de SDL_ttf: %s\n", TTF_GetError());
+        SDL_Quit();
+        return 1;
+    }
 
     // Creation de la fenetre
     int const width = 1500;
@@ -62,6 +69,7 @@ int main() {
         .ROAD_LINE_COLOR = {110, 118, 141, SDL_ALPHA_OPAQUE}
     };
 
+
     SDL_Window *window; // création de la fenêtre
     window = SDL_CreateWindow("SDL2 Window",
                                 SDL_WINDOWPOS_UNDEFINED,
@@ -80,6 +88,7 @@ int main() {
         exit(-1);
     } // render de SDL
 
+    TTF_Font *debug_font = font_load("assets/editundo.ttf", 11);
 
     // On charge la sprite_sheet
     Sprite_sheet sprite_sheet = load_spritesheet("assets/spritesheet_coord.json", "assets/spritesheet.png", renderer, cam);
@@ -210,7 +219,7 @@ int main() {
         
         draw_entities(b,cam,display,colors,renderer,&sprite_sheet);
 
-        printf("PLAYER POS hpos : %f\n",p->h_position);
+        game_debug(&g, debug_font, renderer);
     
         //draw_chicken(p,&sprite_sheet,renderer,cam,display);
         
