@@ -560,11 +560,12 @@ void draw_entities(Board *b, Camera cam, Display_informations display, Colors co
             case TREE_TYPE:
                 draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, display);
                 break;
-
             case WATER_LILY_TYPE:
-                draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, display);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/5, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
                 break;
-
+            case LOG_TYPE:
+                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/4, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
+                break;
             default:
                 draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
                 break;
@@ -575,6 +576,6 @@ void draw_entities(Board *b, Camera cam, Display_informations display, Colors co
         {
             draw_chicken(b->player, sprite_sheet, renderer, cam, display);
         }
-        
+        //draw_sprite_from_grid((MAP_WIDTH/2)*DEFAULT_CELL_SIZE, V_POS*display.tile_size, TRAIN_POLE_ID, 0, sprite_sheet, renderer, cam, display);
     }
 }
