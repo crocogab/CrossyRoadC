@@ -77,7 +77,7 @@ void board_set_player(Board* b, Player* player) {
  * @param[in] b Le plateau à mettre à jour
  * @param[in] delta_t le temps qui s'est écoulé
  */
-void board_update(Board* b, float delta_t, Sprite_sheet *sprite_sheet) {
+void board_update(Board* b, float delta_t, Sprite_sheet *sprite_sheet,debugKit d) {
     if (b == NULL || b->player == NULL) {
         return; // Si le plateau ou le joueur est NULL, on ne fait rien
     }
@@ -113,7 +113,7 @@ void board_update(Board* b, float delta_t, Sprite_sheet *sprite_sheet) {
         else if (ground->type == GROUND_TRAIN && ground->special_attr > 0)
         {
             
-            ground->special_attr -= 1;
+            ground->special_attr -= d.game_speed;
             if (ground->special_attr < TRAIN_ALERT_TIME){
                 
                 ground->obstacles[1]->variant=((int)(ground->special_attr/10)+1)%2;

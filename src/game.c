@@ -36,7 +36,7 @@ void game_debug(Game *g, TTF_Font *font, SDL_Renderer *renderer, Camera cam, deb
 {
     SDL_Color white = {255, 255, 255, SDL_ALPHA_OPAQUE};
     Obstacle *o;
-    write_text("Controls: F1=God Mode | F2=Display lines | F3 = Debug informations | F4 = Display sprites | F5=Slow Time | F6=Speed Time | Q = quit", 5, 25, -1, 0, 2, white, renderer, font);
+    write_text("Controls: F1=God | F2= lines | F3 = informations | F4 = sprites | F5=Slow | F6=Speed | F7= sprites_info | Q = quit", 5, 25, -1, 0, 2, white, renderer, font);
     if (debug_kit->display_information)
     {
         // Première zone : affichage des informations joueurs
@@ -51,7 +51,7 @@ void game_debug(Game *g, TTF_Font *font, SDL_Renderer *renderer, Camera cam, deb
         // Deuxième zone : affichage des informations de la ligne suivante
         write_text("Next line : ", 5, 65, -1, 0, 2, white, renderer, font);
         char next_line_info[256];
-        snprintf(next_line_info, sizeof(next_line_info), "Nb. Obsta.: %d | Type: %d | Special: %d | Velocity: %f",
+        snprintf(next_line_info, sizeof(next_line_info), "Nb. Obsta.: %d | Type: %d | Special: %f | Velocity: %f",
                 g->board->grid_ground[V_POS - 1]->nb_obstacles,
                 g->board->grid_ground[V_POS - 1]->type,
                 g->board->grid_ground[V_POS - 1]->special_attr,

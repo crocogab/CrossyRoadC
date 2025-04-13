@@ -25,7 +25,7 @@ int main() {
     debug.god_mode=0;
     debug.display_sprites=0;
     debug.display_information=0;
-    debug.display_information_sprites=1;
+    debug.display_information_sprites=0;
     
     Game g = game_make(TO_LAUNCH);
     Player *p = player_start();
@@ -174,6 +174,9 @@ int main() {
                     if (event.key.keysym.sym==SDLK_F3){ // ACTIVE OU PAS le debug
                         debug.display_information= debug.display_information ? 0 : 1;
                     }
+                    if (event.key.keysym.sym==SDLK_F7){
+                        debug.display_information_sprites = debug.display_information_sprites ? 0 : 1;
+                    }
 
 
                 default:
@@ -227,7 +230,7 @@ int main() {
             // update si on est mort
         } else {
             
-            board_update(b, debug.game_speed, &sprite_sheet);
+            board_update(b, debug.game_speed, &sprite_sheet,debug);
         }
 
         //printf("Position du joueur : h_float = %f \n",p->h_position);

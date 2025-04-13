@@ -7,6 +7,7 @@
 #include "gui.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include "debugKit.h"
 
 
 typedef struct _Board {
@@ -18,7 +19,7 @@ Board* board_make(Sprite_sheet *sprite_sheet);
 void board_free(Board* b);
 void board_set_ground(Board* b, Ground** ground);
 void board_set_player(Board* b, Player* player);
-void board_update(Board* b, float delta_t, Sprite_sheet *sprite_sheet);
+void board_update(Board* b, float delta_t, Sprite_sheet *sprite_sheet,debugKit d);
 int check_future_collision(Board *, int direction);
 void player_move (Player* p, int direction, float delta_t);
 void ground_move (Board* b, int direction, Sprite_sheet *sprite_sheet);
