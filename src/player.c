@@ -176,7 +176,7 @@ void move_player(int direction, Player *player,Ground * next_ground)
     }
 }
 
-void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display)
+void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit)
 {
     int sprite_index = 0;
     switch (p->previous_direction)
@@ -197,5 +197,5 @@ void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer,
     default:
         break;
     } 
-    draw_sprite_from_grid(p->h_position, V_POS, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display); 
+    draw_sprite_from_grid(p->h_position, V_POS, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
 }

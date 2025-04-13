@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "gui.h"
 #include "ground.h"
+#include "debugKit.h"
 
 typedef struct _Player {
     // Skin *skin;
@@ -25,6 +26,6 @@ void player_free(Player *player);
 
 void move_player(int direction, Player *player,Ground * next_ground);
 
-void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display);
+void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit);
 
 #endif

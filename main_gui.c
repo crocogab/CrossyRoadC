@@ -242,9 +242,9 @@ int main() {
         }
         //5. Maj de etat graphique
         
-        draw_board(b,cam,display,colors,renderer,&sprite_sheet);
+        draw_board(b,cam,display,colors,renderer,&sprite_sheet, &debug);
         
-        draw_entities(b,cam,display,colors,renderer,&sprite_sheet);
+        draw_entities(b,cam,display,colors,renderer,&sprite_sheet, &debug);
 
         game_debug(&g, debug_font, renderer);
     

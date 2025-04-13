@@ -528,13 +528,13 @@ void draw_board(Board *b, Camera cam, Display_informations display, Colors color
  * @param renderer le renderer
  * 
  */
-void draw_entities(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet)
+void draw_entities(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit)
 {
     if (b == NULL || b->grid_ground == NULL) {
         return; // Si le plateau ou la grille du sol est NULL, on ne fait rien
     }
 
-    // On a un flag pour savoir si le joueur a déjà été affiché
+    // On a un flag pour savoir si le joueur a déjà été affic, debug_kithé
     bool displayed = false;
 
     for (int i = 0; i < MAP_LEN; i++)
@@ -546,7 +546,7 @@ void draw_entities(Board *b, Camera cam, Display_informations display, Colors co
             if (!displayed && i == V_POS && !(ground->type == GROUND_WATER_LILY || ground->type == GROUND_WATER_LOG))
             {
                 displayed = true;
-                draw_chicken(b->player, sprite_sheet, renderer, cam, display);
+                draw_chicken(b->player, sprite_sheet, renderer, cam, display, debug_kit);
             }
         
             switch (ground->obstacles[j]->type)
@@ -555,36 +555,36 @@ void draw_entities(Board *b, Camera cam, Display_informations display, Colors co
             case TRUCK_TYPE:
                 if (ground->velocity > 0)
                 {
-                    draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 1, sprite_sheet, renderer, cam, display);
+                    draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 1, sprite_sheet, renderer, cam, display, debug_kit);
                 }
                 else
                 {
-                    draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
+                    draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
                 }                
                 break;
 
             case TREE_TYPE:
-                draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, display);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, display, debug_kit);
                 break;
             case WATER_LILY_TYPE:
-                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/5, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/5, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
                 break;
             case LOG_TYPE:
-                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/4, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/4, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
                 break;
             case TRAIN_POLE_TYPE:
                 // On fait à la main car le poteau volait
-                draw_sprite((Point3d){ground->obstacles[j]->h_position, (i+1)*display.line_width*display.tile_size-22, -10}, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam);
+                draw_sprite((Point3d){ground->obstacles[j]->h_position, (i+1)*display.line_width*display.tile_size-22, -10}, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, debug_kit);
                 break;
             default:
-                draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
                 break;
             }
 
         }
         if (!displayed && i == V_POS)
         {
-            draw_chicken(b->player, sprite_sheet, renderer, cam, display);
+            draw_chicken(b->player, sprite_sheet, renderer, cam, display, debug_kit);
         }
         //draw_sprite_from_grid((MAP_WIDTH/2)*DEFAULT_CELL_SIZE, V_POS*display.tile_size, TRAIN_POLE_ID, 0, sprite_sheet, renderer, cam, display);
     }
