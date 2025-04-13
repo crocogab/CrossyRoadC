@@ -22,7 +22,7 @@ int main() {
     
     debug.display_grid_lines=0;
     debug.vitesse_jeu=1;
-    debug.god_mod=0;
+    debug.god_mode=0;
     debug.display_sprites=1;
     debug.display_information=1;
     debug.display_information_sprites=0;
@@ -37,7 +37,6 @@ int main() {
 
     int jump_back = 0;    // Limitation des retours en arrière
     int score_actu = 0;   // Score actuel
-    int score_maxi = 0;   // Score maximum
     int quit_game = 0;    // Signal pour quitter le jeu
 
     // Initialisation de la SDL
@@ -152,6 +151,10 @@ int main() {
                         }
                         
                     }
+                    // DEBUG MODE
+                    if (event.key.keysym.sym==SDLK_F1){
+                        debug.god_mode=debug.god_mode ? 0 : 1;
+                    }
 
                 default:
                     break;
@@ -159,7 +162,7 @@ int main() {
         }
         // 2. Traiter action
         int collision_type;
-        if (!debug.god_mod){
+        if (!debug.god_mode){
             collision_type= check_future_collision(b, direction);
         }else{
             collision_type=COLLIDE_NONE;
@@ -225,8 +228,8 @@ int main() {
         }
 
         //4. MAJ du score
-        if (score_actu > score_maxi) {
-            score_maxi = score_actu;
+        if (score_actu > p->score) {
+            p->score = score_actu;
         }
         //5. Maj de etat graphique
         
