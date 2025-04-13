@@ -294,13 +294,16 @@ Ground **grid_ground_make(Sprite_sheet *sprite_sheet) {
  * @param[in] b Le plateau contenant la grille de sol
  */
 void grid_ground_starter_set(Board *b, Sprite_sheet *sprite_sheet) {
+
     for (int i = 2; i <= min(MAP_LEN, START_SIZE); i++)
-    {
-        ground_free(b->grid_ground[MAP_LEN - i]);
-        b->grid_ground[MAP_LEN - i] = ground_generate(GROUND_GRASS, 0, 0, 0, sprite_sheet);
+    {   
+        
+        ground_free(b->grid_ground[i]);
+        b->grid_ground[i] = gen_next_ground(b,0,sprite_sheet);
+        
     }
     ground_free(b->grid_ground[MAP_LEN - 1]);
-    b->grid_ground[MAP_LEN-1] = ground_generate(GROUND_GRASS, 0, MAP_WIDTH, MAP_WIDTH, sprite_sheet);
+    b->grid_ground[MAP_LEN-1] = ground_generate(GROUND_GRASS, 0, 0, 0, sprite_sheet);
 }
     
 /**

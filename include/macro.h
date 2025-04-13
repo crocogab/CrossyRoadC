@@ -11,7 +11,7 @@
 //Définition de la taille de la map
 
 #define MAP_WIDTH 24 // Largeur de la map actuelle
-#define MAP_LEN 25 // Hauteur de la map actuelle
+#define MAP_LEN 35 // Hauteur de la map actuelle
 
 #define MAP_WIDTH_CAM 10
 //Définition des tailles par défaut de la map, pour les tests uniquement
@@ -43,8 +43,8 @@
 
 //Définition des attributs de voiture
 #define CAR_TYPE 100
-#define CAR_MAX_SPEED 9 //Vitesse maximum de la voiture en valeur absolue
-#define CAR_MIN_SPEED 5 //Vitesse minimum de la voiture en valeur absolue
+#define CAR_MAX_SPEED 8 //Vitesse maximum de la voiture en valeur absolue
+#define CAR_MIN_SPEED 4 //Vitesse minimum de la voiture en valeur absolue
 #define CAR_MIN_NUMBER 3 //Nombre minimum de voitures sur une ligne
 
 //Définition des attributs de arbre
@@ -61,8 +61,8 @@
 
 //Définition des attributs de truck
 #define TRUCK_TYPE 104
-#define TRUCK_MAX_SPEED 6 //Vitesse maximum du camion en valeur absolue
-#define TRUCK_MIN_SPEED 4 //Vitesse minimum du camion en valeur absolue
+#define TRUCK_MAX_SPEED 5 //Vitesse maximum du camion en valeur absolue
+#define TRUCK_MIN_SPEED 3 //Vitesse minimum du camion en valeur absolue
 #define TRUCK_MIN_NUMBER 1 //Nombre minimum du camion sur une ligne
 
 // Définition des attributs de log
@@ -91,9 +91,9 @@
 #define INTER_TRUCK_MIN 6*DEFAULT_CELL_SIZE
 #define INTER_LOG_MIN 8*DEFAULT_CELL_SIZE
 
-#define START_SIZE 7 // Taille de la zone de départ
+#define START_SIZE 4 // Taille de la zone de départ (PETITE = GRAND DEPART)
 
-#define V_POS 7 // Position verticale du joueur sur le board
+#define V_POS 10 // Position verticale du joueur sur le board
 
 //Définition des seuils de difficulté
 #define DIFF_EASY 25 // Le jeu devient plus dur au dessus de 25 de score

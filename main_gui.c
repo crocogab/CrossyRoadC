@@ -8,6 +8,7 @@
 #include "game.h"
 #include "player.h"
 #include <time.h>
+#include "ground.h"
 
 Board *g_board;
 
@@ -41,7 +42,7 @@ int main() {
     int const height = 1000;
 
     // Variables de la caméra
-    Camera cam = {1.25f, 150-400, -350-65, 0.25f};
+    Camera cam = {1.25f, 100-400, -700-65, 0.25f};
 
     // Variables de la grille
     Display_informations display = {121, 14, 50, 1, 25};
@@ -85,6 +86,7 @@ int main() {
 
     game_start(&g, &sprite_sheet);
     b = g.board;
+    grid_ground_starter_set(b,&sprite_sheet);
     g_board = b;
 
     p->h_position=1000;
@@ -155,7 +157,7 @@ int main() {
             
             
                 if (direction != NEUTRAL) {
-                    move_player(direction, p);
+                    move_player(direction, p,b->grid_ground[V_POS-1]);
                     ground_move(b, direction,&sprite_sheet);
                 }
                 break;
