@@ -194,16 +194,17 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
         }
 
         //On prends des précautions sur le nombre de voitures maximal
-        if (max_nb >= MAP_WIDTH/INTER_CAR_MIN)
+        if (max_nb >=MAP_WIDTH/INTER_CAR_MIN)
         {
             max_nb = MAP_WIDTH/INTER_CAR_MIN; //On ne peut pas avoir plus de voitures que la map est large
         }
         nb = random_int(min_nb, max_nb); //On tire au maximum des voitures espacées de INTER_CAR_MIN ou max_nb
+
         variant = random_int(0,2);
         for (int i = 0; i < nb; i++)
         {
             variant = random_int(0,2);
-            obs[i] = obstacle_make(CAR_TYPE, variant, i*INTER_CAR_MIN, sprite_sheet->sprites[type_var_to_id(CAR_TYPE, variant)].lenght);
+            obs[i] = obstacle_make(CAR_TYPE, variant, i*INTER_CAR_MIN*DEFAULT_CELL_SIZE, sprite_sheet->sprites[type_var_to_id(CAR_TYPE, variant)].lenght);
         }
 
         break;
@@ -231,7 +232,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
         for (int i = 0; i < nb; i++)
         {
             variant = random_int(0, 2);
-            obs[i] = obstacle_make(TRUCK_TYPE, variant, i*INTER_TRUCK_MIN, sprite_sheet->sprites[type_var_to_id(TRUCK_TYPE, variant)].lenght);
+            obs[i] = obstacle_make(TRUCK_TYPE, variant, i*INTER_TRUCK_MIN*DEFAULT_CELL_SIZE, sprite_sheet->sprites[type_var_to_id(TRUCK_TYPE, variant)].lenght);
         }
         
         break;
@@ -278,7 +279,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
             
             variant = random_int(0, 2); // Utilise la plage correcte (0-2)
             
-            obs[i] = obstacle_make(LOG_TYPE, variant, i * INTER_LOG_MIN, sprite_sheet->sprites[type_var_to_id(LOG_TYPE, variant)].lenght);
+            obs[i] = obstacle_make(LOG_TYPE, variant, i * INTER_LOG_MIN*DEFAULT_CELL_SIZE, sprite_sheet->sprites[type_var_to_id(LOG_TYPE, variant)].lenght);
         }
         
         break;
