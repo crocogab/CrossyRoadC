@@ -133,6 +133,22 @@ typedef struct point2d_t
     float y;
 } Point2d;
 
+/**
+ * Définit une animation en ax² + bx + c
+ * @param duration la durée de l'animation en unité de temps
+ * @param a le coefficient de degré 2
+ * @param b le coefficient de degré 1
+ * @param c le coefficient de degré 0
+ * 
+ */
+typedef struct Animation_t
+{
+    float duration;
+    float a;
+    float b;
+    float c;
+} Animation;
+
 Point2d d3_to_2d(float x, float y, float z, Camera cam);
 void draw_quad(Point2d p1, Point2d p2, Point2d p3, Point2d p4, SDL_Color color, SDL_Renderer *renderer);
 void draw_quad_from_3d(Point3d p1, Point3d p2, Point3d p3, Point3d p4, SDL_Color color, Camera cam, SDL_Renderer *renderer);

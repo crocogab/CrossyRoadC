@@ -359,6 +359,24 @@ void draw_sprite_from_grid(float h_pos, int y, int sprite_id, int sprite_index, 
 }
 
 /**
+ * Fonction qui calcule anim(t)
+ * @param anim une animation
+ * @param t le temps écoulé dans l'animation
+ * 
+ */
+float animation_calc(Animation anim, float t)
+{
+    if (t > anim.duration)
+    {
+        return -1.0f;
+    }
+    else
+    {
+        return anim.a*t*t + anim.b*t + anim.c;
+    }
+}
+
+/**
  * Charge une spritesheet dont le chemin est en argument selon les coordonnées en format JSON array
  * contenues dans le fichier de chemin coord_path
  * @param coord_path Chemin du fichier JSON contenant les coordonnées des sprites
