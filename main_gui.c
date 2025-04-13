@@ -218,9 +218,13 @@ int main() {
         SDL_RenderPresent(renderer);
         SDL_Delay(8); // ~60 FPS  
     }
+    
+
     IMG_Quit();
     unload_spritesheet(sprite_sheet);
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     board_free(b);
+    
+    SDL_Quit();
 }

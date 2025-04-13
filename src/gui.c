@@ -241,9 +241,7 @@ void draw_board_line(int x, int type, Camera cam, Display_informations display, 
         {
             draw_sprite((Point3d){i*display.tile_size, (x+1)*display.tile_size, 0}, RAIL_ID, 0, sprite_sheet, renderer, cam);
         }
-        
         break;
-    
     case GROUND_ROAD_BORDER:
 
         // On baisse le plan à la hauteur de la route
