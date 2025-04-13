@@ -11,12 +11,21 @@
 #include <time.h>
 #include "ground.h"
 #include "ttf.h"
+#include "debugKit.h"
 
 Board *g_board;
+
+debugKit debug;
 
 int main() {
     srand(time(NULL)); // nouvelle graine
     
+    debug.display_grid_lines=0;
+    debug.vitesse_jeu=1;
+    debug.god_mod=0;
+    debug.display_sprites=1;
+    debug.display_information=1;
+    debug.display_information_sprites=0;
     
     Game g = game_make(TO_LAUNCH);
     Player *p = player_start();
@@ -149,7 +158,13 @@ int main() {
             }
         }
         // 2. Traiter action
-        int collision_type = check_future_collision(b, direction);
+        int collision_type;
+        if (!debug.god_mod){
+            collision_type= check_future_collision(b, direction);
+        }else{
+            collision_type=COLLIDE_NONE;
+        }
+        
         //printf("COLLISION UP : %d\n",collision_type);
         switch (collision_type) {
             case COLLIDE_NONE:
@@ -189,7 +204,7 @@ int main() {
             // update si on est mort
         } else {
             
-            board_update(b, 1, &sprite_sheet);
+            board_update(b, debug.vitesse_jeu, &sprite_sheet);
         }
 
         //printf("Position du joueur : h_float = %f \n",p->h_position);
@@ -234,6 +249,6 @@ int main() {
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     board_free(b);
-    
+
     SDL_Quit();
 }
