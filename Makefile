@@ -29,7 +29,10 @@ TEST_RANDOM_CUSTOM_SRCS = $(TEST_DIR)/test_random_custom.c $(SRC_DIR)/random_cus
 TEST_GUI = test_gui
 TEST_GUI_SRCS = $(TEST_DIR)/test_gui.c $(SRC_DIR)/gui.c $(SRC_DIR)/board.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/player.c
 
-TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUSTOM) $(TEST_BOARD) $(TEST_GUI)
+TEST_TTF = test_ttf
+TEST_TTF_SRCS = $(TEST_DIR)/test_ttf.c $(SRC_DIR)/gui.c $(SRC_DIR)/board.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/player.c $(SRC_DIR)/ttf.c
+
+TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUSTOM) $(TEST_BOARD) $(TEST_GUI) $(TEST_TTF)
 
 # Compilation
 CC = clang
@@ -40,8 +43,8 @@ CFLAGS += -fsanitize=address -fno-omit-frame-pointer
 LDFLAGS = -fsanitize=address
 
 # libs
-LIBS_GUI = $(shell pkg-config --libs sdl2 SDL2_image json-c)
-CFLAGS_GUI = $(shell pkg-config --cflags sdl2 SDL2_image json-c)
+LIBS_GUI = $(shell pkg-config --libs sdl2 SDL2_image SDL2_ttf json-c)
+CFLAGS_GUI = $(shell pkg-config --cflags sdl2 SDL2_image SDL2_ttf json-c)
 
 # Cible par défaut : GUI
 all: $(TARGET_GUI)
@@ -67,6 +70,9 @@ $(TEST_RANDOM_CUSTOM): $(TEST_RANDOM_CUSTOM_SRCS:.c=.o)
 	$(CC) $^ $(LDFLAGS) -o $@
 
 $(TEST_GUI): $(TEST_GUI_SRCS:.c=.o)
+	$(CC) $^ $(LDFLAGS) $(LIBS_GUI) -o $@
+
+$(TEST_TTF): $(TEST_TTF_SRCS:.c=.o)
 	$(CC) $^ $(LDFLAGS) $(LIBS_GUI) -o $@
 
 # ---------- Règles génériques ----------
@@ -97,13 +103,16 @@ run_test_random_custom: $(TEST_RANDOM_CUSTOM)
 run_test_gui: $(TEST_GUI)
 	./$(TEST_GUI)
 
+run_test_ttf: $(TEST_TTF)
+	./$(TEST_TTF)
+
 run_tests: $(TEST_TARGETS)
 	for test in $(TEST_TARGETS); do ./$$test; done
 
 # ---------- Nettoyage ----------
 clean:
 	rm -f $(OBJS_GUI) $(TARGET_GUI) $(TEST_TARGETS)
-	rm -f $(TEST_BOARD_SRCS:.c=.o) $(TEST_PLAYER_SRCS:.c=.o) $(TEST_OBSTACLE_SRCS:.c=.o) $(TEST_GROUND_SRCS:.c=.o) $(TEST_RANDOM_CUSTOM_SRCS:.c=.o) $(TEST_GUI_SRCS:.c=.o)
+	rm -f $(TEST_BOARD_SRCS:.c=.o) $(TEST_PLAYER_SRCS:.c=.o) $(TEST_OBSTACLE_SRCS:.c=.o) $(TEST_GROUND_SRCS:.c=.o) $(TEST_RANDOM_CUSTOM_SRCS:.c=.o) $(TEST_GUI_SRCS:.c=.o) $(TEST_TTF_SRCS:.c=.o)
 	rm -f *~ \#*\# .\#*
 
 .PHONY: all clean test run_tests run_gui run_test_*
