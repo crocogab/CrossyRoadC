@@ -97,6 +97,7 @@ void move_player(int direction, Player *player,Ground * next_ground)
         }
         player->direction = LEFT;
         player->previous_direction = LEFT;
+        player->is_jumping = 1;
         break;
 
     case RIGHT:
@@ -115,6 +116,7 @@ void move_player(int direction, Player *player,Ground * next_ground)
         }
         player->direction = RIGHT;
         player->previous_direction = RIGHT;
+        player->is_jumping = 1;
         break;
 
     case UP:
@@ -144,6 +146,7 @@ void move_player(int direction, Player *player,Ground * next_ground)
         
         player->direction = UP;
         player->previous_direction = UP;
+        player->is_jumping = 1;
         break;
 
     case DOWN:
@@ -169,6 +172,7 @@ void move_player(int direction, Player *player,Ground * next_ground)
         }
         player->direction = DOWN;
         player->previous_direction = DOWN;
+        player->is_jumping = 1;
         break;
     
     default:
@@ -197,5 +201,70 @@ void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer,
     default:
         break;
     } 
-    draw_sprite_from_grid(p->h_position, V_POS, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
+    draw_sprite_from_grid(p->h_position, V_POS, 0, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
+}
+
+int draw_chicken_anim(Player *p, float anim_time, Animation anim_x, Animation anim_z, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit)
+{
+    int sprite_index = 0;
+    printf("anim_calc_z : %f\n", animation_calc(anim_z, anim_time)/DEFAULT_CELL_SIZE);
+    switch (p->previous_direction)
+    {
+    case LEFT:
+        sprite_index = 2;
+        if (anim_time == 0.0 || anim_time > anim_x.duration)
+        {
+            draw_sprite_from_grid(p->h_position, V_POS, 0, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
+        }
+        else
+        {
+            draw_sprite_from_grid(p->h_position - animation_calc(anim_x, anim_time), V_POS, animation_calc(anim_z, anim_time), CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
+        }
+        break;
+    case RIGHT:
+        sprite_index = 0;
+        if (anim_time == 0.0 || anim_time > anim_x.duration)
+        {
+            draw_sprite_from_grid(p->h_position, V_POS, 0, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
+        }
+        else
+        {
+            draw_sprite_from_grid(p->h_position + animation_calc(anim_x, anim_time), V_POS, animation_calc(anim_z, anim_time), CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
+        }
+        break;
+    case UP:
+        sprite_index = 3;
+        if (anim_time == 0.0 || anim_time > anim_x.duration)
+        {
+            draw_sprite_from_grid(p->h_position, (float)V_POS, 0, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
+        }
+        else
+        {
+            draw_sprite_from_grid(p->h_position, (float)V_POS, animation_calc(anim_z, anim_time), CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
+        }
+        break;
+    case DOWN:
+        sprite_index = 1;
+        if (anim_time == 0.0 || anim_time > anim_x.duration)
+        {
+            draw_sprite_from_grid(p->h_position, (float)V_POS, 0, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
+        }
+        else
+        {
+            draw_sprite_from_grid(p->h_position, (float)V_POS, animation_calc(anim_z, anim_time), CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
+        }
+        break;
+    
+    default:
+        break;
+    }
+
+    
+
+    // On renvoie 0 si l'animation est finie
+    if (anim_time > anim_x.duration || anim_time == 0)
+    {
+        return 0;
+    }
+    return 1;
 }

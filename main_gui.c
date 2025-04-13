@@ -108,6 +108,12 @@ int main() {
 
     p->h_position=1000;
     board_set_player(b, p);
+
+    Animation anim_jump_x = {.duration = 6, .a = 0, .b = 0.1666, .c = -1};
+
+    Animation anim_jump_z = {.duration = 6, .a = -0.02775, .b = 0.16666, .c = 0};
+
+    float anim_time = 0;
     
 
     SDL_Event event;
@@ -123,64 +129,67 @@ int main() {
         int direction = NEUTRAL;
         // 1. Action du joueur           
         if (SDL_PollEvent(&event)){ 
-            switch (event.type){
-                
-                case SDL_QUIT:
-                    g.status=DEAD;
-                    break;
-                case SDL_KEYDOWN: // touche pressée
-                    if (event.key.keysym.sym==SDLK_q){
+            if (!(p->is_jumping))
+            {
+                switch (event.type){
+                    
+                    case SDL_QUIT:
                         g.status=DEAD;
-                    }
-                    if (event.key.keysym.sym==SDLK_RIGHT){
-                        direction = RIGHT;
-
-                    }
-                    if (event.key.keysym.sym==SDLK_LEFT){
-                        direction = LEFT;
-                       
-                    }
-                    if (event.key.keysym.sym==SDLK_UP){
-                        direction = UP;
-                    }
-                    if (event.key.keysym.sym==SDLK_DOWN){
-                        if (jump_back < 3){
-                            direction = DOWN;
-                            //ground_move(b,DOWN, &sprite_sheet);
+                        break;
+                    case SDL_KEYDOWN: // touche pressée
+                        if (event.key.keysym.sym==SDLK_q){
+                            g.status=DEAD;
+                        }
+                        if (event.key.keysym.sym==SDLK_RIGHT){
+                            direction = RIGHT;
 
                         }
+                        if (event.key.keysym.sym==SDLK_LEFT){
+                            direction = LEFT;
                         
-                    }
-                    // DEBUG MODE
-                    if (event.key.keysym.sym==SDLK_F1){
-                        debug.god_mode=debug.god_mode ? 0 : 1;
-                    }
+                        }
+                        if (event.key.keysym.sym==SDLK_UP){
+                            direction = UP;
+                        }
+                        if (event.key.keysym.sym==SDLK_DOWN){
+                            if (jump_back < 3){
+                                direction = DOWN;
+                                //ground_move(b,DOWN, &sprite_sheet);
 
-                    // ralentir temps = f5 et accelerer = f6
-                    if (event.key.keysym.sym==SDLK_F5){
-                        debug.game_speed = debug.game_speed/2;
-                    }
-                    if (event.key.keysym.sym==SDLK_F6){
-                        debug.game_speed = debug.game_speed*2;
-                    }
+                            }
+                            
+                        }
+                        // DEBUG MODE
+                        if (event.key.keysym.sym==SDLK_F1){
+                            debug.god_mode=debug.god_mode ? 0 : 1;
+                        }
 
-                    if (event.key.keysym.sym==SDLK_F2){ // ACTIVE OU PAS LES LIGNES
-                        debug.display_grid_lines= debug.display_grid_lines ? 0 : 1;
-                    }
+                        // ralentir temps = f5 et accelerer = f6
+                        if (event.key.keysym.sym==SDLK_F5){
+                            debug.game_speed = debug.game_speed/2;
+                        }
+                        if (event.key.keysym.sym==SDLK_F6){
+                            debug.game_speed = debug.game_speed*2;
+                        }
 
-                    if (event.key.keysym.sym==SDLK_F4){ // ACTIVE OU PAS LES sprites
-                        debug.display_sprites= debug.display_sprites ? 0 : 1;
-                    }
-                    if (event.key.keysym.sym==SDLK_F3){ // ACTIVE OU PAS le debug
-                        debug.display_information= debug.display_information ? 0 : 1;
-                    }
-                    if (event.key.keysym.sym==SDLK_F7){
-                        debug.display_information_sprites = debug.display_information_sprites ? 0 : 1;
-                    }
+                        if (event.key.keysym.sym==SDLK_F2){ // ACTIVE OU PAS LES LIGNES
+                            debug.display_grid_lines= debug.display_grid_lines ? 0 : 1;
+                        }
+
+                        if (event.key.keysym.sym==SDLK_F4){ // ACTIVE OU PAS LES sprites
+                            debug.display_sprites= debug.display_sprites ? 0 : 1;
+                        }
+                        if (event.key.keysym.sym==SDLK_F3){ // ACTIVE OU PAS le debug
+                            debug.display_information= debug.display_information ? 0 : 1;
+                        }
+                        if (event.key.keysym.sym==SDLK_F7){
+                            debug.display_information_sprites = debug.display_information_sprites ? 0 : 1;
+                        }
 
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
         }
         // 2. Traiter action
@@ -207,8 +216,11 @@ int main() {
             
             
                 if (direction != NEUTRAL) {
+                    // On déplace le joueur
                     move_player(direction, p,b->grid_ground[V_POS-1]);
                     ground_move(b, direction,&sprite_sheet);
+
+
                 }
                 break;
             
@@ -256,9 +268,30 @@ int main() {
         }
         //5. Maj de etat graphique
         
-        draw_board(b,cam,display,colors,renderer,&sprite_sheet, &debug);
+        draw_board(b,anim_time, anim_jump_x,cam,display,colors,renderer,&sprite_sheet, &debug,score_actu);
         
-        draw_entities(b,cam,display,colors,renderer,&sprite_sheet, &debug);
+        // Gestion des animations
+        printf("anim_time : %f\n", anim_time);
+        if (p->is_jumping)
+        {
+            printf("is_juming = true\n");
+            printf("anim_cal : %f | anim.b = %f\n", animation_calc(anim_jump_x, anim_time), anim_jump_x.b);
+        }
+
+        if (p->is_jumping)
+        {
+            anim_time += debug.game_speed;
+        }
+        
+        if (draw_entities(b, anim_time, anim_jump_x, anim_jump_z, cam,display,colors,renderer,&sprite_sheet, &debug) == 0)
+        {
+            anim_time = 0;
+            p->is_jumping = 0;
+        }
+        else
+        {
+            p->is_jumping = 1;
+        }
         
         if (debug.display_information || debug.display_information_sprites){
             game_debug(&g, debug_font, renderer, cam, &debug);

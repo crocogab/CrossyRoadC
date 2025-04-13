@@ -152,7 +152,7 @@ typedef struct Animation_t
 Point2d d3_to_2d(float x, float y, float z, Camera cam);
 void draw_quad(Point2d p1, Point2d p2, Point2d p3, Point2d p4, SDL_Color color, SDL_Renderer *renderer);
 void draw_quad_from_3d(Point3d p1, Point3d p2, Point3d p3, Point3d p4, SDL_Color color, Camera cam, SDL_Renderer *renderer);
-void draw_board_line(int x, int type, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit);
+void draw_board_line(float x, int type, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit,int score_actu, int is_jumping, int p_direction);
 
 Sprite create_sprite(Sprite_coord *sprites_coord, int sprite_count, float lenght);
 Sprite_sheet load_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *renderer, Camera cam);
@@ -160,7 +160,7 @@ Sprite_sheet load_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *
 void unload_spritesheet(Sprite_sheet sprite_sheet);
 
 void draw_sprite(Point3d p, int sprite_id, int sprite_index, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, debugKit *debug_kit);
-void draw_sprite_from_grid(float h_pos, int y, int sprite_id, int sprite_index, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit);
+void draw_sprite_from_grid(float h_pos, float y, float z, int sprite_id, int sprite_index, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit);
 
 float animation_calc(Animation anim, float t);
 

@@ -30,8 +30,8 @@ Ground **grid_ground_make(Sprite_sheet *sprite_sheet);
 void grid_ground_free(Ground **);
 Ground *gen_next_ground(Board *b, int score, Sprite_sheet *sprite_sheet);
 
-void draw_board(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit);
-void draw_entities(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit);
+int draw_board(Board *b, float anim_time, Animation anim, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit,int score_actu);
+int draw_entities(Board *b, float anim_time, Animation anim_x, Animation anim_z, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit);
 
 #endif
 

@@ -105,15 +105,15 @@ void draw_quad_from_3d(Point3d p1, Point3d p2, Point3d p3, Point3d p4, SDL_Color
  * @param colors couleurs
  * @param renderer le renderer
  */
-void draw_board_line(int x, int type, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit)
+void draw_board_line(float x, int type, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit,int score_actu, int is_jumping, int p_direction)
 {
-    Point3d p3d_1 = {0, x * display.line_width*display.tile_size, 0};
-    Point3d p3d_2 = {0, (x + 1) * display.line_width*display.tile_size, 0};
-    Point3d p3d_3 = {display.line_length*display.tile_size, (x + 1) * display.line_width*display.tile_size, 0};
-    Point3d p3d_4 = {display.line_length*display.tile_size, x * display.line_width*display.tile_size, 0};   
+    Point3d p3d_1 = {0, x * (float)(display.line_width*display.tile_size), 0};
+    Point3d p3d_2 = {0, (x + 1.0) * (float)(display.line_width*display.tile_size), 0};
+    Point3d p3d_3 = {display.line_length*display.tile_size, (x + 1.0) * (float)(display.line_width*display.tile_size), 0};
+    Point3d p3d_4 = {display.line_length*display.tile_size, x * (float)(display.line_width*display.tile_size), 0};   
     switch (type)
     {
-    case GROUND_GRASS:    
+    case GROUND_GRASS:
 
         // On pose la zone ombragée
         draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.GRASS_COLOR_SHADOW, cam, renderer);
@@ -124,7 +124,7 @@ void draw_board_line(int x, int type, Camera cam, Display_informations display, 
         p3d_3.x = RIGHT_MAP_X;
         p3d_4.x = RIGHT_MAP_X;
         
-        if (x % 2 == 1)
+        if (((is_jumping*(int)(p_direction == UP)) + score_actu + (int)x)%2)
         {
             draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.GRASS_COLOR_DARK, cam, renderer);
         }
@@ -317,7 +317,7 @@ void draw_sprite(Point3d p, int sprite_id, int sprite_index, Sprite_sheet *sprit
     Point2d p2d = d3_to_2d(p.x, p.y, p.z, cam);
 
     // On transforme le point pour corriger la modification de position due à la taille de l'image en perspective
-    p2d.y += sprite.sprites_coord[sprite_index].w * tan(cam.rotation);
+    p2d.y += (float)sprite.sprites_coord[sprite_index].w * tan(cam.rotation);
     
 
     // On dessine le sprite
@@ -351,10 +351,10 @@ void draw_sprite(Point3d p, int sprite_id, int sprite_index, Sprite_sheet *sprit
  * @param display les informations de l'affichage
  * 
  */
-void draw_sprite_from_grid(float h_pos, int y, int sprite_id, int sprite_index, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit)
+void draw_sprite_from_grid(float h_pos, float y, float z, int sprite_id, int sprite_index, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit)
 {
     // On transforme le point 3D en 2D en corrigeant la position légérement
-    Point3d p = {h_pos, (y+1) * display.line_width*display.tile_size-22, 2};
+    Point3d p = {h_pos, (y + (float)1) * (float)(display.line_width*display.tile_size)-(float)22, z + (float)2};
     draw_sprite(p, sprite_id, sprite_index, sprite_sheet, renderer, cam, debug_kit);
 }
 
@@ -372,7 +372,7 @@ float animation_calc(Animation anim, float t)
     }
     else
     {
-        return anim.a*t*t + anim.b*t + anim.c;
+        return (anim.a*(t*t) + anim.b*t + anim.c)*(float)DEFAULT_CELL_SIZE;
     }
 }
 

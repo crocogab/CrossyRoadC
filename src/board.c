@@ -502,20 +502,82 @@ Ground *gen_next_ground(Board *b, int score, Sprite_sheet *sprite_sheet) {
  * @param renderer le renderer
  * 
  */
-void draw_board(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit)
+int draw_board(Board *b, float anim_time, Animation anim, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit, int score_actu)
 {
     // On dessine le sol
     for (int i = 0; i < display.board_length; i++)
     {
-        //Si on a une route avant on dessine une ROAD_BORDER
-        if (i > 0 && (b->grid_ground[i]->type == GROUND_ROAD_CAR || b->grid_ground[i]->type == GROUND_ROAD_TRUCK) && (b->grid_ground[i-1]->type == GROUND_ROAD_CAR || b->grid_ground[i-1]->type == GROUND_ROAD_TRUCK))
+        if (b->player->previous_direction == UP)
         {
-            draw_board_line(i, GROUND_ROAD_BORDER, cam, display, colors, renderer, sprite_sheet, debug_kit);
+            //Si on a une route avant on dessine une ROAD_BORDER
+            if (i > 0 && (b->grid_ground[i]->type == GROUND_ROAD_CAR || b->grid_ground[i]->type == GROUND_ROAD_TRUCK) && (b->grid_ground[i-1]->type == GROUND_ROAD_CAR || b->grid_ground[i-1]->type == GROUND_ROAD_TRUCK))
+            {
+                if (anim_time == 0.0 || anim_time > anim.duration)
+                {
+                    draw_board_line(i, GROUND_ROAD_BORDER, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->direction);
+                }
+                else
+                {
+                    draw_board_line((float)i + (animation_calc(anim, anim_time)/(float)DEFAULT_CELL_SIZE), GROUND_ROAD_BORDER, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->direction);
+                }
+            }
+            else
+            {                
+                if (anim_time == 0.0 || anim_time > anim.duration)
+                {
+                    draw_board_line(i, b->grid_ground[i]->type, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->direction);
+                }
+                else
+                {
+                    draw_board_line((float)i + (animation_calc(anim, anim_time)/(float)DEFAULT_CELL_SIZE), b->grid_ground[i]->type, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->direction);
+                }
+            }
+        }
+        else if (b->player->previous_direction == DOWN)
+        {
+            //Si on a une route avant on dessine une ROAD_BORDER
+            if (i > 0 && (b->grid_ground[i]->type == GROUND_ROAD_CAR || b->grid_ground[i]->type == GROUND_ROAD_TRUCK) && (b->grid_ground[i-1]->type == GROUND_ROAD_CAR || b->grid_ground[i-1]->type == GROUND_ROAD_TRUCK))
+            {
+                if (anim_time == 0.0 || anim_time > anim.duration)
+                {
+                    draw_board_line(i, GROUND_ROAD_BORDER, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->direction);
+                }
+                else
+                {
+                    draw_board_line((float)i - (animation_calc(anim, anim_time)/(float)DEFAULT_CELL_SIZE), GROUND_ROAD_BORDER, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->direction);
+                }
+            }
+            else
+            {                
+                if (anim_time == 0.0 || anim_time > anim.duration)
+                {
+                    draw_board_line(i, b->grid_ground[i]->type, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->direction);
+                }
+                else
+                {
+                    draw_board_line((float)i - (animation_calc(anim, anim_time)/(float)DEFAULT_CELL_SIZE), b->grid_ground[i]->type, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->direction);
+                }
+            }
         }
         else
         {
-            draw_board_line(i, b->grid_ground[i]->type, cam, display, colors, renderer, sprite_sheet, debug_kit);
+            if (i > 0 && (b->grid_ground[i]->type == GROUND_ROAD_CAR || b->grid_ground[i]->type == GROUND_ROAD_TRUCK) && (b->grid_ground[i-1]->type == GROUND_ROAD_CAR || b->grid_ground[i-1]->type == GROUND_ROAD_TRUCK))
+            {
+                draw_board_line(i, GROUND_ROAD_BORDER, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->is_jumping);
+            }
+            else
+            {
+                draw_board_line(i, b->grid_ground[i]->type, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->is_jumping);
+            }
         }
+    }
+    if (anim_time == 0.0 || anim_time > anim.duration)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
     }
 }
 
@@ -528,14 +590,35 @@ void draw_board(Board *b, Camera cam, Display_informations display, Colors color
  * @param renderer le renderer
  * 
  */
-void draw_entities(Board *b, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit)
+int draw_entities(Board *b, float anim_time, Animation anim_x, Animation anim_z, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit)
 {
     if (b == NULL || b->grid_ground == NULL) {
-        return; // Si le plateau ou la grille du sol est NULL, on ne fait rien
+        return 0; // Si le plateau ou la grille du sol est NULL, on ne fait rien
     }
 
     // On a un flag pour savoir si le joueur a déjà été affic, debug_kithé
     bool displayed = false;
+    int is_animating = 0;
+
+    // On crée un incrément d'animation
+    float anim_incr = 0.0f;
+
+    if (anim_time > anim_x.duration || anim_time == 0.0)
+    {
+        anim_incr = 0.0f;
+    }
+    else
+    {
+        if (b->player->previous_direction == UP)
+        {
+            anim_incr = animation_calc(anim_x, anim_time)/(float)DEFAULT_CELL_SIZE;
+        }
+        else if (b->player->previous_direction == DOWN)
+        {
+            anim_incr = -animation_calc(anim_x, anim_time)/(float)DEFAULT_CELL_SIZE;
+        }
+    }
+
 
     for (int i = 0; i < MAP_LEN; i++)
     {
@@ -546,7 +629,7 @@ void draw_entities(Board *b, Camera cam, Display_informations display, Colors co
             if (!displayed && i == V_POS && !(ground->type == GROUND_WATER_LILY || ground->type == GROUND_WATER_LOG))
             {
                 displayed = true;
-                draw_chicken(b->player, sprite_sheet, renderer, cam, display, debug_kit);
+                is_animating = draw_chicken_anim(b->player, anim_time, anim_x, anim_z, sprite_sheet, renderer, cam, display, debug_kit);
             }
         
             switch (ground->obstacles[j]->type)
@@ -555,37 +638,38 @@ void draw_entities(Board *b, Camera cam, Display_informations display, Colors co
             case TRUCK_TYPE:
                 if (ground->velocity > 0)
                 {
-                    draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 1, sprite_sheet, renderer, cam, display, debug_kit);
+                    draw_sprite_from_grid(ground->obstacles[j]->h_position, (float)i+anim_incr, 0, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 1, sprite_sheet, renderer, cam, display, debug_kit);
                 }
                 else
                 {
-                    draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
+                    draw_sprite_from_grid(ground->obstacles[j]->h_position, (float)i+anim_incr, 0, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);         
                 }                
                 break;
 
             case TREE_TYPE:
-                draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, display, debug_kit);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position, (float)i+anim_incr, 0, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, display, debug_kit);
                 break;
             case WATER_LILY_TYPE:
-                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/5, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/5, 0, (float)i+anim_incr, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
                 break;
             case LOG_TYPE:
-                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/4, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/4, 0, (float)i+anim_incr, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
                 break;
             case TRAIN_POLE_TYPE:
                 // On fait à la main car le poteau volait
-                draw_sprite((Point3d){ground->obstacles[j]->h_position, (i+1)*display.line_width*display.tile_size-22, -10}, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, debug_kit);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position, (float)i+anim_incr, -(10/DEFAULT_CELL_SIZE), type_var_to_id(ground->obstacles[j]->type,ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, display, debug_kit);
                 break;
             default:
-                draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
+                draw_sprite_from_grid(ground->obstacles[j]->h_position, (float)i+anim_incr, 0, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display, debug_kit);
                 break;
             }
 
         }
         if (!displayed && i == V_POS)
         {
-            draw_chicken(b->player, sprite_sheet, renderer, cam, display, debug_kit);
+            is_animating = draw_chicken_anim(b->player, anim_time, anim_x, anim_z, sprite_sheet, renderer, cam, display, debug_kit);
         }
         //draw_sprite_from_grid((MAP_WIDTH/2)*DEFAULT_CELL_SIZE, V_POS*display.tile_size, TRAIN_POLE_ID, 0, sprite_sheet, renderer, cam, display);
     }
+    return is_animating;
 }

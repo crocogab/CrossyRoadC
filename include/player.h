@@ -28,4 +28,6 @@ void move_player(int direction, Player *player,Ground * next_ground);
 
 void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit);
 
+int draw_chicken_anim(Player *p, float anim_time, Animation anim_x, Animation anim_z, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit);
+
 #endif
