@@ -114,7 +114,7 @@ bool obstacle_is_colliding(Obstacle *o, float player_pos) {
     // Pour les obstacles qui peuvent faire le tour de l'écran (comme les voitures, camions)
     // mais pas pour les obstacles d'eau, qui ne devraient pas être détectés de l'autre côté
     bool apres = false;
-    if (o->type != WATER_LILY_TYPE && o->type != LOG_TYPE) {
+    if (o->type != WATER_LILY_TYPE && o->type != LOG_TYPE && o->type!=TRAIN_TYPE) {
         apres = hb.a <= player_pos - MAP_WIDTH*DEFAULT_CELL_SIZE && 
                 player_pos - MAP_WIDTH*DEFAULT_CELL_SIZE <= hb.b;
     }
