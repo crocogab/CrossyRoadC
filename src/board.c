@@ -106,12 +106,17 @@ void board_update(Board* b, float delta_t, Sprite_sheet *sprite_sheet) {
                     ground->velocity = -TRAIN_MAX_SPEED;
                 }
                 ground->special_attr = random_int(TRAIN_MIN_TIME, TRAIN_MAX_TIME);
+                ground->obstacles[1]->variant=0;
             }
         }
         else if (ground->type == GROUND_TRAIN && ground->special_attr > 0)
         {
             
             ground->special_attr -= 1;
+            if (ground->special_attr < TRAIN_ALERT_TIME){
+                
+                ground->obstacles[1]->variant=((int)(ground->special_attr/10)+1)%2;
+            }
         }
 
         for (int i = 0; i < ground->nb_obstacles; i++) 
@@ -302,13 +307,6 @@ void grid_ground_starter_set(Board *b, Sprite_sheet *sprite_sheet) {
         b->grid_ground[i] = gen_next_ground(b,0,sprite_sheet);
         
     }
-
-    ground_free(b->grid_ground[4]);
-    b->grid_ground[4] = ground_generate(GROUND_TRAIN, 0, 0, 0, sprite_sheet);
-
-    ground_free(b->grid_ground[3]);
-    b->grid_ground[3] = ground_generate(GROUND_WATER_LILY, 0, 3, 5, sprite_sheet);
-
     ground_free(b->grid_ground[MAP_LEN - 1]);
     b->grid_ground[MAP_LEN-1] = ground_generate(GROUND_GRASS, 0, 0, 0, sprite_sheet);
 }
@@ -574,8 +572,9 @@ void draw_entities(Board *b, Camera cam, Display_informations display, Colors co
                 draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/4, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
                 break;
             case TRAIN_POLE_TYPE:
-                //draw_sprite()
-                draw_sprite_from_grid(ground->obstacles[j]->h_position-DEFAULT_CELL_SIZE, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
+                
+                
+                draw_sprite_from_grid(ground->obstacles[j]->h_position-DEFAULT_CELL_SIZE, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, display);
                 break;
             default:
                 draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);

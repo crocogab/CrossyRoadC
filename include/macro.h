@@ -80,7 +80,7 @@
 #define TRAIN_MAX_SPEED 50
 #define TRAIN_MIN_TIME 700
 #define TRAIN_MAX_TIME 700
-#define TRAIN_ALERT_TIME 250 // temps pour lequel on avertit de l'arrivée d'un train
+#define TRAIN_ALERT_TIME 150 // temps pour lequel on avertit de l'arrivée d'un train
 
 // Définition des types de collisions
 #define COLLIDE_NONE 110
