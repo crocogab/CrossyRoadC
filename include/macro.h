@@ -90,10 +90,9 @@
 
 
 //Définition des intervalles d'obstacles
-#define INTER_CAR_MIN 5*DEFAULT_CELL_SIZE
-#define INTER_TRUCK_MIN 6*DEFAULT_CELL_SIZE
-#define INTER_LOG_MIN 8*DEFAULT_CELL_SIZE
-
+#define INTER_CAR_MIN 5
+#define INTER_TRUCK_MIN 7
+#define INTER_LOG_MIN 5
 #define START_SIZE 4 // Taille de la zone de départ (PETITE = GRAND DEPART)
 
 #define V_POS 10 // Position verticale du joueur sur le board

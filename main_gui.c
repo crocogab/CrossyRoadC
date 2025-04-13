@@ -97,6 +97,9 @@ int main() {
     } // render de SDL
 
     TTF_Font *debug_font = font_load("assets/editundo.ttf", 20);
+    TTF_Font *score_fond = font_load("assets/editundo.ttf", 100);
+
+    SDL_Color white = {255, 255, 255, SDL_ALPHA_OPAQUE};
 
     // On charge la sprite_sheet
     Sprite_sheet sprite_sheet = load_spritesheet("assets/spritesheet_coord.json", "assets/spritesheet.png", renderer, cam);
@@ -106,7 +109,7 @@ int main() {
     grid_ground_starter_set(b,&sprite_sheet);
     g_board = b;
 
-    p->h_position=1000;
+   
     board_set_player(b, p);
 
     Animation anim_jump_x = {.duration = 6, .a = 0, .b = 0.1666, .c = -1};
@@ -295,6 +298,10 @@ int main() {
         
         if (debug.display_information || debug.display_information_sprites){
             game_debug(&g, debug_font, renderer, cam, &debug);
+        }else{
+            char score_text[32]; // score pas censé depasser 32 chiffres
+            sprintf(score_text, "%d", p->score);
+            write_text(score_text, 50,30 , 2, 10, 2, white, renderer, score_fond);
         }
         
     
