@@ -25,7 +25,7 @@ int main() {
     debug.god_mode=0;
     debug.display_sprites=0;
     debug.display_information=0;
-    debug.display_information_sprites=0;
+    debug.display_information_sprites=1;
     
     Game g = game_make(TO_LAUNCH);
     Player *p = player_start();
@@ -257,8 +257,8 @@ int main() {
         
         draw_entities(b,cam,display,colors,renderer,&sprite_sheet, &debug);
         
-        if (debug.display_information){
-            game_debug(&g, debug_font, renderer);
+        if (debug.display_information || debug.display_information_sprites){
+            game_debug(&g, debug_font, renderer, cam, &debug);
         }
         
     
