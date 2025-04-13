@@ -10,7 +10,7 @@ int main() {
 
     // Déclaration des paramètres de la police
     const char* font_path = "assets/editundo.ttf";
-    int taille = 24;
+    int taille = 72;
 
     // Chargement de la police
     TTF_Font* font = font_load(font_path, taille);
@@ -52,6 +52,8 @@ int main() {
     SDL_Event event;
     int running = 1;
 
+    int shadow_angle = 0;
+
     while (running)
     {
         if(SDL_PollEvent(&event))
@@ -68,6 +70,15 @@ int main() {
                 {
                     running = 0;
                 }
+                else if (event.key.keysym.sym == SDLK_UP)
+                {
+                    shadow_angle += 1;
+                }
+                else if (event.key.keysym.sym == SDLK_DOWN)
+                {
+                    shadow_angle -= 1;
+                }
+
 
             default:
                 break;
@@ -86,7 +97,8 @@ int main() {
             exit(-1);
         }
 
-        write_text("Bonjour.12&*", 100, 100, 25, 25, 2, color, renderer, font);
+        write_text("Crossy", 200, 200, shadow_angle, 60, 4, color, renderer, font);
+        write_text("Road", 250, 260, shadow_angle, 60, 4, color, renderer, font);
 
         // Mise à jour de l'affichage
         SDL_RenderPresent(renderer);
