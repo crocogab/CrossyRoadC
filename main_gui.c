@@ -21,7 +21,7 @@ int main() {
     srand(time(NULL)); // nouvelle graine
     
     debug.display_grid_lines=0;
-    debug.vitesse_jeu=1;
+    debug.game_speed=1;
     debug.god_mode=0;
     debug.display_sprites=1;
     debug.display_information=1;
@@ -156,6 +156,15 @@ int main() {
                         debug.god_mode=debug.god_mode ? 0 : 1;
                     }
 
+                    // ralentir temps = f5 et accelerer = f6
+                    if (event.key.keysym.sym==SDLK_F5){
+                        debug.game_speed = debug.game_speed/2;
+                    }
+                    if (event.key.keysym.sym==SDLK_F6){
+                        debug.game_speed = debug.game_speed*2;
+                    }
+
+
                 default:
                     break;
             }
@@ -207,7 +216,7 @@ int main() {
             // update si on est mort
         } else {
             
-            board_update(b, debug.vitesse_jeu, &sprite_sheet);
+            board_update(b, debug.game_speed, &sprite_sheet);
         }
 
         //printf("Position du joueur : h_float = %f \n",p->h_position);

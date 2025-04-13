@@ -4,7 +4,7 @@
 
 typedef struct debugKit_
 {
-   int vitesse_jeu; // sera utilisé dans board_update
+   float game_speed; // sera utilisé dans board_update
    int god_mode; // 0 si pas activé et 1 si god_mod
    int display_grid_lines ; // 0 si pas actif 1 sinon
    int display_sprites; 
