@@ -572,9 +572,8 @@ void draw_entities(Board *b, Camera cam, Display_informations display, Colors co
                 draw_sprite_from_grid(ground->obstacles[j]->h_position+DEFAULT_CELL_SIZE/4, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
                 break;
             case TRAIN_POLE_TYPE:
-                
-                
-                draw_sprite_from_grid(ground->obstacles[j]->h_position-DEFAULT_CELL_SIZE, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam, display);
+                // On fait à la main car le poteau volait
+                draw_sprite((Point3d){ground->obstacles[j]->h_position, (i+1)*display.line_width*display.tile_size-22, -10}, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), ground->obstacles[j]->variant, sprite_sheet, renderer, cam);
                 break;
             default:
                 draw_sprite_from_grid(ground->obstacles[j]->h_position, i, type_var_to_id(ground->obstacles[j]->type, ground->obstacles[j]->variant), 0, sprite_sheet, renderer, cam, display);
