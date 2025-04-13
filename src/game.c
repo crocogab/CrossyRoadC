@@ -53,5 +53,28 @@ void game_debug(Game *g, TTF_Font *font, SDL_Renderer *renderer)
             g->board->grid_ground[V_POS - 1]->special_attr,
             g->board->grid_ground[V_POS - 1]->velocity);
     write_text(next_line_info, 5, 65, -1, 0, 2, white, renderer, font);
+    
+    // Troisième zone : affichage des informations des obstacles de la ligne suivante
+    Obstacle *o;
+    for (int i = 0; i < g->board->grid_ground[V_POS-1]->nb_obstacles; i++)
+    {
+        o = g->board->grid_ground[V_POS-1]->obstacles[i];
+        if ((o->type == TREE_TYPE || o->type == ROCK_TYPE) && o->h_position > LEFT_MAP_X && o->h_position < RIGHT_MAP_X)
+        {
+            char obstacle_info[256];
+            snprintf(obstacle_info, sizeof(obstacle_info), "Obstacle num. %d: Type: %d | Position: (%.2f, %d) | Length: %.2f",
+                    i, o->type, o->h_position, V_POS-1, o->length);
+            write_text(obstacle_info, 5, 85 + i*20, -1, 0, 2, white, renderer, font);
+        }
+        else if (!(o->type == TREE_TYPE || o->type == ROCK_TYPE))
+        {
+            char obstacle_info[256];
+            snprintf(obstacle_info, sizeof(obstacle_info), "Obstacle num. %d: Type: %d | Position: (%.2f, %d) | Length: %.2f",
+                    i, o->type, o->h_position, V_POS-1, o->length);
+            write_text(obstacle_info, 5, 85 + i*20, -1, 0, 2, white, renderer, font);
+        }
+        
+    }
+    
 
 }
