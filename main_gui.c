@@ -294,6 +294,7 @@ int main() {
         else
         {
             p->is_jumping = 1;
+            anim_time += 0.01;
         }
         
         if (debug.display_information || debug.display_information_sprites){
