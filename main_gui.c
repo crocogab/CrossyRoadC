@@ -112,9 +112,17 @@ int main() {
    
     board_set_player(b, p);
 
-    Animation anim_jump_x = {.duration = 6, .a = 0, .b = 0.1666, .c = -1};
+    float duration = 15.0;
+    float jump_height = 0.5;
 
-    Animation anim_jump_z = {.duration = 6, .a = -0.02775, .b = 0.16666, .c = 0};
+    float b_x = 1.0/duration;
+
+    float a_z = -(4*jump_height)/(duration*duration);
+    float b_z = (4*jump_height)/duration;
+
+    Animation anim_jump_x = {.duration = duration, .a = 0, .b = b_x, .c = -1};
+
+    Animation anim_jump_z = {.duration = duration, .a = a_z, .b = b_z, .c = 0};
 
     float anim_time = 0;
     
