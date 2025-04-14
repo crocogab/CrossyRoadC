@@ -57,7 +57,7 @@ int main() {
     int const height = 1000;
 
     // Variables de la caméra
-    Camera cam = {1.25f, 300, -765, 0.25f};
+    Camera cam = {1.25f, -300, -765, 0.25f};
 
     // Variables de la grille
     Display_informations display = {121, 14, 50, 1, 25};
@@ -167,7 +167,7 @@ int main() {
                             //ground_move(b,DOWN, &sprite_sheet);
                         }
                     }
-                    
+
                     case SDL_KEYDOWN: // touche pressée
                         if (event.key.keysym.sym==SDLK_q){
                             g.status=DEAD;
