@@ -57,7 +57,7 @@ int main() {
     int const height = 1000;
 
     // Variables de la caméra
-    Camera cam = {1.25f, 100-400, -700-65, 0.25f};
+    Camera cam = {1.25f, 300, -765, 0.25f};
 
     // Variables de la grille
     Display_informations display = {121, 14, 50, 1, 25};
@@ -148,29 +148,31 @@ int main() {
                     case SDL_QUIT:
                         g.status=DEAD;
                         break;
+                    case SDL_KEYUP: //touche relachée pour les mouvements
+                    if (event.key.keysym.sym==SDLK_RIGHT){
+                        direction = RIGHT;
+                    }
+                    if (event.key.keysym.sym==SDLK_LEFT){
+                        direction = LEFT;
+                    }
+                    if (event.key.keysym.sym==SDLK_UP){
+                        direction = UP;
+                    }
+                    if (event.key.keysym.sym==SDLK_SPACE){
+                        direction = UP;
+                    }
+                    if (event.key.keysym.sym==SDLK_DOWN){
+                        if (jump_back < 3){
+                            direction = DOWN;
+                            //ground_move(b,DOWN, &sprite_sheet);
+                        }
+                    }
+                    
                     case SDL_KEYDOWN: // touche pressée
                         if (event.key.keysym.sym==SDLK_q){
                             g.status=DEAD;
                         }
-                        if (event.key.keysym.sym==SDLK_RIGHT){
-                            direction = RIGHT;
 
-                        }
-                        if (event.key.keysym.sym==SDLK_LEFT){
-                            direction = LEFT;
-                        
-                        }
-                        if (event.key.keysym.sym==SDLK_UP){
-                            direction = UP;
-                        }
-                        if (event.key.keysym.sym==SDLK_DOWN){
-                            if (jump_back < 3){
-                                direction = DOWN;
-                                //ground_move(b,DOWN, &sprite_sheet);
-
-                            }
-                            
-                        }
                         // DEBUG MODE
                         if (event.key.keysym.sym==SDLK_F1){
                             debug.god_mode=debug.god_mode ? 0 : 1;
