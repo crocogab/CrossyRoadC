@@ -301,7 +301,7 @@ int main() {
         }else{
             char score_text[32]; // score pas censé depasser 32 chiffres
             sprintf(score_text, "%d", p->score);
-            write_text(score_text, 50,30 , 2, 10, 2, white, renderer, score_fond);
+            write_text(score_text, 50,30 , -1, 0, 10, white, renderer, score_fond);
         }
         
     
