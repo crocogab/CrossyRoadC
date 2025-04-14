@@ -192,6 +192,15 @@ void draw_board_line(float x, int type, Camera cam, Display_informations display
         p3d_3.z -= 2*display.border_gap;
         p3d_4.z -= 2*display.border_gap;
 
+        // On dessine d'abord la zone ombragée
+        draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.WATER_SHADOW_COLOR, cam, renderer);
+
+        // Dessin du sol
+        p3d_1.x = LEFT_MAP_X;
+        p3d_2.x = LEFT_MAP_X;
+        p3d_3.x = RIGHT_MAP_X;
+        p3d_4.x = RIGHT_MAP_X;
+
         // On dessine le sol
         draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.WATER_COLOR, cam, renderer);
 

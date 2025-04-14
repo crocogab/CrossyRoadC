@@ -58,6 +58,7 @@ typedef struct Colors_t
     SDL_Color GRASS_BORDER_COLOR;
     SDL_Color DIRT_COLOR;
     SDL_Color WATER_COLOR;
+    SDL_Color WATER_SHADOW_COLOR;
     SDL_Color ROAD_COLOR;
     SDL_Color ROAD_BORDER_COLOR;
     SDL_Color ROAD_LINE_COLOR;
