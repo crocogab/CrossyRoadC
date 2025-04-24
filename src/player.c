@@ -21,7 +21,7 @@
  * @param score Le score initial du joueur.
  * 
  * @return Player* Un pointeur vers la structure Player nouvellement créée et initialisée. 
- *         Retourne NULL si l'allocation mémoire échoue. (Note: le code actuel ne gère pas l'échec de malloc).
+ *         Retourne NULL si l'allocation mémoire échoue.
  * 
  * @pre 0 <= h_position < fin_de_la_map (La position horizontale doit être dans les limites de la carte).
  */
@@ -55,6 +55,7 @@ Player *player_start()
  * Libère la mémoire allouée pour une structure Player.
  *
  * @param player Pointeur vers la structure Player à libérer.
+ * 
  */
 void player_free(Player *player)
 {
@@ -68,11 +69,10 @@ void player_free(Player *player)
  * 
  * @param[in] direction Direction du mouvement
  * @param[in] player l'entité concernée par le mouvement valide
+ * @param[in] next_ground le sol sur lequel le joueur se déplace
  * 
- * @author : Raphaël
  */
-
-void move_player(int direction, Player *player,Ground * next_ground)
+void move_player(int direction, Player *player, Ground * next_ground)
 {
     int current_cell_x;
     int new_cell_x;
@@ -180,86 +180,55 @@ void move_player(int direction, Player *player,Ground * next_ground)
     }
 }
 
-void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit)
-{
-    int sprite_index = 0;
-    switch (p->previous_direction)
-    {
-    case LEFT:
-        sprite_index = 2;
-        break;
-    case RIGHT:
-        sprite_index = 0;
-        break;
-    case UP:
-        sprite_index = 3;
-        break;
-    case DOWN:
-        sprite_index = 1;
-        break;
-    
-    default:
-        break;
-    } 
-    draw_sprite_from_grid(p->h_position, V_POS, 0, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
-}
-
+/**
+ * Dessine le personnage sur la carte avec animation
+ * 
+ * @param p Le joueur à dessiner
+ * @param anim_time Le temps d'animation
+ * @param anim_x L'animation sur l'axe horizontal
+ * @param anim_z L'animation sur l'axe vertical
+ * @param sprite_sheet La sprite sheet
+ * @param renderer Le renderer
+ * @param cam La caméra
+ * @param display Les informations d'affichage
+ * @param debug_kit Le kit de débug
+ * 
+ * @return 0 si l'animation est finie, 1 sinon
+ */
 int draw_chicken_anim(Player *p, float anim_time, Animation anim_x, Animation anim_z, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit)
 {
     int sprite_index = 0;
-    printf("anim_calc_z : %f\n", animation_calc(anim_z, anim_time)/DEFAULT_CELL_SIZE);
+    // On calcule le deplacement induit par l'animation en cours
+    float delta_anim_x = 0.0;
+    float delta_anim_z = 0.0;
+    if (anim_time > 0.0 && anim_time <= anim_x.duration)
+    {
+        delta_anim_x = animation_calc(anim_x, anim_time);
+        delta_anim_z = animation_calc(anim_z, anim_time);
+    }
+
     switch (p->previous_direction)
     {
     case LEFT:
         sprite_index = 2;
-        if (anim_time == 0.0 || anim_time > anim_x.duration)
-        {
-            draw_sprite_from_grid(p->h_position, V_POS, 0, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
-        }
-        else
-        {
-            draw_sprite_from_grid(p->h_position - animation_calc(anim_x, anim_time), V_POS, animation_calc(anim_z, anim_time), CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
-        }
+        draw_sprite_from_grid(p->h_position - delta_anim_x, V_POS, delta_anim_z, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
         break;
     case RIGHT:
         sprite_index = 0;
-        if (anim_time == 0.0 || anim_time > anim_x.duration)
-        {
-            draw_sprite_from_grid(p->h_position, V_POS, 0, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
-        }
-        else
-        {
-            draw_sprite_from_grid(p->h_position + animation_calc(anim_x, anim_time), V_POS, animation_calc(anim_z, anim_time), CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
-        }
+        draw_sprite_from_grid(p->h_position + delta_anim_x, V_POS, delta_anim_z, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
         break;
     case UP:
         sprite_index = 3;
-        if (anim_time == 0.0 || anim_time > anim_x.duration)
-        {
-            draw_sprite_from_grid(p->h_position, (float)V_POS, 0, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
-        }
-        else
-        {
-            draw_sprite_from_grid(p->h_position, (float)V_POS, animation_calc(anim_z, anim_time), CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
-        }
+        draw_sprite_from_grid(p->h_position, (float)V_POS, delta_anim_z, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
         break;
     case DOWN:
         sprite_index = 1;
-        if (anim_time == 0.0 || anim_time > anim_x.duration)
-        {
-            draw_sprite_from_grid(p->h_position, (float)V_POS, 0, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
-        }
-        else
-        {
-            draw_sprite_from_grid(p->h_position, (float)V_POS, animation_calc(anim_z, anim_time), CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
-        }
+        draw_sprite_from_grid(p->h_position, (float)V_POS, delta_anim_z, CHICKEN_ID, sprite_index, sprite_sheet, renderer, cam, display, debug_kit); 
         break;
     
     default:
         break;
     }
-
-    
 
     // On renvoie 0 si l'animation est finie
     if (anim_time > anim_x.duration || anim_time == 0)
