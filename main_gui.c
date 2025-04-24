@@ -289,6 +289,8 @@ int main() {
             anim_time += debug.game_speed; // Avancée de l'animation
         }
         
+        // Dessin des entités en prenant en compte le temps d'animation s'il y a une animation en cours
+        // si le temps d'animation est dépassé, draw_entities renvoie 0 et on met fin à l'état d'animation
         if (draw_entities(b, anim_time, anim_jump_x, anim_jump_z, cam,display,colors,renderer,&sprite_sheet, &debug) == 0)
         {
             anim_time = 0;
@@ -300,6 +302,7 @@ int main() {
             anim_time += 0.01;
         }
         
+        // Affichage des menus de debug si activés
         if (debug.display_information || debug.display_information_sprites){
             game_debug(&g, debug_font, renderer, cam, &debug);
         }else{
@@ -307,9 +310,6 @@ int main() {
             sprintf(score_text, "%d", p->score);
             write_text(score_text, 50,30 , -1, 0, 10, white, renderer, score_fond);
         }
-        
-    
-        //draw_chicken(p,&sprite_sheet,renderer,cam,display);
         
         //6. Affichage
         SDL_RenderPresent(renderer);
