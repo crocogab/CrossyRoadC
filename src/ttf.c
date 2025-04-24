@@ -30,13 +30,17 @@ void font_unload(TTF_Font *font)
 }
 
 /**
- * Fonction permettant d'écrire un texte sur l'écran
- * @param renderer le renderer SDL utilisé pour dessiner
+ * Affiche un texte sur l'écran avec des options de style avancées.
+ * 
  * @param texte le texte à afficher
- * @param font la police utilisée pour le texte
- * @param couleur la couleur du texte
- * @param x la position x où afficher le texte
- * @param y la position y où afficher le texte
+ * @param x la position en pixels sur l'axe X où afficher le texte
+ * @param y la position en pixels sur l'axe Y où afficher le texte
+ * @param shadow_angle l'angle de l'ombre projetée (-1 si pas d'ombre)
+ * @param shadow_length la longueur de l'ombre projetée
+ * @param outline_size l'épaisseur du contour du texte (0 si pas d'outline)
+ * @param color la couleur du texte
+ * @param renderer le renderer
+ * @param font la police de caractères utilisée pour le texte
  * 
  */
 void write_text(const char* texte, int x, int y, float shadow_angle, float shadow_length, float outline_size, SDL_Color color, SDL_Renderer* renderer, TTF_Font* font) {
