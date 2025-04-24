@@ -291,7 +291,7 @@ int main() {
         
         // Dessin des entités en prenant en compte le temps d'animation s'il y a une animation en cours
         // si le temps d'animation est dépassé, draw_entities renvoie 0 et on met fin à l'état d'animation
-        if (draw_entities(b, anim_time, anim_jump_x, anim_jump_z, cam,display,colors,renderer,&sprite_sheet, &debug) == 0)
+        if (draw_entities(b, anim_time, anim_jump_x, anim_jump_z, cam,display,renderer,&sprite_sheet, &debug) == 0)
         {
             anim_time = 0;
             p->is_jumping = 0;

@@ -10,6 +10,8 @@
 /**
  * Crée un nouveau plateau.
  * 
+ * @param sprite_sheet Pointeur vers la spritesheet
+ * 
  * @return Un pointeur vers le plateau créé
  */
 Board* board_make(Sprite_sheet *sprite_sheet) {
@@ -26,6 +28,7 @@ Board* board_make(Sprite_sheet *sprite_sheet) {
  * Libère la mémoire associée à un plateau.
  * 
  * @param[in] b Le plateau à libérer
+ * 
  */
 void board_free(Board* b) {
     if (b != NULL) {
@@ -45,6 +48,7 @@ void board_free(Board* b) {
  * 
  * @param[in] b Le plateau concerné
  * @param[in] ground La nouvelle grille de terrain
+ * 
  */
 void board_set_ground(Board* b, Ground** ground) {
     if (b != NULL) {
@@ -61,6 +65,7 @@ void board_set_ground(Board* b, Ground** ground) {
  * 
  * @param[in] b Le plateau concerné
  * @param[in] player Le nouveau joueur
+ * 
  */
 void board_set_player(Board* b, Player* player) {
     if (b != NULL) {
@@ -76,8 +81,11 @@ void board_set_player(Board* b, Player* player) {
  * 
  * @param[in] b Le plateau à mettre à jour
  * @param[in] delta_t le temps qui s'est écoulé
+ * @param[in] sprite_sheet La spritesheet
+ * @param[in] d le kit de débug
+ * 
  */
-void board_update(Board* b, float delta_t, Sprite_sheet *sprite_sheet,debugKit d) {
+void board_update(Board* b, float delta_t, Sprite_sheet *sprite_sheet, debugKit d) {
     if (b == NULL || b->player == NULL) {
         return; // Si le plateau ou le joueur est NULL, on ne fait rien
     }
@@ -227,6 +235,8 @@ int check_future_collision(Board *b, int direction) {
  * 
  * @param[in] b Le plateau contenant la grille de sol
  * @param[in] direction La direction du mouvement du joueur
+ * @param[in] sprite_sheet La spritesheet
+ * 
  */
 void ground_move(Board* b, int direction, Sprite_sheet *sprite_sheet) {
     if (b == NULL || b->grid_ground == NULL) {
@@ -265,22 +275,11 @@ void ground_move(Board* b, int direction, Sprite_sheet *sprite_sheet) {
 }
 
 /**
- * Libère la mémoire associée à la grille de char**. 
- * 
- * @param[in] g La grille à libérer
- */
-void grid_tui_free(char **g) {
-    for (int i = 0; i < MAP_LEN; i++) {
-        free(g[i]);
-    }
-    free(g);
-}
-
-
-/**
  * Alloue et initialise un tableau 2D de pointeurs vers des structures Ground
  * Chaque ligne de la grille est initialisée à l'aide de la fonction `ground_generate`
  * avec des valeurs par défaut.
+ * 
+ * @param[in] sprite_sheet Pointeur vers la spritesheet
  *
  * @return Ground** Un pointeur vers la grille 2D allouée de structures Ground.
  *         L'appelant est responsable de libérer la mémoire allouée.
@@ -298,6 +297,8 @@ Ground **grid_ground_make(Sprite_sheet *sprite_sheet) {
  * i.e, crée un spawn similaire à celui du jeu
  * 
  * @param[in] b Le plateau contenant la grille de sol
+ * @param[in] sprite_sheet La spritesheet
+ * 
  */
 void grid_ground_starter_set(Board *b, Sprite_sheet *sprite_sheet) {
 
@@ -314,7 +315,9 @@ void grid_ground_starter_set(Board *b, Sprite_sheet *sprite_sheet) {
     
 /**
  * Libère la mémoire allouée pour une grille de type Ground.
+ * 
  * @param g Un pointeur vers un tableau de pointeurs de type Ground à libérer.
+ * 
  */
 void grid_ground_free(Ground ** g){
     for (int i = 0; i<MAP_LEN; i++){
@@ -325,8 +328,10 @@ void grid_ground_free(Ground ** g){
 
 /**
  * Fonction auxiliaire de gen_next_ground, sert à générer un sol de type eau
+ * 
  * @param score le score
  * @param previous_velo vélocité du sol précédent
+ * @param sprite_sheet la spritesheet
  * 
  */
 Ground *gen_water(int score, float previous_velo, Sprite_sheet *sprite_sheet)
@@ -366,8 +371,10 @@ Ground *gen_water(int score, float previous_velo, Sprite_sheet *sprite_sheet)
 
 /**
  * Fonction auxiliaire de gen_next_ground, sert à générer un sol de type route
+ * 
  * @param score le score
  * @param previous_velo vélocité du sol précédent
+ * @param sprite_sheet la spritesheet
  * 
  */
 Ground *gen_road(int score, float previous_velo, Sprite_sheet *sprite_sheet)
@@ -495,43 +502,50 @@ Ground *gen_next_ground(Board *b, int score, Sprite_sheet *sprite_sheet) {
 
 /**
  * Fonction qui dessine le plateau de jeu
+ * 
  * @param b le plateau de jeu
+ * @param anim_time le temps d'animation
+ * @param anim l'animation suivant l'axe y
  * @param cam la caméra
  * @param display les informations d'affichage
  * @param colors les couleurs
  * @param renderer le renderer
+ * @param sprite_sheet la spritesheet
+ * @param debug_kit le kit de débug
+ * @param score_actu le score actuel
  * 
+ * @return 0 si l'animation est terminée, 1 sinon
  */
 int draw_board(Board *b, float anim_time, Animation anim, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit, int score_actu)
 {
-    // On dessine le sol
-    float anim_incr_x = 0.0;
+    // On calcule le déplacement causé par l'animation
+    float anim_incr_y = 0.0;
 
     if (b->player->is_jumping)
     {
         if (b->player->previous_direction == UP)
         {
-            anim_incr_x = animation_calc(anim, anim_time);
+            anim_incr_y = animation_calc(anim, anim_time);
         }
         else if (b->player->previous_direction == DOWN)
         {
-            anim_incr_x = -animation_calc(anim, anim_time);
+            anim_incr_y = -animation_calc(anim, anim_time);
         }        
     }
      
-
+    // On dessine le sol
     for (int i = 0; i < display.board_length; i++)
     {
         //Si on a une route avant on dessine une ROAD_BORDER
         if (i > 0 && (b->grid_ground[i]->type == GROUND_ROAD_CAR || b->grid_ground[i]->type == GROUND_ROAD_TRUCK) && (b->grid_ground[i-1]->type == GROUND_ROAD_CAR || b->grid_ground[i-1]->type == GROUND_ROAD_TRUCK))
         {
 
-            draw_board_line((float)i + (anim_incr_x/(float)DEFAULT_CELL_SIZE), GROUND_ROAD_BORDER, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->direction);
+            draw_board_line((float)i + (anim_incr_y/(float)DEFAULT_CELL_SIZE), GROUND_ROAD_BORDER, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->direction);
         }
         else
         {                
 
-            draw_board_line((float)i + (anim_incr_x/(float)DEFAULT_CELL_SIZE), b->grid_ground[i]->type, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->direction);
+            draw_board_line((float)i + (anim_incr_y/(float)DEFAULT_CELL_SIZE), b->grid_ground[i]->type, cam, display, colors, renderer, sprite_sheet, debug_kit,score_actu, b->player->is_jumping, b->player->direction);
 
         }
     }
@@ -548,14 +562,20 @@ int draw_board(Board *b, float anim_time, Animation anim, Camera cam, Display_in
 
 /**
  * Fonction qui dessine les obstacles
+ * 
  * @param b le plateau de jeu
+ * @param anim_time le temps d'animation
+ * @param anim_x l'animation suivant l'axe horizontal
+ * @param anim_z l'animation suivant l'axe z
  * @param cam la caméra
  * @param display les informations d'affichage
- * @param colors les couleurs
  * @param renderer le renderer
+ * @param sprite_sheet la spritesheet
+ * @param debug_kit le kit de débug
  * 
+ * @return 0 si l'animation est terminée, 1 sinon
  */
-int draw_entities(Board *b, float anim_time, Animation anim_x, Animation anim_z, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit)
+int draw_entities(Board *b, float anim_time, Animation anim_x, Animation anim_z, Camera cam, Display_informations display, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit)
 {
     if (b == NULL || b->grid_ground == NULL) {
         return 0; // Si le plateau ou la grille du sol est NULL, on ne fait rien
@@ -634,7 +654,6 @@ int draw_entities(Board *b, float anim_time, Animation anim_x, Animation anim_z,
         {
             is_animating = draw_chicken_anim(b->player, anim_time, anim_x, anim_z, sprite_sheet, renderer, cam, display, debug_kit);
         }
-        //draw_sprite_from_grid((MAP_WIDTH/2)*DEFAULT_CELL_SIZE, V_POS*display.tile_size, TRAIN_POLE_ID, 0, sprite_sheet, renderer, cam, display);
     }
     return is_animating;
 }
