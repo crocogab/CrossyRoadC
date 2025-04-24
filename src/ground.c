@@ -12,6 +12,7 @@
  * @param type Type de sol (défini dans les macros).
  * @param nb_obstacles Nombre d'obstacles sur la ligne.
  * @param special_attr Attribut spécial associé au sol (par exemple, temps pour un train).
+ * 
  * @return Un pointeur vers un objet Ground alloué dynamiquement.
  */
 Ground *ground_make(Obstacle **obstacles, float velocity, int type, int nb_obstacles, int special_attr) {
@@ -40,7 +41,12 @@ void ground_free(Ground *g) {
 }
 
 /**
- * Renvoie l'id (macro gui) d'un objet en fonction de son type
+ * Renvoie l'id (macro gui) d'un sprite en fonction de son type
+ * 
+ * @param type de l'objet (défini dans les macros)
+ * @param variant variante de l'objet (nombre maximal de variantes défini dans macro.h)
+ * 
+ * @return id du sprite
  */
 int type_var_to_id(int type, int variant)
 {
@@ -113,6 +119,8 @@ int type_var_to_id(int type, int variant)
  * @param previous_velo Vitesse du sol précédent pour éviter les conflits.
  * @param min_nb Nombre minimum d'obstacles à générer.
  * @param max_nb Nombre maximum d'obstacles à générer.
+ * @param sprite_sheet Pointeur vers la spritesheet utilisée pour le dessin.
+ * 
  * @return Un pointeur vers un objet Ground alloué dynamiquement.
  */
 Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, Sprite_sheet *sprite_sheet)
@@ -133,7 +141,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
         //On choisit une vitesse pour les obstacles
         velo = 0;
 
-        //On génére un max d'obstacles avant la ligne
+        //On génére un max d'obstacles avant la zone jouable
         int pre_nb = random_int(((MAP_WIDTH-MAP_WIDTH_CAM)/2)-3, (MAP_WIDTH-MAP_WIDTH_CAM)/2);
         if (pre_nb > 0) {
             int *obs_h_pos_array = random_int_array(0, (MAP_WIDTH-MAP_WIDTH_CAM)/2-1, pre_nb);
@@ -145,7 +153,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
         }
 
         nb = random_int(min_nb, max_nb); //On tire un nombre d'obstacles entre min_nb et max_nb
-        //On va maintenant générer autant d'obstacles sur la ligne
+        //On va maintenant générer autant d'obstacles sur la zone jouable
         if (nb > 0) {
             int *obs_h_pos_array = random_int_array((MAP_WIDTH-MAP_WIDTH_CAM)/2, (MAP_WIDTH-MAP_WIDTH_CAM)/2 + MAP_WIDTH_CAM, nb);
             for (int i = 0; i < nb; i++)
@@ -163,7 +171,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
             free(obs_h_pos_array);
         }
 
-        //On génére un max d'obstacles après la ligne
+        //On génére un max d'obstacles après la zone jouable
         int post_nb = random_int(((MAP_WIDTH-MAP_WIDTH_CAM)/2)-3, (MAP_WIDTH-MAP_WIDTH_CAM)/2);
         if (pre_nb + nb + post_nb >= MAP_WIDTH) {
             post_nb = MAP_WIDTH - pre_nb - nb - 1; // Garder une marge de sécurité
@@ -203,7 +211,6 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
         variant = random_int(0,2);
         for (int i = 0; i < nb; i++)
         {
-            variant = random_int(0,2);
             obs[i] = obstacle_make(CAR_TYPE, variant, i*INTER_CAR_MIN*DEFAULT_CELL_SIZE, sprite_sheet->sprites[type_var_to_id(CAR_TYPE, variant)].lenght);
         }
 
@@ -231,7 +238,6 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
         nb = random_int(min_nb, max_nb); //On tire au maximum des voitures espacées de INTER_CAR_MIN ou max_nb
         for (int i = 0; i < nb; i++)
         {
-            variant = random_int(0, 2);
             obs[i] = obstacle_make(TRUCK_TYPE, variant, i*INTER_TRUCK_MIN*DEFAULT_CELL_SIZE, sprite_sheet->sprites[type_var_to_id(TRUCK_TYPE, variant)].lenght);
         }
         
@@ -297,7 +303,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
         special_attr = random_int(TRAIN_MIN_TIME, TRAIN_MAX_TIME);
 
         obs[0] = obstacle_make(TRAIN_TYPE, variant, -1, sprite_sheet->sprites[type_var_to_id(TRAIN_TYPE, 0)].lenght);
-        // variance = 0 / 1 allumé / eteint
+        // variance = 0 / 1 -> allumé / eteint
         if (MAP_WIDTH%2==0){
             obs[1]= obstacle_make(TRAIN_POLE_TYPE,0,(MAP_WIDTH/2)*DEFAULT_CELL_SIZE+DEFAULT_CELL_SIZE/2,TRAIN_POLE_LEN);// DOIT ETRE AU MILIEU DE 2 CASES
         }else{
