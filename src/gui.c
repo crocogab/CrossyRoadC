@@ -12,9 +12,7 @@
  * @param x coordonnée x du point 3d
  * @param y coordonnée y du point 3d
  * @param z coordonnée z du point 3d
- * @param cam_orientation orientation de la caméra
- * @param rotation rotation de la caméra
- * @param cam_x position de la caméra
+ * @param cam caméra
  * 
  * @return point2d coordonées du point 2d
  */
@@ -97,20 +95,25 @@ void draw_quad_from_3d(Point3d p1, Point3d p2, Point3d p3, Point3d p4, SDL_Color
 
 /**
  * Fonction qui dessine une ligne de la grille
- * @param x coordonnée x de la ligne (coin haut gauche)
- * @param y coordonnée y de la ligne (coin haut gauche)
- * @param type type de la ligne (GRASS, WATER, ROAD)
+ * @param y coordonnée y de la ligne (ordonnée sur le plateau)
+ * @param type type de la ligne (GRASS, WATER, ROAD, ... cf macro.h)
  * @param cam caméra
  * @param display informations d'affichage
  * @param colors couleurs
  * @param renderer le renderer
+ * @param sprite_sheet la sprite sheet (pour le dessins des rails)
+ * @param debug_kit le kit de débug
+ * @param score_actu le score actuel (pour l'alternance des couleurs de l'herbe)
+ * @param is_jumping si le joueur est en train de sauter (pour gérer l'animation du plateau)
+ * @param p_direction direction du joueur (pour gérer l'animation du plateau)
+ * 
  */
-void draw_board_line(float x, int type, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit,int score_actu, int is_jumping, int p_direction)
+void draw_board_line(float y, int type, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit,int score_actu, int is_jumping, int p_direction)
 {
-    Point3d p3d_1 = {0, x * (float)(display.line_width*display.tile_size), 0};
-    Point3d p3d_2 = {0, (x + 1.0) * (float)(display.line_width*display.tile_size), 0};
-    Point3d p3d_3 = {display.line_length*display.tile_size, (x + 1.0) * (float)(display.line_width*display.tile_size), 0};
-    Point3d p3d_4 = {display.line_length*display.tile_size, x * (float)(display.line_width*display.tile_size), 0};   
+    Point3d p3d_1 = {0, y * (float)(display.line_width*display.tile_size), 0};
+    Point3d p3d_2 = {0, (y + 1.0) * (float)(display.line_width*display.tile_size), 0};
+    Point3d p3d_3 = {display.line_length*display.tile_size, (y + 1.0) * (float)(display.line_width*display.tile_size), 0};
+    Point3d p3d_4 = {display.line_length*display.tile_size, y * (float)(display.line_width*display.tile_size), 0};   
     switch (type)
     {
     case GROUND_GRASS:
@@ -124,7 +127,7 @@ void draw_board_line(float x, int type, Camera cam, Display_informations display
         p3d_3.x = RIGHT_MAP_X;
         p3d_4.x = RIGHT_MAP_X;
         
-        if (((is_jumping*(int)(p_direction == UP)) + score_actu + (int)x)%2)
+        if (((is_jumping*(int)(p_direction == UP)) + score_actu + (int)y)%2)
         {
             draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.GRASS_COLOR_DARK, cam, renderer);
         }
@@ -145,7 +148,7 @@ void draw_board_line(float x, int type, Camera cam, Display_informations display
             {
                 Point3d line_start = p3d_1;
                 Point3d line_end = p3d_2;
-                line_start.z += 1; // Slightly elevate the line for visibility
+                line_start.z += 1; // On met la ligne légérement au dessus du sol
                 line_end.z += 1;
                 line_start.x += 2;
                 line_end.x += 2;
@@ -247,10 +250,10 @@ void draw_board_line(float x, int type, Camera cam, Display_informations display
         // Dessin de la bordure
         draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.ROAD_BORDER_COLOR, cam, renderer);
 
-        // On dessine les rails TODO
+        // On dessine les rails
         for (int i = 0; i < display.line_length; i++)
         {
-            draw_sprite((Point3d){i*display.tile_size, (x+1)*display.tile_size, 0}, RAIL_ID, 0, sprite_sheet, renderer, cam, debug_kit);
+            draw_sprite((Point3d){i*display.tile_size, (y+1)*display.tile_size, 0}, RAIL_ID, 0, sprite_sheet, renderer, cam, debug_kit);
         }
         break;
     case GROUND_ROAD_BORDER:
@@ -278,10 +281,10 @@ void draw_board_line(float x, int type, Camera cam, Display_informations display
         p3d_2.z = -display.border_gap+1;
         p3d_3.z = -display.border_gap+1;
         p3d_4.z = -display.border_gap+1;
-        p3d_1.y = x * display.line_width*display.tile_size - display.tile_size/18;
-        p3d_2.y = x * display.line_width*display.tile_size + display.tile_size/18;
-        p3d_3.y = x * display.line_width*display.tile_size + display.tile_size/18;
-        p3d_4.y = x * display.line_width*display.tile_size - display.tile_size/18;
+        p3d_1.y = y * display.line_width*display.tile_size - display.tile_size/18;
+        p3d_2.y = y * display.line_width*display.tile_size + display.tile_size/18;
+        p3d_3.y = y * display.line_width*display.tile_size + display.tile_size/18;
+        p3d_4.y = y * display.line_width*display.tile_size - display.tile_size/18;
         
         for (int i = 0; i < display.line_length; i += 2)
         {
@@ -302,10 +305,13 @@ void draw_board_line(float x, int type, Camera cam, Display_informations display
  * Fonction dessinant un sprite à un point donné de l'espace après transformation iso.
  * On dessinera le sprite_index donné.
  * @param p Point bas gauche de dessin du sprite
- * @param sprite Tableau des coordonnées des sprites dans la spritesheet
+ * @param sprite_id Id du sprite dans la spritesheet
  * @param sprite_index Index du sprite choisi dans la spritesheet ( < sprite.sprite_count)
+ * @param sprite_sheet la spritesheet
  * @param renderer le renderer
  * @param cam les paramètres de caméra
+ * @param debug_kit le kit de débug
+ * 
  */
 void draw_sprite(Point3d p, int sprite_id, int sprite_index, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, debugKit *debug_kit)
 {
@@ -350,14 +356,17 @@ void draw_sprite(Point3d p, int sprite_id, int sprite_index, Sprite_sheet *sprit
 /**
  * Fonction dessinant un sprite à un point donné en coordonnées du jeu (h_pos et y)
  * On dessinera le sprite_index donné à la position transformée en 3d
+ * 
  * @param h_pos position horizontale du sprite
- * @param y position verticale (entière donc) du sprite
+ * @param y position verticale du sprite
+ * @param z position de hauteur du sprite
  * @param sprite_id l'id du sprite dans la feuille
  * @param sprite_index la variante du sprite à afficher
- * @param sprite le sprite
+ * @param sprite_sheet la spritesheet
  * @param renderer le renderer
  * @param cam la camera
  * @param display les informations de l'affichage
+ * @param debug_kit le kit de débug
  * 
  */
 void draw_sprite_from_grid(float h_pos, float y, float z, int sprite_id, int sprite_index, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit)
@@ -369,6 +378,8 @@ void draw_sprite_from_grid(float h_pos, float y, float z, int sprite_id, int spr
 
 /**
  * Fonction qui calcule anim(t)
+ * (une animation est définie par une fonction de la forme ax² + bx + c, Animation contient uniquement les coefficients)
+ * 
  * @param anim une animation
  * @param t le temps écoulé dans l'animation
  * 
@@ -388,9 +399,14 @@ float animation_calc(Animation anim, float t)
 /**
  * Charge une spritesheet dont le chemin est en argument selon les coordonnées en format JSON array
  * contenues dans le fichier de chemin coord_path
+ * /!\ l'ordre des sprites et leurs variantes est donc important et ne sera pas changé
+ * /!\ la taille des sprites et leurs variantes peut donc varier sans problème aucun
+ * 
  * @param coord_path Chemin du fichier JSON contenant les coordonnées des sprites
  * @param sheet_path Chemin du fichier image contenant la spritesheet
  * @param renderer Le renderer SDL
+ * @param cam La caméra
+ * 
  * @return Le sprite créé
  */
 Sprite_sheet load_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *renderer, Camera cam)
@@ -414,8 +430,6 @@ Sprite_sheet load_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *
     }
     SDL_FreeSurface(sprite_surface);
 
-
-
     // On charge les coordonnées des sprites
     FILE *file = fopen(coord_path, "r");
     if (!file)
@@ -424,7 +438,7 @@ Sprite_sheet load_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *
         exit(-1);
     }
 
-    // On parse le fichier JSON avec la librairie
+    // On parse le fichier JSON avec une librairie externe
     json_object *j_file = json_object_from_file(coord_path);
     if (!j_file)
     {
@@ -463,6 +477,7 @@ Sprite_sheet load_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *
                 exit(-1);
             }
             json_object *x_obj, *y_obj, *w_obj, *h_obj;
+            // Récupération des attributs x, y, w et h de chaque image
             json_object_object_get_ex(coord_array, "x", &x_obj);
             json_object_object_get_ex(coord_array, "y", &y_obj);
             json_object_object_get_ex(coord_array, "w", &w_obj);
@@ -474,7 +489,8 @@ Sprite_sheet load_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *
             ans_sheet.sprites[i].sprites_coord[j].h = json_object_get_int(h_obj);
             sprite_temp ++;
         }
-        //On utilise la longueur de la diagonale pour la longueur du sprite
+        // Calcul de la longueur de chaque sprite en fonction de la longueur de l'image associée (la taille ne sera pas conservée pour les sprites immobiles)
+        // on utilise la longueur de la diagonale pour la longueur du sprite
         if (cam.rotation != 0.00)
         {
             ans_sheet.sprites[i].lenght = (float)ans_sheet.sprites[i].sprites_coord[0].w / cos(cam.rotation);
@@ -484,13 +500,14 @@ Sprite_sheet load_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *
             ans_sheet.sprites[i].lenght = (float)ans_sheet.sprites[i].sprites_coord[0].h;
         }
         }
-        // Libération de l'objet JSON
+    // Libération de l'objet associé au JSON
     json_object_put(j_file);
     return ans_sheet;
 }
 
 /**
  * Libère la mémoire allouée pour la sprite_sheet
+ * 
  * @param sprite_sheet la sprite_sheet à libérer
  * 
  */
