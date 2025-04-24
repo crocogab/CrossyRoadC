@@ -20,6 +20,7 @@ debugKit debug;
 int main() {
     srand(time(NULL)); // nouvelle graine
     
+    //Initialisation des informations pour le debug
     debug.display_grid_lines=0;
     debug.game_speed=1;
     debug.god_mode=0;
@@ -27,6 +28,7 @@ int main() {
     debug.display_information=0;
     debug.display_information_sprites=0;
     
+    //Initialisation des objets
     Game g = game_make(TO_LAUNCH);
     Player *p = player_start();
     Board *b;
@@ -34,7 +36,6 @@ int main() {
 
     
     // initialisation du plateau
-
     int jump_back = 0;    // Limitation des retours en arrière
     int score_actu = 0;   // Score actuel
     int quit_game = 0;    // Signal pour quitter le jeu
@@ -46,6 +47,7 @@ int main() {
     }
     atexit(SDL_Quit);
 
+    // Inisitialisation de la partie texte de SDL
     if (TTF_Init() == -1) {
         printf("Erreur d'initialisation de SDL_ttf: %s\n", TTF_GetError());
         SDL_Quit();
@@ -61,8 +63,8 @@ int main() {
 
     // Variables de la grille
     Display_informations display = {121, 14, 50, 1, 25};
-    
     p->grid_cell_width=display.tile_size;
+
     // Couleurs de Crossy_road
     Colors colors = {
         // Les sols
@@ -90,13 +92,15 @@ int main() {
         exit(-1);
     }
     
+    // Création du renderer
     SDL_Renderer *renderer;
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create renderer: %s", SDL_GetError());
         exit(-1);
-    } // render de SDL
+    }
 
+    // Initialisation des polices d'écriture du jeu
     TTF_Font *debug_font = font_load("assets/editundo.ttf", 20);
     TTF_Font *score_fond = font_load("assets/editundo.ttf", 100);
 
@@ -105,37 +109,38 @@ int main() {
     // On charge la sprite_sheet
     Sprite_sheet sprite_sheet = load_spritesheet("assets/spritesheet_coord.json", "assets/spritesheet.png", renderer, cam);
 
+    // On change certains aspects pour le début de la partie
     game_start(&g, &sprite_sheet);
     b = g.board;
     grid_ground_starter_set(b,&sprite_sheet);
     g_board = b;
 
-   
     board_set_player(b, p);
 
-    float duration = 15.0;
-    float jump_height = 0.5;
+    // Paramétrage des différentes animations de saut (interpolation de polynômes du second degré)
+    float duration = 15.0; // Durée d'un saut
+    float jump_height = 0.5; // Hauteur d'un saut
 
     float b_x = 1.0/duration;
 
     float a_z = -(4*jump_height)/(duration*duration);
     float b_z = (4*jump_height)/duration;
 
-    Animation anim_jump_x = {.duration = duration, .a = 0, .b = b_x, .c = -1};
+    Animation anim_jump_x = {.duration = duration, .a = 0, .b = b_x, .c = -1}; // Le déplacement au sol est linéaire
 
-    Animation anim_jump_z = {.duration = duration, .a = a_z, .b = b_z, .c = 0};
-
+    Animation anim_jump_z = {.duration = duration, .a = a_z, .b = b_z, .c = 0}; // La courbe de saut est quadratique
+    // Initialisation du compteur pour les frames des animations
     float anim_time = 0;
     
-
+    // Initialisation de l'écoute des événements
     SDL_Event event;
     
-    
+    // Début de la boucle d'action
     while (g.status==PLAYING){
         
         if (!p->alive) {
             g.status = DEAD;
-            break; // Exit the game loop immediately when player is dead
+            break; // Fin de la partie si le joueur meurt
         }
 
         int direction = NEUTRAL;
@@ -164,7 +169,6 @@ int main() {
                     if (event.key.keysym.sym==SDLK_DOWN){
                         if (jump_back < 3){
                             direction = DOWN;
-                            //ground_move(b,DOWN, &sprite_sheet);
                         }
                     }
 
@@ -177,7 +181,6 @@ int main() {
                         if (event.key.keysym.sym==SDLK_F1){
                             debug.god_mode=debug.god_mode ? 0 : 1;
                         }
-
                         // ralentir temps = f5 et accelerer = f6
                         if (event.key.keysym.sym==SDLK_F5){
                             debug.game_speed = debug.game_speed/2;
@@ -185,11 +188,9 @@ int main() {
                         if (event.key.keysym.sym==SDLK_F6){
                             debug.game_speed = debug.game_speed*2;
                         }
-
                         if (event.key.keysym.sym==SDLK_F2){ // ACTIVE OU PAS LES LIGNES
                             debug.display_grid_lines= debug.display_grid_lines ? 0 : 1;
                         }
-
                         if (event.key.keysym.sym==SDLK_F4){ // ACTIVE OU PAS LES sprites
                             debug.display_sprites= debug.display_sprites ? 0 : 1;
                         }
@@ -214,7 +215,6 @@ int main() {
             collision_type=COLLIDE_NONE;
         }
         
-        //printf("COLLISION UP : %d\n",collision_type);
         switch (collision_type) {
             case COLLIDE_NONE:
                 //mouvement autorise
@@ -258,11 +258,8 @@ int main() {
             
             board_update(b, debug.game_speed, &sprite_sheet,debug);
         }
-
-        //printf("Position du joueur : h_float = %f \n",p->h_position);
         
-        // PROBLEME DE TRAIN A ECRAN
-        // On efface l'écran
+        // On efface l'écran et on nettoie
         SDL_Color const BACKGROUND_COLOR = {.r = 0xD0, .g = 0xD0, .b = 0xD0, .a = SDL_ALPHA_OPAQUE};
         if (SDL_SetRenderDrawColor(renderer, BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, BACKGROUND_COLOR.a))
         {
@@ -280,21 +277,15 @@ int main() {
         if (score_actu > p->score) {
             p->score = score_actu;
         }
+
         //5. Maj de etat graphique
-        
+        // Dessin des sols du plateau
         draw_board(b,anim_time, anim_jump_x,cam,display,colors,renderer,&sprite_sheet, &debug,score_actu);
         
         // Gestion des animations
-        printf("anim_time : %f\n", anim_time);
         if (p->is_jumping)
         {
-            printf("is_juming = true\n");
-            printf("anim_cal : %f | anim.b = %f\n", animation_calc(anim_jump_x, anim_time), anim_jump_x.b);
-        }
-
-        if (p->is_jumping)
-        {
-            anim_time += debug.game_speed;
+            anim_time += debug.game_speed; // Avancée de l'animation
         }
         
         if (draw_entities(b, anim_time, anim_jump_x, anim_jump_z, cam,display,colors,renderer,&sprite_sheet, &debug) == 0)
