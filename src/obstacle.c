@@ -15,7 +15,6 @@
  * 
  * @return Un pointeur vers le nouvel obstacle créé.
  */
-
 Obstacle *obstacle_make(int type, int variant, float h_position, float lenght) {
     // crée et initialise un obstacle à partir des paramètres donnés
     Obstacle *obst = malloc(sizeof(Obstacle));
@@ -31,6 +30,7 @@ Obstacle *obstacle_make(int type, int variant, float h_position, float lenght) {
  * Libère l'espace mémoire alloué à un espace
  * 
  * @param[in] o Un poiteur vers un obstacle à détruire
+ * 
  */
 void obstacle_free(Obstacle *o) {
     // libère la mémoire de l'obstacle donné
@@ -44,6 +44,7 @@ void obstacle_free(Obstacle *o) {
  * 
  * @param[in] o poiteur vers un obstacle à mettre à jour
  * @param[in] delta_t le temps écoulé depuis le dernier appel de cette fonction
+ * @param[in] velocity la vitesse de l'obstacle
  * 
  */
 void obstacle_update(Obstacle *o, float delta_t, float velocity) {
