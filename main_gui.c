@@ -118,7 +118,7 @@ int main() {
     board_set_player(b, p);
 
     // Paramétrage des différentes animations de saut (interpolation de polynômes du second degré)
-    float duration = 15.0; // Durée d'un saut
+    float duration = 13.0; // Durée d'un saut
     float jump_height = 0.5; // Hauteur d'un saut
 
     float b_x = 1.0/duration;
@@ -146,7 +146,7 @@ int main() {
         int direction = NEUTRAL;
         // 1. Action du joueur           
         if (SDL_PollEvent(&event)){ 
-            if (!(p->is_jumping))
+            
             {
                 switch (event.type){
                     
@@ -154,23 +154,24 @@ int main() {
                         g.status=DEAD;
                         break;
                     case SDL_KEYUP: //touche relachée pour les mouvements
-                    if (event.key.keysym.sym==SDLK_RIGHT){
+                    if (event.key.keysym.sym==SDLK_RIGHT && (!(p->is_jumping))){
                         direction = RIGHT;
                     }
-                    if (event.key.keysym.sym==SDLK_LEFT){
+                    if (event.key.keysym.sym==SDLK_LEFT && (!(p->is_jumping))){
                         direction = LEFT;
                     }
-                    if (event.key.keysym.sym==SDLK_UP){
+                    if (event.key.keysym.sym==SDLK_UP && (!(p->is_jumping))){
                         direction = UP;
                     }
-                    if (event.key.keysym.sym==SDLK_SPACE){
+                    if (event.key.keysym.sym==SDLK_SPACE && (!(p->is_jumping))){
                         direction = UP;
                     }
-                    if (event.key.keysym.sym==SDLK_DOWN){
+                    if (event.key.keysym.sym==SDLK_DOWN && (!(p->is_jumping))){
                         if (jump_back < 3){
                             direction = DOWN;
                         }
                     }
+                    break;
 
                     case SDL_KEYDOWN: // touche pressée
                         if (event.key.keysym.sym==SDLK_q){
@@ -200,7 +201,7 @@ int main() {
                         if (event.key.keysym.sym==SDLK_F7){
                             debug.display_information_sprites = debug.display_information_sprites ? 0 : 1;
                         }
-
+                        break;
 
                     default:
                         break;
