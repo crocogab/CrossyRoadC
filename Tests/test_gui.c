@@ -184,10 +184,12 @@ int main() {
         }
         */
         
+        /*
         draw_board(test_board, cam, display, colors, renderer, &sprite_sheet);
         test_board->player->h_position = 0;
         draw_chicken(test_board->player, &sprite_sheet, renderer, cam, display);
         draw_entities(test_board, cam, display, colors, renderer, &sprite_sheet);
+        */
         
         // Switch framebuffer
         SDL_RenderPresent(renderer);
