@@ -12,16 +12,16 @@ OBJS_GUI = $(SRCS_GUI:.c=.o)
 
 # Tests
 TEST_BOARD = test_board
-TEST_BOARD_SRCS = $(TEST_DIR)/test_board.c $(SRC_DIR)/board.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/player.c
+TEST_BOARD_SRCS = $(TEST_DIR)/test_board.c $(SRC_DIR)/board.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/player.c $(SRC_DIR)/gui.c
 
 TEST_PLAYER = test_player
-TEST_PLAYER_SRCS = $(TEST_DIR)/test_player.c $(SRC_DIR)/player.c
+TEST_PLAYER_SRCS = $(TEST_DIR)/test_player.c $(SRC_DIR)/player.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/gui.c
 
 TEST_OBSTACLE = test_obstacle
 TEST_OBSTACLE_SRCS = $(TEST_DIR)/test_obstacle.c $(SRC_DIR)/obstacle.c
 
 TEST_GROUND = test_ground
-TEST_GROUND_SRCS = $(TEST_DIR)/test_ground.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c
+TEST_GROUND_SRCS = $(TEST_DIR)/test_ground.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/gui.c
 
 TEST_RANDOM_CUSTOM = test_random_custom
 TEST_RANDOM_CUSTOM_SRCS = $(TEST_DIR)/test_random_custom.c $(SRC_DIR)/random_custom.c
@@ -41,13 +41,15 @@ TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUST
 CC = clang
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -g3 -I$(HEADER_DIR)
 
-# sanitizers
-CFLAGS += -fsanitize=address -fno-omit-frame-pointer
-LDFLAGS = -fsanitize=address
+
 
 # libs
 LIBS_GUI = $(shell pkg-config --libs sdl2 SDL2_image SDL2_ttf json-c)
 CFLAGS_GUI = $(shell pkg-config --cflags sdl2 SDL2_image SDL2_ttf json-c)
+
+# sanitizers
+CFLAGS += -fsanitize=address -fno-omit-frame-pointer $(CFLAGS_GUI)
+LDFLAGS = -fsanitize=address $(LIBS_GUI)
 
 # Cible par défaut : GUI
 all: $(TARGET_GUI)
