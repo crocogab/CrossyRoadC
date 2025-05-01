@@ -36,13 +36,10 @@ void hitmatrix_free(int ***hitmatrix, int max_deepness) {
 }
 
 /**
- * CRée et initialise une matrice 3D de collision à partir de l'état du jeu au moment de l'appel
+ * Crée et initialise une matrice 3D de collision à partir de l'état du jeu au moment de l'appel
  */
 int ***hitmatrix_init(Board *b, int deepness, float delta_t) {
     int ***grid = hitmatrix_make(deepness);
-    Ground *g;
-    Couple hb;
-    int collide_type;
     for (int i = 0; i < deepness; i++) {
         hitgrid_fill(grid[i], b->grid_ground, i * delta_t);
     }
@@ -111,7 +108,7 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t) {
             hb = obstacle_hitbox(g.obstacles[k]);
 
             for (int j = hb.a; j <= hb.b; j++) {
-                hitgrid[i][j%MAP_WIDTH] = collide_obstacle;
+                hitgrid[i][j%MAP_WIDTH] = collide_obstacle; // pas sûr du modulo
             }
         }
     }
