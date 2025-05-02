@@ -15,4 +15,5 @@ void hitgrid_fill(int **hitgrid, Ground **, float t);
 
 int pouleria_zero(Board *, float delta_t, int max_deepness);
 
+
 #endif //IA_H

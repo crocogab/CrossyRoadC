@@ -8,7 +8,6 @@
 
 
 
-
 /**
  * Alloue de la mémoire pour une grille 3D de collision.
  * 
@@ -116,6 +115,7 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t) {
         }
     }
 }
+
 
 
 int pouleria_zero(Board *b, float dt, int maxd) {
