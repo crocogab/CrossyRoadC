@@ -1,9 +1,12 @@
-#include "board.h"
-#include "macro.h"
+// #include "board.h"
+// #include "macro.h"
 #include "ia.h"
+#include "macro.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
+
+
 
 
 /**
@@ -105,7 +108,7 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t) {
     
         // gestion des obstacles 
         for (int k = 0; k < g.nb_obstacles; k++) {
-            hb = obstacle_hitbox(g.obstacles[k]);
+            hb = obstacle_simulated_hitbox(g.obstacles[k], grid_ground[i]->velocity * t * DEFAULT_CELL_SIZE);
 
             for (int j = hb.a; j <= hb.b; j++) {
                 hitgrid[i][j%MAP_WIDTH] = collide_obstacle; // pas sûr du modulo
@@ -115,4 +118,14 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t) {
 }
 
 
+int pouleria_zero(Board *b, float dt, int maxd) {
+    // int *res = malloc(maxd * sizeof(int));
+    int **hitgrid = hitgrid_init(b->grid_ground, 0);
+    if (hitgrid[V_POS][(int) b->player->h_position] == COLLIDE_NONE) {
+        return UP;
+    } else {
+        return NEUTRAL;
+    }
+    // return res;
+}
 

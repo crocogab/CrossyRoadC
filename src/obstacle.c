@@ -97,6 +97,36 @@ Couple obstacle_hitbox(Obstacle *o) {
     return ab;
 }
 
+Couple obstacle_simulated_hitbox(Obstacle *o, float delta_x) {
+    float h = o->h_position + delta_x;
+
+    if (o->type != TRAIN_TYPE)
+    {
+        // modulo à la main parce que math.h::fmod est bizarre
+        if (h < 0) {
+            h = h + MAP_WIDTH*DEFAULT_CELL_SIZE;
+        } else if (h >= MAP_WIDTH*DEFAULT_CELL_SIZE) {
+            h = h - MAP_WIDTH*DEFAULT_CELL_SIZE;
+        }
+    }
+
+    int a = (int) h;
+    int b = (int) h +o->length;
+    
+    if (a > b) {
+        int c = a;
+        a = b;
+        b = c;
+    }
+    Couple ab;
+    ab.a = a;
+    if (o->type == TRAIN_POLE_TYPE) {
+        b = a-1;
+    }
+    ab.b = b;
+
+    return ab;
+}
 
 /**
  * Vérifie si un obstacle donné est en collision avec la position du joueur
