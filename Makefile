@@ -35,7 +35,10 @@ TEST_TTF_SRCS = $(TEST_DIR)/test_ttf.c $(SRC_DIR)/gui.c $(SRC_DIR)/board.c $(SRC
 TEST_MENU = test_menu
 TEST_MENU_SRCS = $(TEST_DIR)/test_menu.c $(SRC_DIR)/gui.c $(SRC_DIR)/board.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/player.c $(SRC_DIR)/ttf.c $(SRC_DIR)/menu.c
 
-TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUSTOM) $(TEST_BOARD) $(TEST_GUI) $(TEST_TTF) $(TEST_MENU)
+TEST_IA = test_ia 
+TEST_IA_SRCS = $(TEST_DIR)/test_ia.c $(SRC_DIR)/ia.c $(SRC_DIR)/board.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/player.c $(SRC_DIR)/gui.c
+
+TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUSTOM) $(TEST_BOARD) $(TEST_GUI) $(TEST_TTF) $(TEST_MENU) $(TEST_IA)
 
 # Compilation
 CC = clang
@@ -81,6 +84,9 @@ $(TEST_TTF): $(TEST_TTF_SRCS:.c=.o)
 	$(CC) $^ $(LDFLAGS) $(LIBS_GUI) -o $@
 
 $(TEST_MENU): $(TEST_MENU_SRCS:.c=.o)
+	$(CC) $^ $(LDFLAGS) $(LIBS_GUI) -o $@
+
+$(TEST_IA): $(TEST_IA_SRCS:.c=.o)
 	$(CC) $^ $(LDFLAGS) $(LIBS_GUI) -o $@
 
 # ---------- Règles génériques ----------
