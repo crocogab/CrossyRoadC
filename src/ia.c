@@ -48,6 +48,31 @@ int ***hitmatrix_init(Board *b, int deepness, float delta_t) {
     return grid;
 }
 
+void hitmatrix_update(int***hm, Board *b, int deep, float dt, int coup) {
+    
+    // moving hitgrids
+    hitgrid_free(hm[0]);
+    for (int i = 1; i < deep; i++) {
+        hm[i-1] = hm[i];
+    }
+
+    // generating the last grid
+    hm[deep-1] = hitgrid_init(b, (deep-1) * dt);
+
+    // updating hitgrids
+    switch (coup) {
+        case UP:
+            // 
+            
+            break ;
+        
+        case DOWN:
+
+            break;
+
+    }
+}
+
 /**
  * Alloue de la mémoire pour une grille de collision.
  */
