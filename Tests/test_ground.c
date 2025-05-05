@@ -23,19 +23,21 @@ int main(void) {
     Camera cam = {1.25f, -300, -765, 0.25f};
     Sprite_sheet sprite_sheet = load_spritesheet("assets/spritesheet_coord.json", "assets/spritesheet.png", renderer, cam);
 
-    // ground_generate signature updated: pass NULL as sprite_sheet
+    // Test de la fonction ground_generate pour le type GROUND_ROAD_CAR
+    // On génère un sol avec 2 voitures
+    // On utilise une vitesse précédente de 0 pour la première génération
     Ground *test_ground = ground_generate(GROUND_ROAD_CAR, 0, 2, 2, &sprite_sheet);
     assert(test_ground != NULL);
-    // type and special attribute for road cars
+    // Vérification des attributs du sol généré
     assert(test_ground->type == GROUND_ROAD_CAR);
     assert(test_ground->special_attr == 0);
-    // nb_obstacles must be exactly the fixed range [2,2]
+    // Vérification du nombre d'obstacles
     assert(test_ground->nb_obstacles == 2);
-    // velocity must be within the car speed bounds
+    // Vérification, la vitesse doit être entre CAR_MIN_SPEED et CAR_MAX_SPEED
     assert(test_ground->velocity >= CAR_MIN_SPEED - EPS);
     assert(test_ground->velocity <= CAR_MAX_SPEED + EPS);
 
-    // each obstacle must be a car, within the map bounds and valid variant
+    // Vérification de la position des obstacles, tous doivent être dans la plage [0, MAP_WIDTH] (c'est la map)
     for (int i = 0; i < test_ground->nb_obstacles; i++) {
         Obstacle *obs = test_ground->obstacles[i];
         assert(obs->type == CAR_TYPE);
