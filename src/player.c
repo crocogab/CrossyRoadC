@@ -46,7 +46,7 @@ Player *player_make(float grid_cell_size, float h_position, int direction, bool 
  *
  * @return Player* Un pointeur vers la structure Player nouvellement créée et initialisée.
  */
-Player *player_start()
+Player *player_start(void)
 {
     return player_make(DEFAULT_CELL_SIZE, (float)(MAP_WIDTH*DEFAULT_CELL_SIZE/2)+(DEFAULT_CELL_SIZE/4), UP, true, false, 0);
 }

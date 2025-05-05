@@ -20,7 +20,7 @@ typedef struct _Player {
 
 Player *player_make(float grid_cell_size, float h_position, int direction, bool alive, bool isJumping, int score);
 
-Player *player_start();
+Player *player_start(void);
 
 void player_free(Player *player);
 
