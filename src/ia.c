@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include <stdio.h> // debug
 
 
 /**
@@ -81,6 +82,7 @@ int **hitgrid_make(void) {
     for (int i = 0; i < MAP_LEN; i++) {
         grid[i] = malloc(MAP_WIDTH * sizeof(int));
     }
+    printf("hg make ok\n");
     return grid;
 }
 
@@ -100,6 +102,7 @@ void hitgrid_free(int **hitgrid) {
 int **hitgrid_init(Ground **grid_ground, float t) {
     int **hitgrid = hitgrid_make();
     hitgrid_fill(hitgrid, grid_ground, t);
+    printf("hg init ok\n");
     return hitgrid;
 }
 
@@ -111,8 +114,9 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t) {
     Couple hb;
     int collide_neutral;
     int collide_obstacle;
+    printf("init fill ok\n");
     for (int i = 0; i < MAP_LEN; i++) {
-        g = (*grid_ground)[i];
+        g = *(grid_ground[i]);
 
         if (g.type == GROUND_WATER_LILY || g.type == GROUND_WATER_LOG) {
             collide_neutral = COLLIDE_DEADLY;
@@ -125,20 +129,27 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t) {
                 collide_obstacle = COLLIDE_DEADLY;
             }
         }
+        printf("i = %i ok\n", i);
+        // printf("j = ");
         // préremplissage par défaut en fonction du type de sol
         for (int j = 0; j < MAP_WIDTH; j++) {
             hitgrid[i][j] = collide_neutral;
+            // printf("%i ", j);
         }
+        // printf("ok\nk = ");
     
         // gestion des obstacles 
         for (int k = 0; k < g.nb_obstacles; k++) {
             hb = obstacle_simulated_hitbox(g.obstacles[k], grid_ground[i]->velocity * t * DEFAULT_CELL_SIZE);
 
-            for (int j = hb.a; j <= hb.b; j++) {
+            for (int j = hb.a / DEFAULT_CELL_SIZE; j <= hb.b / DEFAULT_CELL_SIZE; j++) {
                 hitgrid[i][j%MAP_WIDTH] = collide_obstacle; // pas sûr du modulo
             }
+            // printf("%i ", k);
         }
+        // printf("ok\n");
     }
+
 }
 
 
@@ -146,11 +157,19 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t) {
 int pouleria_zero(Board *b, float dt, int maxd) {
     // int *res = malloc(maxd * sizeof(int));
     int **hitgrid = hitgrid_init(b->grid_ground, 0);
-    if (hitgrid[V_POS][(int) b->player->h_position] == COLLIDE_NONE) {
+    printf("si ça crash juste après ça c'est la position du joueur\n");
+    int coll = hitgrid[V_POS][((int) b->player->h_position / DEFAULT_CELL_SIZE)] ;
+    printf("raté\n");
+    if (coll == COLLIDE_NONE) {
+        hitgrid_free(hitgrid);
+        printf("up\n");
         return UP;
     } else {
+        hitgrid_free(hitgrid);
+        printf("coup: %i\n", coll);
         return NEUTRAL;
     }
+
     // return res;
 }
 

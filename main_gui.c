@@ -150,7 +150,7 @@ int main() {
         //MARK: Action du joueur  
         if (debug.pouleria) {
             direction = pouleria_zero(g_board, debug.game_speed, debug.deepness_ia);
-        }         
+        }
         if (SDL_PollEvent(&event)){ 
             {
                 switch (event.type){
