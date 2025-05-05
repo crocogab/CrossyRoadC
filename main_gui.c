@@ -12,6 +12,7 @@
 #include "ground.h"
 #include "ttf.h"
 #include "debugKit.h"
+#include "ia.h"
 
 Board *g_board;
 
@@ -27,6 +28,8 @@ int main() {
     debug.display_sprites=0;
     debug.display_information=0;
     debug.display_information_sprites=0;
+    debug.pouleria = 0;
+    debug.deepness_ia = 5;
     
     //Initialisation des objets
     Game g = game_make(TO_LAUNCH);
@@ -144,7 +147,7 @@ int main() {
         }
 
         int direction = NEUTRAL;
-        // 1. Action du joueur           
+        //MARK: Action du joueur           
         if (SDL_PollEvent(&event)){ 
             
             {
@@ -153,22 +156,29 @@ int main() {
                     case SDL_QUIT:
                         g.status=DEAD;
                         break;
+
+                    case debug.pouleria: 
+                        direction = pouleria_zero(g_board, debug.game_speed, debug.deepness_ia)
+
+                    break;
                     case SDL_KEYUP: //touche relachée pour les mouvements
-                    if (event.key.keysym.sym==SDLK_RIGHT && (!(p->is_jumping))){
-                        direction = RIGHT;
-                    }
-                    if (event.key.keysym.sym==SDLK_LEFT && (!(p->is_jumping))){
-                        direction = LEFT;
-                    }
-                    if (event.key.keysym.sym==SDLK_UP && (!(p->is_jumping))){
-                        direction = UP;
-                    }
-                    if (event.key.keysym.sym==SDLK_SPACE && (!(p->is_jumping))){
-                        direction = UP;
-                    }
-                    if (event.key.keysym.sym==SDLK_DOWN && (!(p->is_jumping))){
-                        if (jump_back < 3){
-                            direction = DOWN;
+                    if (! debug.pouleria) {
+                        if (event.key.keysym.sym==SDLK_RIGHT && (!(p->is_jumping))){
+                            direction = RIGHT;
+                        }
+                        if (event.key.keysym.sym==SDLK_LEFT && (!(p->is_jumping))){
+                            direction = LEFT;
+                        }
+                        if (event.key.keysym.sym==SDLK_UP && (!(p->is_jumping))){
+                            direction = UP;
+                        }
+                        if (event.key.keysym.sym==SDLK_SPACE && (!(p->is_jumping))){
+                            direction = UP;
+                        }
+                        if (event.key.keysym.sym==SDLK_DOWN && (!(p->is_jumping))){
+                            if (jump_back < 3){
+                                direction = DOWN;
+                            }
                         }
                     }
                     break;
