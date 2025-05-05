@@ -147,9 +147,11 @@ int main() {
         }
 
         int direction = NEUTRAL;
-        //MARK: Action du joueur           
+        //MARK: Action du joueur  
+        if (debug.pouleria) {
+            direction = pouleria_zero(g_board, debug.game_speed, debug.deepness_ia);
+        }         
         if (SDL_PollEvent(&event)){ 
-            
             {
                 switch (event.type){
                     
@@ -157,10 +159,6 @@ int main() {
                         g.status=DEAD;
                         break;
 
-                    case debug.pouleria: 
-                        direction = pouleria_zero(g_board, debug.game_speed, debug.deepness_ia)
-
-                    break;
                     case SDL_KEYUP: //touche relachée pour les mouvements
                     if (! debug.pouleria) {
                         if (event.key.keysym.sym==SDLK_RIGHT && (!(p->is_jumping))){
@@ -210,6 +208,9 @@ int main() {
                         }
                         if (event.key.keysym.sym==SDLK_F7){
                             debug.display_information_sprites = debug.display_information_sprites ? 0 : 1;
+                        }
+                        if (event.key.keysym.sym==SDLK_F8) {
+                            debug.pouleria = debug.pouleria ? 0 : 1;
                         }
                         break;
 
