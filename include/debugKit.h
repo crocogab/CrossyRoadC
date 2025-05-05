@@ -10,6 +10,8 @@ typedef struct debugKit_
    int display_sprites; 
    int display_information; // active les infos de debug en haut a gauche
    int display_information_sprites; // active les infos des sprites
+   int pouleria;
+   int deepness_ia;
 }debugKit;
 
 
