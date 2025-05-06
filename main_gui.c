@@ -334,5 +334,9 @@ int main() {
     SDL_DestroyRenderer(renderer);
     board_free(b);
 
+    TTF_CloseFont(debug_font);
+    TTF_CloseFont(score_fond);
+    TTF_Quit();
+
     SDL_Quit();
 }
