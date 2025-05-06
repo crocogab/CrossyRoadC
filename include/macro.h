@@ -71,8 +71,8 @@
 // Définition des attributs de log
 #define LOG_TYPE 105
 #define LOG_MAX_SPEED 2
-#define LOG_MIN_SPEED 1.5
-#define LOG_MIN_NUMBER 2
+#define LOG_MIN_SPEED 1.2
+#define LOG_MIN_NUMBER 3
 
 // Définition des attributs de train
 #define TRAIN_TYPE 106
@@ -90,9 +90,9 @@
 
 
 //Définition des intervalles d'obstacles
-#define INTER_CAR_MIN 5
-#define INTER_TRUCK_MIN 7
-#define INTER_LOG_MIN 5
+#define INTER_CAR_MIN 7
+#define INTER_TRUCK_MIN 8
+#define INTER_LOG_MIN 8
 #define START_SIZE 4 // Taille de la zone de départ (PETITE = GRAND DEPART)
 
 #define V_POS 10 // Position verticale du joueur sur le board
