@@ -5,11 +5,14 @@
 #include "gui.h"
 #include "macro.h"
 #include "UI.h"
+#include <stdio.h>
 
 Button create_button(int button_id, int x, int y, int is_hidden, int state, Sprite_sheet *menu_spritesheet, int sprite_id)
 {
     return (Button){button_id, x, y, menu_spritesheet->sprites[sprite_id].sprites_coord->w, menu_spritesheet->sprites[sprite_id].sprites_coord->h, is_hidden, state, menu_spritesheet, 0, sprite_id};
 }
+
+const char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 void save_high_score(const char *name, int score)
 {
@@ -251,4 +254,55 @@ void unload_ui_spritesheet(Sprite_sheet sprite_sheet)
     {
         SDL_DestroyTexture(sprite_sheet.sprite_sheet);
     }
+}
+
+/**
+ * Dessine une lettre à l'écran
+ * 
+ * @param renderer le renderer SDL
+ * @param font la police de caractères
+ * @param letter la lettre à dessiner
+ * @param x position x de la lettre
+ * @param y position y de la lettre
+ * @param selected si la lettre est sélectionnée (1) ou non (0)
+ */
+
+void draw_letter(SDL_Renderer *renderer, TTF_Font *font, char letter, int x, int y, int selected) {
+    char text[2] = {letter, '\0'};
+    SDL_Color color = selected ? (SDL_Color){255, 0, 0, 255} : (SDL_Color){255, 255, 255, 255};
+
+    SDL_Surface *surface = TTF_RenderText_Solid(font, text, color);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Rect dst = {x, y, surface->w, surface->h};
+    SDL_RenderCopy(renderer, texture, NULL, &dst);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
+}
+
+/**
+ * Dessine un bouton à l'écran
+ * 
+ * @param renderer le renderer SDL
+ * @param font la police de caractères
+ * @param text le texte à afficher sur le bouton
+ * @param x position x du bouton
+ * @param y position y du bouton
+ * @param w largeur du bouton
+ * @param h hauteur du bouton
+ */
+void draw_button(SDL_Renderer *renderer, TTF_Font *font, const char *text, int x, int y, int w, int h) {
+    SDL_Rect rect = {x, y, w, h};
+    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+    SDL_RenderFillRect(renderer, &rect);
+
+    SDL_Color white = {255, 255, 255, 255};
+    SDL_Surface *surface = TTF_RenderText_Solid(font, text, white);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    SDL_Rect textRect = {x + (w - surface->w)/2, y + (h - surface->h)/2, surface->w, surface->h};
+    SDL_RenderCopy(renderer, texture, NULL, &textRect);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
 }

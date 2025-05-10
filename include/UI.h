@@ -1,11 +1,14 @@
 #ifndef UI_H
 #define UI_H
 #define FILE_NAME_SCORE "assets/high_scores.json"
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include "gui.h"
+
 
 /**
  * Définit un bouton, l'affichage se fait depuis une sprite_sheet
@@ -43,5 +46,9 @@ void render_button(Button *button, SDL_Renderer *renderer);
 Sprite_sheet load_ui_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *renderer, Camera cam);
 
 void unload_ui_spritesheet(Sprite_sheet sprite_sheet);
+
+void draw_letter(SDL_Renderer *renderer, TTF_Font *font, char letter, int x, int y, int selected);
+
+void draw_button(SDL_Renderer *renderer, TTF_Font *font, const char *text, int x, int y, int w, int h);
 
 #endif
