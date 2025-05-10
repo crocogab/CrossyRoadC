@@ -1,5 +1,6 @@
 #ifndef UI_H
 #define UI_H
+#define FILE_NAME_SCORE "assets/high_scores.json"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -30,6 +31,9 @@ typedef struct Button_t{
     int sprite_index;
     int sprite_id;
 } Button;
+
+
+void save_high_score(const char* name, int score);
 
 void render_button(Button *button, SDL_Renderer *renderer);
 

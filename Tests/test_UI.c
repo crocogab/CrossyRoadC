@@ -8,6 +8,11 @@
 #include "UI.h"
 
 int main() {
+
+    save_high_score("ABC" , 200);
+    save_high_score("DEF" , 100);
+    save_high_score("ABC" , 150);
+    
     // Initialisation de la SDL
     if (SDL_Init(SDL_INIT_EVERYTHING)) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize SDL: %s", SDL_GetError());
