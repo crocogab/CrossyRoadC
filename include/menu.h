@@ -1,10 +1,12 @@
 #ifndef MENU_H
 #define MENU_H
+#define FILE_NAME_SCORE "assets/high_scores.json"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include "gui.h"
+
 
 /**
  * Définit un bouton, l'affichage se fait depuis une sprite_sheet
@@ -31,6 +33,7 @@ typedef struct Button_t{
     int sprite_id;
 } Button;
 
+void save_high_score(const char* name, int score);
 void render_button(Button *button, SDL_Renderer *renderer);
 
 #endif
