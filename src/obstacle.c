@@ -124,7 +124,7 @@ Couple obstacle_simulated_hitbox(Obstacle *o, float x, float dx) {
 
     if (o->type == TRAIN_POLE_TYPE) {
         ab.a = 1; ab.b = 0;
-    } else if (o->length < 0) {
+    } else if ((o->length < 0) ^ (o->type == LOG_TYPE) ) {
         ab.a = b < d ? b : d;
         ab.b = a < c ? c : a;
     } else {

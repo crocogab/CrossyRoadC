@@ -58,7 +58,7 @@ void hitmatrix_update(int***hm, Board *b, int deep, float dt, int coup) {
     }
 
     // generating the last grid
-    hm[deep-1] = hitgrid_init(b, (deep-1) * dt, dt);
+    hm[deep-1] = hitgrid_init(b->grid_ground, (deep-1) * dt, dt);
 
     // updating hitgrids
     switch (coup) {
@@ -142,7 +142,11 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
         float t0xcell = t * DEFAULT_CELL_SIZE;
         float t1xcell = (t + dt) * DEFAULT_CELL_SIZE; 
         for (int k = 0; k < g.nb_obstacles; k++) {
-            hb = obstacle_simulated_hitbox(g.obstacles[k], grid_ground[i]->velocity * t0xcell, grid_ground[i]->velocity * t1xcell);
+            hb = obstacle_simulated_hitbox(
+                g.obstacles[k], 
+                grid_ground[i]->velocity * t0xcell, 
+                grid_ground[i]->velocity * t1xcell
+            );
 
             for (int j = hb.a / DEFAULT_CELL_SIZE; j <= hb.b / DEFAULT_CELL_SIZE; j++) {
                 hitgrid[i][j%MAP_WIDTH] = collide_obstacle; // pas sûr du modulo
@@ -155,23 +159,24 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
 }
 
 
-
+/**
+ * version zero de l'ia. Se contente de regarder devant et d'avancer si c'est possible. 
+ * 
+ * @param[in] board le plateau de  tel qu'il est au moment de l'appel
+ * @param[in] delta_t l'unité de temps utlisée pour l'ia, correspond probablement à la durée de l'animation de temps
+ * @param[in] max_deepness profondeur maximum de simulation, inutile ici.
+ * 
+ * @return un entier, une macro qui correspond à un des 5 coups possibles.
+ */
 int pouleria_zero(Board *b, float dt, int maxd) {
-    // int *res = malloc(maxd * sizeof(int));
     int **hitgrid = hitgrid_init(b->grid_ground, 0, dt);
-    // printf("si ça crash juste après ça c'est la position du joueur\n");
     int coll = hitgrid[V_POS][((int) b->player->h_position / DEFAULT_CELL_SIZE)] ;
-    // printf("raté\n");
+    
+    hitgrid_free(hitgrid);
     if (coll == COLLIDE_NONE) {
-        hitgrid_free(hitgrid);
-        // printf("up\n");
         return UP;
     } else {
-        hitgrid_free(hitgrid);
-        // printf("coup: %i\n", coll);
         return NEUTRAL;
     }
-
-    // return res;
 }
 
