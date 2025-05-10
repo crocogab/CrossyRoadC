@@ -85,7 +85,7 @@ int main() {
     };
 
 
-    SDL_Window *window; // création de la fenêtre
+    SDL_Window *window; // MARK: création de la fenêtre
     window = SDL_CreateWindow("SDL2 Window",
                                 SDL_WINDOWPOS_UNDEFINED,
                                 SDL_WINDOWPOS_UNDEFINED,
@@ -149,7 +149,7 @@ int main() {
 
         int direction = NEUTRAL;
         //MARK: Action du joueur  
-        if (debug.pouleria) {
+        if (debug.pouleria && (!(p->is_jumping))) {
             direction = pouleria_zero(g_board, debug.game_speed, debug.deepness_ia);
         }
         if (SDL_PollEvent(&event)){ 
