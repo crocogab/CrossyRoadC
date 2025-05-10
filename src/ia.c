@@ -41,10 +41,10 @@ void hitmatrix_free(int ***hitmatrix, int max_deepness) {
 /**
  * Crée et initialise une matrice 3D de collision à partir de l'état du jeu au moment de l'appel
  */
-int ***hitmatrix_init(Board *b, int deepness, float delta_t) {
+int ***hitmatrix_init(Board *b, int deepness, float dt) {
     int ***grid = hitmatrix_make(deepness);
     for (int i = 0; i < deepness; i++) {
-        hitgrid_fill(grid[i], b->grid_ground, i * delta_t);
+        hitgrid_fill(grid[i], b->grid_ground, i * dt, dt);
     }
     return grid;
 }
@@ -58,7 +58,7 @@ void hitmatrix_update(int***hm, Board *b, int deep, float dt, int coup) {
     }
 
     // generating the last grid
-    hm[deep-1] = hitgrid_init(b, (deep-1) * dt);
+    hm[deep-1] = hitgrid_init(b, (deep-1) * dt, dt);
 
     // updating hitgrids
     switch (coup) {
@@ -99,9 +99,9 @@ void hitgrid_free(int **hitgrid) {
 /**
  * Crée et initialise une grille de collision à un temps donné (relatif au moment de l'appel).
  */
-int **hitgrid_init(Ground **grid_ground, float t) {
+int **hitgrid_init(Ground **grid_ground, float t, float dt) {
     int **hitgrid = hitgrid_make();
-    hitgrid_fill(hitgrid, grid_ground, t);
+    hitgrid_fill(hitgrid, grid_ground, t, dt);
     printf("hg init ok\n");
     return hitgrid;
 }
@@ -109,7 +109,7 @@ int **hitgrid_init(Ground **grid_ground, float t) {
 /**
  * Remplit une grille de collision déjà créée, à un temps donné.
  */
-void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t) {
+void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
     Ground g;
     Couple hb;
     int collide_neutral;
@@ -139,8 +139,10 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t) {
         // printf("ok\nk = ");
     
         // gestion des obstacles 
+        float t0xcell = t * DEFAULT_CELL_SIZE;
+        float t1xcell = (t + dt) * DEFAULT_CELL_SIZE; 
         for (int k = 0; k < g.nb_obstacles; k++) {
-            hb = obstacle_simulated_hitbox(g.obstacles[k], grid_ground[i]->velocity * t * DEFAULT_CELL_SIZE);
+            hb = obstacle_simulated_hitbox(g.obstacles[k], grid_ground[i]->velocity * t0xcell, grid_ground[i]->velocity * t1xcell);
 
             for (int j = hb.a / DEFAULT_CELL_SIZE; j <= hb.b / DEFAULT_CELL_SIZE; j++) {
                 hitgrid[i][j%MAP_WIDTH] = collide_obstacle; // pas sûr du modulo
@@ -156,7 +158,7 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t) {
 
 int pouleria_zero(Board *b, float dt, int maxd) {
     // int *res = malloc(maxd * sizeof(int));
-    int **hitgrid = hitgrid_init(b->grid_ground, 0);
+    int **hitgrid = hitgrid_init(b->grid_ground, 0, dt);
     printf("si ça crash juste après ça c'est la position du joueur\n");
     int coll = hitgrid[V_POS][((int) b->player->h_position / DEFAULT_CELL_SIZE)] ;
     printf("raté\n");

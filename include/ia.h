@@ -10,8 +10,8 @@ void hitmatrix_update(int ***hitmatrix, Board *, int max_deepness, float delta_t
 
 int **hitgrid_make(void);
 void hitgrid_free(int **);
-int **hitgrid_init(Ground **, float t);
-void hitgrid_fill(int **hitgrid, Ground **, float t);
+int **hitgrid_init(Ground **, float t, float dt);
+void hitgrid_fill(int **hitgrid, Ground **, float t, float dt);
 
 int pouleria_zero(Board *, float delta_t, int max_deepness);
 
