@@ -7,7 +7,7 @@ TEST_DIR = ./Tests
 TARGET_GUI = main_gui
 
 # fichiers source GUI
-SRCS_GUI = main_gui.c $(SRC_DIR)/gui.c $(SRC_DIR)/game.c $(SRC_DIR)/board.c $(SRC_DIR)/player.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/ttf.c $(SRC_DIR)/menu.c ${SRC_DIR}/ia.c
+SRCS_GUI = main_gui.c $(SRC_DIR)/gui.c $(SRC_DIR)/game.c $(SRC_DIR)/board.c $(SRC_DIR)/player.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/ttf.c $(SRC_DIR)/UI.c ${SRC_DIR}/ia.c
 OBJS_GUI = $(SRCS_GUI:.c=.o)
 
 # Tests
@@ -32,13 +32,13 @@ TEST_GUI_SRCS = $(TEST_DIR)/test_gui.c $(SRC_DIR)/gui.c $(SRC_DIR)/board.c $(SRC
 TEST_TTF = test_ttf
 TEST_TTF_SRCS = $(TEST_DIR)/test_ttf.c $(SRC_DIR)/gui.c $(SRC_DIR)/board.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/player.c $(SRC_DIR)/ttf.c
 
-TEST_MENU = test_menu
-TEST_MENU_SRCS = $(TEST_DIR)/test_menu.c $(SRC_DIR)/gui.c $(SRC_DIR)/board.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/player.c $(SRC_DIR)/ttf.c $(SRC_DIR)/menu.c
+TEST_UI = test_ui
+TEST_UI_SRCS = $(TEST_DIR)/test_UI.c $(SRC_DIR)/gui.c $(SRC_DIR)/board.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/player.c $(SRC_DIR)/ttf.c $(SRC_DIR)/UI.c
 
 TEST_IA = test_ia 
 TEST_IA_SRCS = $(TEST_DIR)/test_ia.c $(SRC_DIR)/ia.c $(SRC_DIR)/board.c $(SRC_DIR)/ground.c $(SRC_DIR)/obstacle.c $(SRC_DIR)/random_custom.c $(SRC_DIR)/player.c $(SRC_DIR)/gui.c
 
-TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUSTOM) $(TEST_BOARD) $(TEST_GUI) $(TEST_TTF) $(TEST_MENU) $(TEST_IA)
+TEST_TARGETS = $(TEST_PLAYER) $(TEST_OBSTACLE) $(TEST_GROUND) $(TEST_RANDOM_CUSTOM) $(TEST_BOARD) $(TEST_GUI) $(TEST_TTF) $(TEST_UI) $(TEST_IA)
 
 # Compilation
 CC = clang
@@ -83,7 +83,7 @@ $(TEST_GUI): $(TEST_GUI_SRCS:.c=.o)
 $(TEST_TTF): $(TEST_TTF_SRCS:.c=.o)
 	$(CC) $^ $(LDFLAGS) $(LIBS_GUI) -o $@
 
-$(TEST_MENU): $(TEST_MENU_SRCS:.c=.o)
+$(TEST_UI): $(TEST_UI_SRCS:.c=.o)
 	$(CC) $^ $(LDFLAGS) $(LIBS_GUI) -o $@
 
 $(TEST_IA): $(TEST_IA_SRCS:.c=.o)
@@ -120,8 +120,8 @@ run_test_gui: $(TEST_GUI)
 run_test_ttf: $(TEST_TTF)
 	./$(TEST_TTF)
 
-run_test_menu: $(TEST_MENU)
-	./$(TEST_MENU)
+run_test_ui: $(TEST_UI)
+	./$(TEST_UI)
 
 run_tests: $(TEST_TARGETS)
 	for test in $(TEST_TARGETS); do ./$$test; done
@@ -129,7 +129,7 @@ run_tests: $(TEST_TARGETS)
 # ---------- Nettoyage ----------
 clean:
 	rm -f $(OBJS_GUI) $(TARGET_GUI) $(TEST_TARGETS)
-	rm -f $(TEST_BOARD_SRCS:.c=.o) $(TEST_PLAYER_SRCS:.c=.o) $(TEST_OBSTACLE_SRCS:.c=.o) $(TEST_GROUND_SRCS:.c=.o) $(TEST_RANDOM_CUSTOM_SRCS:.c=.o) $(TEST_GUI_SRCS:.c=.o) $(TEST_TTF_SRCS:.c=.o) $(TEST_MENU_SRCS:.c=.o)
+	rm -f $(TEST_BOARD_SRCS:.c=.o) $(TEST_PLAYER_SRCS:.c=.o) $(TEST_OBSTACLE_SRCS:.c=.o) $(TEST_GROUND_SRCS:.c=.o) $(TEST_RANDOM_CUSTOM_SRCS:.c=.o) $(TEST_GUI_SRCS:.c=.o) $(TEST_TTF_SRCS:.c=.o) $(TEST_UI_SRCS:.c=.o)
 	rm -f *~ \#*\# .\#*
 
 .PHONY: all clean test run_tests run_gui run_test_*
