@@ -266,7 +266,7 @@ void draw_board_line(float y, int type, Camera cam, Display_informations display
 
         // On dessine le sol
         draw_quad_from_3d(p3d_1, p3d_2, p3d_3, p3d_4, colors.ROAD_COLOR, cam, renderer);
-     
+
         // On met le plan à la verticale et aligné avec le sol précedemment tracé
         p3d_2.z -= display.border_gap;
         p3d_3.z -= display.border_gap;
