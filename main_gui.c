@@ -261,11 +261,63 @@ int main() {
                 break;
         }
 
-
-
-
         if (!p->alive) {
-            // update si on est mort
+            //Enregistremeent du score
+            TTF_Font *font = font_load("assets/editundo.ttf", 48);
+            char letters[4] = {'A', 'A', 'A', '\0'};
+            int selected_letter = 0;
+            SDL_bool running = SDL_TRUE;
+            // Boucle d'événements pour la saisie du pseudo
+            while (running) {
+                while (SDL_PollEvent(&event)) {
+                    if (event.type == SDL_QUIT)
+                        running = SDL_FALSE;
+                    else if (event.type == SDL_KEYDOWN) {
+                        switch (event.key.keysym.sym) {
+                            case SDLK_RIGHT:
+                                selected_letter = (selected_letter + 1) % 3;
+                                break;
+                            case SDLK_LEFT:
+                                selected_letter = (selected_letter + 2) % 3;
+                                break;
+                            case SDLK_UP:
+                                letters[selected_letter] = (letters[selected_letter] == 'Z') ? 'A' : letters[selected_letter] + 1;
+                                break;
+                            case SDLK_DOWN:
+                                letters[selected_letter] = (letters[selected_letter] == 'A') ? 'Z' : letters[selected_letter] - 1;
+                                break;
+                            case SDLK_RETURN:
+                                printf("Pseudo validé : %c%c%c\n", letters[0], letters[1], letters[2]);
+                                save_high_score(letters, p->score);
+                                running = SDL_FALSE;
+                                break;
+                        }
+                    } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                        int x = event.button.x;
+                        int y = event.button.y;
+                        if (x >= 650 && x <= 850 && y >= 400 && y <= 450) {
+                            printf("Pseudo validé par clic : %c%c%c\n", letters[0], letters[1], letters[2]);
+                            save_high_score(letters, p->score);
+                            running = SDL_FALSE;
+                        }
+                    }
+                }
+
+                SDL_SetRenderDrawColor(renderer, 50, 50, 50, 150);
+                SDL_RenderClear(renderer);
+
+                // Dessin des 3 lettres
+                for (int i = 0; i < 3; i++) {
+                    draw_letter(renderer, font, letters[i], 650 + i * 80, 300, i == selected_letter);
+                }
+
+                // Bouton "Valider"
+                draw_button(renderer, font, "Valider", 710, 400, 80, 50);
+
+                SDL_RenderPresent(renderer);
+                SDL_Delay(16); // ~60 FPS
+                
+            }
         } else {
             
             board_update(b, debug.game_speed, &sprite_sheet,debug);
@@ -329,72 +381,14 @@ int main() {
     
 
 
-    //Enregistremeent du score
-    TTF_Font *font = font_load("assets/editundo.ttf", 48);
     
-
-    char letters[4] = {'A', 'A', 'A', '\0'};
-    int selected_letter = 0;
     
-    SDL_bool running = SDL_TRUE;
-    
-
-    while (running) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT)
-                running = SDL_FALSE;
-            else if (event.type == SDL_KEYDOWN) {
-                switch (event.key.keysym.sym) {
-                    case SDLK_RIGHT:
-                        selected_letter = (selected_letter + 1) % 3;
-                        break;
-                    case SDLK_LEFT:
-                        selected_letter = (selected_letter + 2) % 3;
-                        break;
-                    case SDLK_UP:
-                        letters[selected_letter] = (letters[selected_letter] == 'Z') ? 'A' : letters[selected_letter] + 1;
-                        break;
-                    case SDLK_DOWN:
-                        letters[selected_letter] = (letters[selected_letter] == 'A') ? 'Z' : letters[selected_letter] - 1;
-                        break;
-                    case SDLK_RETURN:
-                        printf("Pseudo validé : %c%c%c\n", letters[0], letters[1], letters[2]);
-                        save_high_score(letters, p->score);
-                        running = SDL_FALSE;
-                        break;
-                }
-            } else if (event.type == SDL_MOUSEBUTTONDOWN) {
-                int x = event.button.x;
-                int y = event.button.y;
-                if (x >= 500 && x <= 580 && y >= 400 && y <= 450) {
-                    printf("Pseudo validé par clic : %c%c%c\n", letters[0], letters[1], letters[2]);
-                    save_high_score(letters, p->score);
-                    running = SDL_FALSE;
-                }
-            }
-        }
-
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-
-        // Dessin des 3 lettres
-        for (int i = 0; i < 3; i++) {
-            draw_letter(renderer, font, letters[i], 200 + i * 80, 200, i == selected_letter);
-        }
-
-        // Bouton "Valider"
-        draw_button(renderer, font, "Valider", 500, 400, 80, 50);
-
-        SDL_RenderPresent(renderer);
-        SDL_Delay(16); // ~60 FPS
-    }
 
     TTF_CloseFont(debug_font);
     TTF_CloseFont(score_fond);
     IMG_Quit();
     unload_spritesheet(sprite_sheet);
     board_free(b);
-    TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();

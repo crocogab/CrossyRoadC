@@ -292,10 +292,6 @@ void draw_letter(SDL_Renderer *renderer, TTF_Font *font, char letter, int x, int
  * @param h hauteur du bouton
  */
 void draw_button(SDL_Renderer *renderer, TTF_Font *font, const char *text, int x, int y, int w, int h) {
-    SDL_Rect rect = {x, y, w, h};
-    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
-    SDL_RenderFillRect(renderer, &rect);
-
     SDL_Color white = {255, 255, 255, 255};
     SDL_Surface *surface = TTF_RenderText_Solid(font, text, white);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
