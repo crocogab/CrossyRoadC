@@ -97,9 +97,11 @@ Couple obstacle_hitbox(Obstacle *o) {
     return ab;
 }
 
-Couple obstacle_simulated_hitbox(Obstacle *o, float delta_x) {
-    float h = o->h_position + delta_x;
+Couple obstacle_simulated_hitbox(Obstacle *o, float x, float dx) {
 
+    float h = o->h_position + x; // position à t
+
+     
     if (o->type != TRAIN_TYPE)
     {
         // modulo à la main parce que math.h::fmod est bizarre
@@ -110,20 +112,26 @@ Couple obstacle_simulated_hitbox(Obstacle *o, float delta_x) {
         }
     }
 
+    // intbox à t
     int a = (int) h;
-    int b = (int) h +o->length;
-    
-    if (a > b) {
-        int c = a;
-        a = b;
-        b = c;
-    }
+    int b = (int) h + o->length;
+    // intbox à t + dt
+    int c = (int) h + dx;
+    int d = (int) h + dx + o->length;
+
+
     Couple ab;
-    ab.a = a;
+
     if (o->type == TRAIN_POLE_TYPE) {
-        b = a-1;
+        ab.a = 1; ab.b = 0;
+    } else if (o->length < 0) {
+        ab.a = b < d ? b : d;
+        ab.b = a < c ? c : a;
+    } else {
+        ab.a = a < c ? a : c;
+        ab.b = b < d ? d : b;
     }
-    ab.b = b;
+
 
     return ab;
 }
