@@ -82,7 +82,7 @@ int **hitgrid_make(void) {
     for (int i = 0; i < MAP_LEN; i++) {
         grid[i] = malloc(MAP_WIDTH * sizeof(int));
     }
-    printf("hg make ok\n");
+    // printf("hg make ok\n");
     return grid;
 }
 
@@ -102,7 +102,7 @@ void hitgrid_free(int **hitgrid) {
 int **hitgrid_init(Ground **grid_ground, float t, float dt) {
     int **hitgrid = hitgrid_make();
     hitgrid_fill(hitgrid, grid_ground, t, dt);
-    printf("hg init ok\n");
+    // printf("hg init ok\n");
     return hitgrid;
 }
 
@@ -114,7 +114,7 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
     Couple hb;
     int collide_neutral;
     int collide_obstacle;
-    printf("init fill ok\n");
+    // printf("init fill ok\n");
     for (int i = 0; i < MAP_LEN; i++) {
         g = *(grid_ground[i]);
 
@@ -129,7 +129,7 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
                 collide_obstacle = COLLIDE_DEADLY;
             }
         }
-        printf("i = %i ok\n", i);
+        // printf("i = %i ok\n", i);
         // printf("j = ");
         // préremplissage par défaut en fonction du type de sol
         for (int j = 0; j < MAP_WIDTH; j++) {
@@ -159,16 +159,16 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
 int pouleria_zero(Board *b, float dt, int maxd) {
     // int *res = malloc(maxd * sizeof(int));
     int **hitgrid = hitgrid_init(b->grid_ground, 0, dt);
-    printf("si ça crash juste après ça c'est la position du joueur\n");
+    // printf("si ça crash juste après ça c'est la position du joueur\n");
     int coll = hitgrid[V_POS][((int) b->player->h_position / DEFAULT_CELL_SIZE)] ;
-    printf("raté\n");
+    // printf("raté\n");
     if (coll == COLLIDE_NONE) {
         hitgrid_free(hitgrid);
-        printf("up\n");
+        // printf("up\n");
         return UP;
     } else {
         hitgrid_free(hitgrid);
-        printf("coup: %i\n", coll);
+        // printf("coup: %i\n", coll);
         return NEUTRAL;
     }
 
