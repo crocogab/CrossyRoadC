@@ -6,8 +6,13 @@
 #include "macro.h"
 #include "UI.h"
 
+Button create_button(int button_id, int x, int y, int is_hidden, int state, Sprite_sheet *menu_spritesheet, int sprite_id)
+{
+    return (Button){button_id, x, y, menu_spritesheet->sprites[sprite_id].sprites_coord->w, menu_spritesheet->sprites[sprite_id].sprites_coord->h, is_hidden, state, menu_spritesheet, 0, sprite_id};
+}
 
-void save_high_score(const char* name, int score) {
+void save_high_score(const char *name, int score)
+{
     if (strlen(name) != 3) {
         printf("Le nom doit être une chaîne de 3 caractères.\n");
         return;

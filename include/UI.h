@@ -14,6 +14,7 @@
  * @param y position y du bouton
  * @param w largeur du bouton
  * @param h hauteur du bouton
+ * @param is_hidden si le bouton est caché (1: oui, 0: non)
  * @param state état du bouton (0: off, 1: on)
  * @param menu_spritesheet la sprite_sheet associée
  * @param sprite_index l'index du sprite à afficher
@@ -26,12 +27,14 @@ typedef struct Button_t{
     int y;
     int w;
     int h;
+    int is_hidden; // 0: visible, 1: hidden
     int state; // 0: off, 1: on
     Sprite_sheet *menu_spritesheet;
     int sprite_index;
     int sprite_id;
 } Button;
 
+Button create_button(int button_id, int x, int y, int is_hidden, int state, Sprite_sheet *menu_spritesheet, int sprite_id);
 
 void save_high_score(const char* name, int score);
 

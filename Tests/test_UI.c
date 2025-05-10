@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include "macro.h"
 #include "gui.h"
 #include "UI.h"
 
@@ -46,6 +47,8 @@ int main() {
 
     Sprite_sheet menu_spritesheet = load_ui_spritesheet("assets/ui_spritesheet_coord.json", "assets/ui_spritesheet.png", renderer, (Camera){0, 0, 0, 0});
 
+    Button menu_button = create_button(0, 200, 200, 0, 0, &menu_spritesheet, SETTINGS_ID);
+
     SDL_Event event;
     int running = 1;
 
@@ -86,6 +89,8 @@ int main() {
             exit(-1);
         }
 
+        render_button(&menu_button, renderer);
+
         // Switch framebuffer
         SDL_RenderPresent(renderer);
 
@@ -94,6 +99,8 @@ int main() {
     }
     
     IMG_Quit();
+
+    unload_ui_spritesheet(menu_spritesheet);
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);    
