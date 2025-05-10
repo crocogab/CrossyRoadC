@@ -13,6 +13,7 @@
 #include "ttf.h"
 #include "debugKit.h"
 #include "ia.h"
+#include "UI.h" 
 
 Board *g_board;
 
