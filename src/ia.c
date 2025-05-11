@@ -155,9 +155,9 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
             if (g.type == GROUND_TRAIN) {
                 // redemander comment ça marche
             } else {
-                if (hb.a < 0) {for (int k=0; k<1; k++) {printf("%i CONNARD %i %i %i\n", g.type, deb, fin, hb.a);}}
+                if (hb.a < 0) {for (int k=0; k<1; k++) {printf("%i <- o.type | deb fin hb.a->  %i %i %i\n", g.type, deb, fin, hb.a);}}
                 for (int j = deb; j <= fin; j++) {
-                    if (j<0) {for (int k=0; k<1; k++) {printf("apparement j'ai mal fait mon boulot\n");}}
+                    if (j<0) {for (int k=0; k<1; k++) {printf("attention ça va crash :)\n");}}
                     hitgrid[i][j%MAP_WIDTH] = collide_obstacle; // pas sûr du modulo
                 }
             }
