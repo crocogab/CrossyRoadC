@@ -296,7 +296,7 @@ int main() {
                     } else if (event.type == SDL_MOUSEBUTTONDOWN) {
                         int x = event.button.x;
                         int y = event.button.y;
-                        if (x >= 650 && x <= 850 && y >= 400 && y <= 450) {
+                        if (x >= 650 && x <= 850 && y >= 300 && y <= 345) {
                             printf("Pseudo validé par clic : %c%c%c\n", letters[0], letters[1], letters[2]);
                             save_high_score(letters, p->score);
                             running = SDL_FALSE;
@@ -304,16 +304,33 @@ int main() {
                     }
                 }
 
-                SDL_SetRenderDrawColor(renderer, 50, 50, 50, 150);
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 150);
                 SDL_RenderClear(renderer);
 
                 // Dessin des 3 lettres
                 for (int i = 0; i < 3; i++) {
-                    draw_letter(renderer, font, letters[i], 650 + i * 80, 300, i == selected_letter);
+                    draw_letter(renderer, font, letters[i], 650 + i * 80, 200, i == selected_letter);
                 }
-
                 // Bouton "Valider"
-                draw_button(renderer, font, "Valider", 710, 400, 80, 50);
+                draw_button(renderer, font, "Valider", 710, 300, 80, 50);
+
+                // YOUR SCORE
+                draw_text(renderer, font, "YOUR SCORE :", 550, 100, (SDL_Color){255, 255, 255});    
+                char score_buf[16];
+                sprintf(score_buf, "%d", p->score);
+                draw_text(renderer, font, score_buf, 920, 100, (SDL_Color){255, 255, 255});
+
+                // LEADERBOARD
+                char top_names[10][4];
+                int top_scores[10];
+                int top_count = load_top_scores_jsonc(FILE_NAME_SCORE, top_names, top_scores);
+
+                draw_text(renderer, font, "LEADERBOARD", 580, 420, (SDL_Color){255, 255, 255});
+                for (int i = 0; i < top_count; i++) {
+                    char line[64];
+                    sprintf(line, "%d. %s - %d", i + 1, top_names[i], top_scores[i]);
+                    draw_text(renderer, font, line, 580, 490 + i * 45, (SDL_Color){255, 255, 255});
+                }
 
                 SDL_RenderPresent(renderer);
                 SDL_Delay(16); // ~60 FPS

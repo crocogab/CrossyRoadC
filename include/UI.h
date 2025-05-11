@@ -3,6 +3,7 @@
 #define FILE_NAME_SCORE "assets/high_scores.json"
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
+#define MAX_ENTRIES 100
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -51,4 +52,7 @@ void draw_letter(SDL_Renderer *renderer, TTF_Font *font, char letter, int x, int
 
 void draw_button(SDL_Renderer *renderer, TTF_Font *font, const char *text, int x, int y, int w, int h);
 
+int load_top_scores_jsonc(const char *filename, char names[10][4], int scores[10]);
+
+void draw_text(SDL_Renderer *renderer, TTF_Font *font, const char *text, int x, int y, SDL_Color color);
 #endif

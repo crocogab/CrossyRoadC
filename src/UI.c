@@ -6,6 +6,9 @@
 #include "macro.h"
 #include "UI.h"
 #include <stdio.h>
+#include <string.h>
+
+
 
 Button create_button(int button_id, int x, int y, int is_hidden, int state, Sprite_sheet *menu_spritesheet, int sprite_id)
 {
@@ -298,6 +301,93 @@ void draw_button(SDL_Renderer *renderer, TTF_Font *font, const char *text, int x
 
     SDL_Rect textRect = {x + (w - surface->w)/2, y + (h - surface->h)/2, surface->w, surface->h};
     SDL_RenderCopy(renderer, texture, NULL, &textRect);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
+}
+
+
+int load_top_scores_jsonc(const char *filename, char names[10][4], int scores[10]) {
+    FILE *file = fopen(filename, "r");
+    if (!file) return 0;
+
+    fseek(file, 0, SEEK_END);
+    long len = ftell(file);
+    rewind(file);
+
+    char *buffer = malloc(len + 1);
+    fread(buffer, 1, len, file);
+    buffer[len] = '\0';
+    fclose(file);
+
+    struct json_object *parsed_json = json_tokener_parse(buffer);
+    free(buffer);
+
+    if (!parsed_json || json_object_get_type(parsed_json) != json_type_object) return 0;
+
+    char all_names[MAX_ENTRIES][4];
+    int all_scores[MAX_ENTRIES];
+    int count = 0;
+
+    json_object_object_foreach(parsed_json, key, val) {
+        if (count >= MAX_ENTRIES) break;
+
+        if (strlen(key) == 3 && json_object_get_type(val) == json_type_int) {
+            strncpy(all_names[count], key, 3);
+            all_names[count][3] = '\0';
+            all_scores[count] = json_object_get_int(val);
+            count++;
+        }
+    }
+    json_object_put(parsed_json);  // Free
+
+    // Tri décroissant par score
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = i + 1; j < count; j++) {
+            if (all_scores[j] > all_scores[i]) {
+                int tmp = all_scores[i];
+                all_scores[i] = all_scores[j];
+                all_scores[j] = tmp;
+
+                char tmp_name[4];
+                strcpy(tmp_name, all_names[i]);
+                strcpy(all_names[i], all_names[j]);
+                strcpy(all_names[j], tmp_name);
+            }
+        }
+    }
+
+    int limit = count < 10 ? count : 10;
+    for (int i = 0; i < limit; i++) {
+        strcpy(names[i], all_names[i]);
+        scores[i] = all_scores[i];
+    }
+
+    return limit;
+}
+
+/**
+ * Dessine un texte complet à l'écran
+ * 
+ * @param renderer le renderer SDL
+ * @param font la police de caractères
+ * @param text le texte à dessiner
+ * @param x position x du texte
+ * @param y position y du texte
+ * @param color couleur du texte
+ */
+void draw_text(SDL_Renderer *renderer, TTF_Font *font, const char *text, int x, int y, SDL_Color color) {
+    SDL_Surface *surface = TTF_RenderText_Solid(font, text, color);
+    if (!surface) return;
+
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (!texture) {
+        SDL_FreeSurface(surface);
+        return;
+    }
+
+    SDL_Rect dst = {x, y, surface->w, surface->h};
+    SDL_RenderCopy(renderer, texture, NULL, &dst);
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
