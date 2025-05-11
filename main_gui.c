@@ -15,7 +15,6 @@
 #include "ia.h"
 #include "UI.h" 
 
-Board *g_board;
 
 debugKit debug;
 
@@ -36,8 +35,7 @@ int main() {
     Game g = game_make(TO_LAUNCH);
     Player *p = player_start();
     Board *b;
-    g_board = NULL;
-
+   
     
     // initialisation du plateau
     int jump_back = 0;    // Limitation des retours en arrière
@@ -117,8 +115,7 @@ int main() {
     game_start(&g, &sprite_sheet);
     b = g.board;
     grid_ground_starter_set(b,&sprite_sheet);
-    g_board = b;
-
+    
     board_set_player(b, p);
 
     // Paramétrage des différentes animations de saut (interpolation de polynômes du second degré)
@@ -147,11 +144,14 @@ int main() {
             break; // Fin de la partie si le joueur meurt
         }
 
-        int direction = NEUTRAL;
+        
         //MARK: Action du joueur  
-        if (debug.pouleria && (!(p->is_jumping))) {
-            direction = pouleria_zero(g_board, debug.game_speed, debug.deepness_ia);
-        }
+        int direction = NEUTRAL;
+        int ai_direction = NEUTRAL;
+        int player_direction = NEUTRAL;
+
+
+
         if (SDL_PollEvent(&event)){ 
             {
                 switch (event.type){
@@ -161,26 +161,24 @@ int main() {
                         break;
 
                     case SDL_KEYUP: //touche relachée pour les mouvements
-                    if (! debug.pouleria) {
-                        if (event.key.keysym.sym==SDLK_RIGHT && (!(p->is_jumping))){
-                            direction = RIGHT;
-                        }
-                        if (event.key.keysym.sym==SDLK_LEFT && (!(p->is_jumping))){
-                            direction = LEFT;
-                        }
-                        if (event.key.keysym.sym==SDLK_UP && (!(p->is_jumping))){
-                            direction = UP;
-                        }
-                        if (event.key.keysym.sym==SDLK_SPACE && (!(p->is_jumping))){
-                            direction = UP;
-                        }
-                        if (event.key.keysym.sym==SDLK_DOWN && (!(p->is_jumping))){
-                            if (jump_back < 3){
-                                direction = DOWN;
+            
+                        if (!(p->is_jumping)) {
+                            if (event.key.keysym.sym == SDLK_RIGHT) {
+                                player_direction = RIGHT;
+                            }
+                            if (event.key.keysym.sym == SDLK_LEFT) {
+                                player_direction = LEFT;
+                            }
+                            if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_SPACE) {
+                                player_direction = UP;
+                            }
+                            if (event.key.keysym.sym == SDLK_DOWN) {
+                                if (jump_back < 3) {
+                                    player_direction = DOWN;
+                                }
                             }
                         }
-                    }
-                    break;
+                        break;
 
                     case SDL_KEYDOWN: // touche pressée
                         if (event.key.keysym.sym==SDLK_q){
@@ -220,6 +218,17 @@ int main() {
                 }
             }
         }
+        if (debug.pouleria && (!(p->is_jumping))) {
+            
+            ai_direction = pouleria_zero(g.board, debug.game_speed, debug.deepness_ia);
+                
+            direction = ai_direction;
+            
+        } else {
+            // Le joueur contrôle le jeu
+            direction = player_direction;
+        }
+
         // 2. Traiter action
         int collision_type;
         if (!debug.god_mode){

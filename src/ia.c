@@ -49,28 +49,41 @@ int ***hitmatrix_init(Board *b, int deepness, float dt) {
     return grid;
 }
 
-void hitmatrix_update(int***hm, Board *b, int deep, float dt, int coup) {
+void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
+    // Libérer la mémoire de la première grille
+    if (hm[0] != NULL) {
+        hitgrid_free(hm[0]);
+    }
     
-    // moving hitgrids
-    hitgrid_free(hm[0]);
+    // Faire glisser toutes les grilles d'un cran
     for (int i = 1; i < deep; i++) {
         hm[i-1] = hm[i];
     }
 
-    // generating the last grid
+    // Créer une nouvelle grille pour la dernière position
     hm[deep-1] = hitgrid_init(b->grid_ground, (deep-1) * dt, dt);
 
-    // updating hitgrids
+    // Modifier les grilles en fonction du coup joué
     switch (coup) {
         case UP:
-            // 
-            
-            break ;
+            // Ajuster les prédictions en tenant compte que le joueur avance
+            // (Si nécessaire, implémenter la logique pour simuler l'avancement du joueur)
+            break;
         
         case DOWN:
-
+            // Ajuster les prédictions en tenant compte que le joueur recule
+            // (Si nécessaire, implémenter la logique pour simuler le recul du joueur)
             break;
-
+            
+        case LEFT:
+        case RIGHT:
+        case NEUTRAL:
+            // Pas besoin d'ajustement spécial pour ces coups
+            break;
+            
+        default:
+            // Coup non reconnu, ne rien faire de spécial
+            break;
     }
 }
 
@@ -114,59 +127,106 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
     Couple hb;
     int collide_neutral;
     int collide_obstacle;
-    // printf("init fill ok\n");
-    for (int i = 0; i < MAP_LEN; i++) {
+    float map_width_pixels = MAP_WIDTH * DEFAULT_CELL_SIZE;
+    
+    for (int i =  0; i<MAP_LEN; i++) {
         g = *(grid_ground[i]);
-
+        
+        //on itère à l'envers pour le debug
+        // if (i==V_POS-1){
+        //     printf("SOL num %d TYPE : %d RAND : %d\n",i,g.type,rand()%20);
+        // }
+        
+        
+        
+        
         if (g.type == GROUND_WATER_LILY || g.type == GROUND_WATER_LOG) {
-            collide_neutral = COLLIDE_DEADLY;
-            collide_obstacle = COLLIDE_NONE;
+            collide_neutral = COLLIDE_DEADLY;  // eau mortelle
+            collide_obstacle = COLLIDE_NONE;   // obstacles sont surs
         } else {
-            collide_neutral = COLLIDE_NONE;
-            if (g.type == GROUND_GRASS) {
-                collide_obstacle = COLLIDE_HARMLESS;
+            collide_neutral = COLLIDE_NONE;    // sol est sur par default
+            if (g.type == GROUND_GRASS ) { 
+                collide_obstacle = COLLIDE_HARMLESS; //arbres = innofensifs
             } else {
-                collide_obstacle = COLLIDE_DEADLY;
+                collide_obstacle = COLLIDE_DEADLY;   // Autres obstacles = mortels
             }
         }
-        // printf("i = %i ok\n", i);
-        // printf("j = ");
-        // préremplissage par défaut en fonction du type de sol
+        
+        // par default on met à neutral
         for (int j = 0; j < MAP_WIDTH; j++) {
             hitgrid[i][j] = collide_neutral;
-            // printf("%i ", j);
         }
-        // printf("ok\nk = ");
     
-        // gestion des obstacles 
-        float t0xcell = t * DEFAULT_CELL_SIZE;
-        float t1xcell = (t + dt) * DEFAULT_CELL_SIZE; 
-        int deb,fin;
+        // Gestion des obstacles 
+        float t0xcell = t * DEFAULT_CELL_SIZE;      // position temps 0
+        float t1xcell = (t + dt) * DEFAULT_CELL_SIZE; // position au temps t+dt
+        int deb, fin;
+        
         for (int k = 0; k < g.nb_obstacles; k++) {
-
+            
+            //printf("OBSTACLE : %d  type : %d \n",k,g.obstacles[k]->type);
             hb = obstacle_simulated_hitbox(
                 g.obstacles[k], 
                 g.velocity * t0xcell, 
-                g.velocity * t1xcell
+                g.velocity * (t1xcell - t0xcell)
             );
+            
+
             deb = hb.a / DEFAULT_CELL_SIZE;
             fin = hb.b / DEFAULT_CELL_SIZE;
+            //printf("OBSTACLE %d , hitbox : (%d,%d )\n",k,deb,fin);
 
             if (g.type == GROUND_TRAIN) {
-                // redemander comment ça marche
+                
+                // for (int j = 0; j < MAP_WIDTH; j++) {
+                //     hitgrid[i][j] = COLLIDE_DEADLY;
+                // }
+                
+                
+                break;
             } else {
-                if (hb.a < 0) {for (int k=0; k<1; k++) {printf("%i <- o.type | deb fin hb.a->  %i %i %i\n", g.type, deb, fin, hb.a);}}
-                for (int j = deb; j <= fin; j++) {
-                    if (j<0) {for (int k=0; k<1; k++) {printf("attention ça va crash :)\n");}}
-                    hitgrid[i][j%MAP_WIDTH] = collide_obstacle; // pas sûr du modulo
-                }
-            }
-            
-            // printf("%i ", k);
-        }
-        // printf("ok\n");
-    }
+                if (g.obstacles[k]->type != LOG_TYPE ){
+                    for (int j = deb; j <= fin; j++) {
+                        if (j >= 0 && j < MAP_WIDTH ) { //
+                            // On met à jour la grille avec l'information de collision
+                            hitgrid[i][j % MAP_WIDTH] = collide_obstacle;
+                        }
+                    }
 
+                }else{
+                    for (int j = 0; j < MAP_WIDTH; j++) {
+                        int wrapped_j = (j % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
+                        int prev_j = ((j-1) % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
+                        
+                        
+                        float test_offset = DEFAULT_CELL_SIZE/4;
+                        
+                        
+                        bool current_collision = obstacle_is_colliding(g.obstacles[k], wrapped_j * DEFAULT_CELL_SIZE + test_offset);
+                        
+                        
+                        bool prev_collision = obstacle_is_colliding(g.obstacles[k], prev_j * DEFAULT_CELL_SIZE + test_offset);
+                        
+                        if (current_collision) {
+                            
+                            hitgrid[i][wrapped_j] = collide_obstacle;
+                        }
+                        
+                        if (prev_collision) {
+                            
+                            hitgrid[i][prev_j] = collide_obstacle;
+                        } else if (current_collision) {
+                            
+                            hitgrid[i][wrapped_j] = collide_obstacle;
+                        }
+                    }
+            
+                }
+                
+            }
+        }
+        //printf("-------------------------- \n");
+    }
 }
 
 
@@ -180,13 +240,35 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
  * @return un entier, une macro qui correspond à un des 5 coups possibles.
  */
 int pouleria_zero(Board *b, float dt, int maxd) {
+    
+    if (b->player == NULL || b->player->h_position < 0) {
+        printf("Position invalide\n");
+        return NEUTRAL; // invalide : ne rien faire
+    }
+    
+    // calcule indice du joueur
+    int player_h_index = (int)(b->player->h_position) / DEFAULT_CELL_SIZE;
+    
+   
+    if (player_h_index < 0 || player_h_index >= MAP_WIDTH) {
+        printf("Position invalide\n");
+        return NEUTRAL; // hors limite
+    }
+    
+    
     int **hitgrid = hitgrid_init(b->grid_ground, 0, dt);
-    int coll = hitgrid[V_POS][((int) b->player->h_position / DEFAULT_CELL_SIZE)] ;
+    
+    // recupère la prochaine collision
+    int collision = hitgrid[V_POS-1][player_h_index];
+    
     
     hitgrid_free(hitgrid);
-    if (coll == COLLIDE_NONE) {
-        return UP;
+    
+    
+    if (collision == COLLIDE_NONE) {
+        return UP; // si pas obstacle on avance
     } else {
+
         return NEUTRAL;
     }
 }

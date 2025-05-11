@@ -100,24 +100,29 @@ Couple obstacle_hitbox(Obstacle *o) {
 Couple obstacle_simulated_hitbox(Obstacle *o, float x, float dx) {
 
     float h = o->h_position + x; // position à t
+    Couple ab;
+
+    
+
+    if (o->type == TRAIN_POLE_TYPE) {
+        // pour les poteaux -> pas de hitbox
+        ab.a = 1; 
+        ab.b = 0;
+        return ab;
+    }
 
      
-    if (o->type != TRAIN_TYPE)
-    {
-        // modulo à la main parce que math.h::fmod est bizarre
-        // if (h < 0) {
-        //     h = h + MAP_WIDTH*DEFAULT_CELL_SIZE;
-        // } else if (h >= MAP_WIDTH*DEFAULT_CELL_SIZE) {
-        //     h = h - MAP_WIDTH*DEFAULT_CELL_SIZE;
-        // }
-        float i = 0;
-        if (dx < 0) {i = i + dx;} else {i = i - dx;}
-        if (o->length < 0) {i = i + o->length;} else {i = i - o->length;}
-
-        while (h <= i) {
-            h = h + MAP_WIDTH * DEFAULT_CELL_SIZE;
+    if (o->type != TRAIN_TYPE) {
+        
+        float map_width_pixels = MAP_WIDTH * DEFAULT_CELL_SIZE;
+        
+        // ajuster h pour qu'il soit dans les limites
+        while (h < 0) {
+            h += map_width_pixels;
         }
-        if (h + dx < 0 || h + dx + o->length < 0) {printf("en gros c se fout de ma gueule %f %f %f %f\n", h, dx, o->length,i);}
+        while (h >= map_width_pixels) {
+            h -= map_width_pixels;
+        }
     }
 
     // intbox à t
@@ -127,20 +132,39 @@ Couple obstacle_simulated_hitbox(Obstacle *o, float x, float dx) {
     int c = (int) (h + dx);
     int d = (int) (h + dx + o->length);
 
-
-    Couple ab;
-
-    if (o->type == TRAIN_POLE_TYPE) {
-        ab.a = 1; ab.b = 0;
-    } else if ((o->length < 0) ^ (o->type == LOG_TYPE) ) {
+    if (o->type == LOG_TYPE || (o->length < 0 && o->type != LOG_TYPE)) {
+        
         ab.a = b < d ? b : d;
-        ab.b = a < c ? c : a;
+        ab.b = a > c ? a : c;
+        
+        
+        if (ab.a > ab.b) {
+            // on inverse pour a <= b
+            int temp = ab.a;
+            ab.a = ab.b;
+            ab.b = temp;
+        }
     } else {
+        
         ab.a = a < c ? a : c;
-        ab.b = b < d ? d : b;
+        ab.b = b > d ? b : d;
     }
 
-    if (o->type != TRAIN_TYPE && ab.a < 0) {printf("OBSTACLE %i %i %i %i \n%i %i \n%f %f %f\n", a,b,c,d, ab.a,ab.b, h, dx, o->length);}
+    if (o->type != TRAIN_TYPE) {
+        
+        if (ab.a < 0) {
+            
+            
+            printf("Attention: hitbox hors limites (a=%d) pour obstacle type %d\n", ab.a, o->type);
+            
+            
+            ab.a = (ab.a % (MAP_WIDTH * DEFAULT_CELL_SIZE) + MAP_WIDTH * DEFAULT_CELL_SIZE) % (MAP_WIDTH * DEFAULT_CELL_SIZE);
+            printf("Nouvelle position : %d ",ab.a);
+        }
+        if (ab.b < 0) {
+            ab.b = (ab.b % (MAP_WIDTH * DEFAULT_CELL_SIZE) + MAP_WIDTH * DEFAULT_CELL_SIZE) % (MAP_WIDTH * DEFAULT_CELL_SIZE);
+        }
+    }
     return ab;
 }
 
