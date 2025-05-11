@@ -141,16 +141,27 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
         // gestion des obstacles 
         float t0xcell = t * DEFAULT_CELL_SIZE;
         float t1xcell = (t + dt) * DEFAULT_CELL_SIZE; 
+        int deb,fin;
         for (int k = 0; k < g.nb_obstacles; k++) {
+
             hb = obstacle_simulated_hitbox(
                 g.obstacles[k], 
-                grid_ground[i]->velocity * t0xcell, 
-                grid_ground[i]->velocity * t1xcell
+                g.velocity * t0xcell, 
+                g.velocity * t1xcell
             );
+            deb = hb.a / DEFAULT_CELL_SIZE;
+            fin = hb.b / DEFAULT_CELL_SIZE;
 
-            for (int j = hb.a / DEFAULT_CELL_SIZE; j <= hb.b / DEFAULT_CELL_SIZE; j++) {
-                hitgrid[i][j%MAP_WIDTH] = collide_obstacle; // pas sûr du modulo
+            if (g.type == GROUND_TRAIN) {
+                // redemander comment ça marche
+            } else {
+                if (hb.a < 0) {for (int k=0; k<1; k++) {printf("%i CONNARD %i %i %i\n", g.type, deb, fin, hb.a);}}
+                for (int j = deb; j <= fin; j++) {
+                    if (j<0) {for (int k=0; k<1; k++) {printf("apparement j'ai mal fait mon boulot\n");}}
+                    hitgrid[i][j%MAP_WIDTH] = collide_obstacle; // pas sûr du modulo
+                }
             }
+            
             // printf("%i ", k);
         }
         // printf("ok\n");

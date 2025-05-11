@@ -13,8 +13,16 @@ void hitgrid_print(int **hg) {
     }
 }
 
-int main() {
+int main(void) {
+    // Obstacle *obstest = obstacle_make(LOG_TYPE, 0, LEFT_MAP_X + DEFAULT_CELL_SIZE, 1.6);
+    printf("Début des tests ia\n");
+    int **hitgrid = hitgrid_make();
     
+    // hitgrid_fill(hitgrid, );
 
+    hitgrid_print(hitgrid);
+
+    
+    printf("La librairie ia passe tous les tests\n");
     return 0;
 }

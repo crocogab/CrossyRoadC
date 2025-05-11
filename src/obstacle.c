@@ -105,19 +105,27 @@ Couple obstacle_simulated_hitbox(Obstacle *o, float x, float dx) {
     if (o->type != TRAIN_TYPE)
     {
         // modulo à la main parce que math.h::fmod est bizarre
-        if (h < 0) {
-            h = h + MAP_WIDTH*DEFAULT_CELL_SIZE;
-        } else if (h >= MAP_WIDTH*DEFAULT_CELL_SIZE) {
-            h = h - MAP_WIDTH*DEFAULT_CELL_SIZE;
+        // if (h < 0) {
+        //     h = h + MAP_WIDTH*DEFAULT_CELL_SIZE;
+        // } else if (h >= MAP_WIDTH*DEFAULT_CELL_SIZE) {
+        //     h = h - MAP_WIDTH*DEFAULT_CELL_SIZE;
+        // }
+        float i = 0;
+        if (dx < 0) {i = i + dx;} else {i = i - dx;}
+        if (o->length < 0) {i = i + o->length;} else {i = i - o->length;}
+
+        while (h <= i) {
+            h = h + MAP_WIDTH * DEFAULT_CELL_SIZE;
         }
+        if (h + dx < 0 || h + dx + o->length < 0) {printf("en gros c se fout de ma gueule %f %f %f %f\n", h, dx, o->length,i);}
     }
 
     // intbox à t
     int a = (int) h;
-    int b = (int) h + o->length;
+    int b = (int) (h + o->length);
     // intbox à t + dt
-    int c = (int) h + dx;
-    int d = (int) h + dx + o->length;
+    int c = (int) (h + dx);
+    int d = (int) (h + dx + o->length);
 
 
     Couple ab;
@@ -132,7 +140,7 @@ Couple obstacle_simulated_hitbox(Obstacle *o, float x, float dx) {
         ab.b = b < d ? d : b;
     }
 
-
+    if (o->type != TRAIN_TYPE && ab.a < 0) {printf("OBSTACLE %i %i %i %i \n%i %i \n%f %f %f\n", a,b,c,d, ab.a,ab.b, h, dx, o->length);}
     return ab;
 }
 
@@ -160,3 +168,4 @@ bool obstacle_is_colliding(Obstacle *o, float player_pos) {
     
     return avant || apres;
 }
+ 
