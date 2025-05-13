@@ -66,3 +66,6 @@ test_*
 
 # fichiers spécifiques nixos
 shell.nix
+
+#fichiers de score
+assets/high_scores.json
