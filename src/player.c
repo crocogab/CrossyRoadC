@@ -72,7 +72,7 @@ void player_free(Player *player)
  * @param[in] next_ground le sol sur lequel le joueur se déplace
  * 
  */
-void move_player(int direction, Player *player, Ground * next_ground)
+void move_player(int direction, Player *player, Ground * next_ground, Ground * ground_actu)
 {
     int current_cell_x;
     int new_cell_x;
@@ -87,12 +87,19 @@ void move_player(int direction, Player *player, Ground * next_ground)
         else
         {
             // POUR ETRE TOUJOURS SUR LA BONNE PARTIE DE LA CASE -> EVITE d ETRE AU MILIEU DE 2 CASES
-            current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
-            new_cell_x = current_cell_x - 1;
+            if (ground_actu->type==GROUND_WATER_LOG || ground_actu->type==GROUND_WATER_LILY ){
+                player->h_position=player->h_position-DEFAULT_CELL_SIZE;
+
+            }else{
+                current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
+                new_cell_x = current_cell_x - 1;
+                
+                wrapped_cell_x = (new_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
+                
+                player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
+
+            }
             
-            wrapped_cell_x = (new_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
-            
-            player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
 
         }
         player->direction = LEFT;
@@ -106,13 +113,19 @@ void move_player(int direction, Player *player, Ground * next_ground)
             printf("Invalid move: direction %s\n", "right");
         }
         else
-        {
-            current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
-            new_cell_x = current_cell_x + 1;
+        {   if (ground_actu->type==GROUND_WATER_LOG || ground_actu->type==GROUND_WATER_LILY ){
+                player->h_position=player->h_position+DEFAULT_CELL_SIZE;
+            }
+            else{
+                current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
+                new_cell_x = current_cell_x + 1;
+                
+                wrapped_cell_x = (new_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
+                
+                player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
+
+            }
             
-            wrapped_cell_x = (new_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
-            
-            player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
         }
         player->direction = RIGHT;
         player->previous_direction = RIGHT;
@@ -120,28 +133,11 @@ void move_player(int direction, Player *player, Ground * next_ground)
         break;
 
     case UP:
-        
         current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
-                    
         wrapped_cell_x = (current_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
 
-        if (next_ground->type==WATER_LILY_TYPE || next_ground->type==LOG_TYPE){
-            for (int i=0;i<=next_ground->nb_obstacles;i++ ){
-                if (obstacle_is_colliding(next_ground->obstacles[i],wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4))){
-                    player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
-                }
-                if (obstacle_is_colliding(next_ground->obstacles[i],(wrapped_cell_x-1) * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4))){
-                    player->h_position = (wrapped_cell_x-1) * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
-                }else{
-                    player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
-                }
-
-            }
-
-        }else{
-            player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
-        }
-            
+        
+        player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
         
         
         player->direction = UP;
@@ -154,22 +150,9 @@ void move_player(int direction, Player *player, Ground * next_ground)
                     
         wrapped_cell_x = (current_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
             
-        if (next_ground->type==WATER_LILY_TYPE || next_ground->type==LOG_TYPE){
-            for (int i=0;i<=next_ground->nb_obstacles;i++ ){
-                if (obstacle_is_colliding(next_ground->obstacles[i],wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4))){
-                    player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
-                }
-                if (obstacle_is_colliding(next_ground->obstacles[i],(wrapped_cell_x-1) * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4))){
-                    player->h_position = (wrapped_cell_x-1) * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
-                }else{
-                    player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
-                }
-
-            }
-
-        }else{
-            player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
-        }
+        
+        player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
+        
         player->direction = DOWN;
         player->previous_direction = DOWN;
         player->is_jumping = 1;

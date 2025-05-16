@@ -59,7 +59,7 @@
 #define TRAIN_POLE_LEN 0
 
 //Définition des attributs de water lily
-#define WATER_LILY_LEN 1*DEFAULT_CELL_SIZE
+#define WATER_LILY_LEN 1*DEFAULT_CELL_SIZE-1
 #define WATER_LILY_TYPE 103
 
 //Définition des attributs de truck

@@ -248,7 +248,7 @@ int pouleria_zero(Board *b, float dt, int maxd) {
     }
     
     // calcule indice du joueur
-    int player_h_index = (int)(b->player->h_position) / DEFAULT_CELL_SIZE;
+    int player_h_index = (int)((b->player->h_position) / DEFAULT_CELL_SIZE);
     
    
     if (player_h_index < 0 || player_h_index >= MAP_WIDTH) {

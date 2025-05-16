@@ -253,7 +253,7 @@ int main() {
             
                 if (direction != NEUTRAL) {
                     // On déplace le joueur
-                    move_player(direction, p,b->grid_ground[V_POS-1]);
+                    move_player(direction, p,b->grid_ground[V_POS-1],b->grid_ground[V_POS]);
                     ground_move(b, direction,&sprite_sheet);
 
 
