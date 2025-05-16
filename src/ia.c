@@ -173,7 +173,8 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
             
 
             deb = hb.a / DEFAULT_CELL_SIZE;
-            fin = hb.b / DEFAULT_CELL_SIZE;  
+            fin = hb.b / DEFAULT_CELL_SIZE;
+  
             //printf("OBSTACLE %d , hitbox : (%d,%d )\n",k,deb,fin);
 
             if (g.type == GROUND_TRAIN) {
@@ -262,14 +263,37 @@ int pouleria_zero(Board *b, float dt, int maxd) {
     int collision = hitgrid[V_POS-1][player_h_index];
     
     
-    hitgrid_free(hitgrid);
+    
     
     
     if (collision == COLLIDE_NONE) {
-        return UP; // si pas obstacle on avance
+        return UP; 
     } else {
-
-        return NEUTRAL;
+    
+        int left_index = player_h_index - 1;
+        int right_index = player_h_index + 1;
+    
+    
+        bool can_go_left = (left_index >= 0);
+        bool can_go_right = (right_index < MAP_WIDTH);
+    
+    
+        int left_collision = can_go_left ? hitgrid[V_POS][left_index] : COLLIDE_DEADLY;
+        int right_collision = can_go_right ? hitgrid[V_POS][right_index] : COLLIDE_DEADLY;
+    
+    
+        if (left_collision == COLLIDE_NONE && right_collision == COLLIDE_NONE) {
+        
+            return (rand() % 2 == 0) ? LEFT : RIGHT;
+        } else if (left_collision == COLLIDE_NONE) {
+            return LEFT;
+        } else if (right_collision == COLLIDE_NONE) {
+            return RIGHT;
+        } else {
+        
+            return NEUTRAL;
+        }
     }
+    hitgrid_free(hitgrid);
 }
 
