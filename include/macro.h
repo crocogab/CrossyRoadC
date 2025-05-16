@@ -48,11 +48,11 @@
 #define CAR_MIN_NUMBER 3 //Nombre minimum de voitures sur une ligne
 
 //Définition des attributs de arbre
-#define TREE_LEN 1*DEFAULT_CELL_SIZE
+#define TREE_LEN 1*DEFAULT_CELL_SIZE -1
 #define TREE_TYPE 101
 
 //Définition des attributs de rock
-#define ROCK_LEN 1*DEFAULT_CELL_SIZE
+#define ROCK_LEN 1*DEFAULT_CELL_SIZE-1
 #define ROCK_TYPE 102
 
 #define TRAIN_POLE_TYPE 107

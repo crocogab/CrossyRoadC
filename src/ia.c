@@ -173,7 +173,7 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
             
 
             deb = hb.a / DEFAULT_CELL_SIZE;
-            fin = hb.b / DEFAULT_CELL_SIZE;
+            fin = hb.b / DEFAULT_CELL_SIZE;  
             //printf("OBSTACLE %d , hitbox : (%d,%d )\n",k,deb,fin);
 
             if (g.type == GROUND_TRAIN) {
@@ -186,7 +186,7 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
                 break;
             } else {
                 if (g.obstacles[k]->type != LOG_TYPE ){
-                    for (int j = deb; j < fin; j++) {
+                    for (int j = deb; j <= fin; j++) {
                         if (j >= 0 && j < MAP_WIDTH ) { //
                             // On met à jour la grille avec l'information de collision
                             hitgrid[i][j % MAP_WIDTH] = collide_obstacle;
