@@ -220,7 +220,7 @@ int main() {
         }
         if (debug.pouleria && (!(p->is_jumping))) {
             
-            ai_direction = pouleria_zero(g.board, debug.game_speed, debug.deepness_ia);
+            ai_direction = pouleria_zero(g.board, duration, debug.deepness_ia);
                 
             direction = ai_direction;
             

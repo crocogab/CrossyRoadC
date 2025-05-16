@@ -158,8 +158,8 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
         }
     
         // Gestion des obstacles 
-        float t0xcell = t * DEFAULT_CELL_SIZE;      // position temps 0
-        float t1xcell = (t + dt) * DEFAULT_CELL_SIZE; // position au temps t+dt
+        float t0xcell = t ;      // position temps 0
+        float t1xcell = (t + dt) ; // position au temps t+dt
         int deb, fin;
         
         for (int k = 0; k < g.nb_obstacles; k++) {
