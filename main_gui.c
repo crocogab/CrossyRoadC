@@ -264,6 +264,7 @@ int main() {
                 // Collision mortelle
                 p->alive = false;
                 g.status = DEAD;
+                printf("direction: %d\n",direction);
                 break;
             
             case COLLIDE_HARMLESS:
