@@ -67,12 +67,27 @@ void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
     switch (coup) {
         case UP:
             // Ajuster les prédictions en tenant compte que le joueur avance
-            // (Si nécessaire, implémenter la logique pour simuler l'avancement du joueur)
+            for (int i = 0; i < deep - 1; i++) {
+                int *lig = hm[i][MAP_LEN-1];
+                // on déplace toutes les lignes vers le haut
+                for (int j = 0; j < MAP_LEN-1; j++) {
+                    hm[i][j+1] = hm[i][j];
+                }
+                
+                // pour la ligne en bas, on est pas censé y accéder donc whatever 
+            }
             break;
         
         case DOWN:
-            // Ajuster les prédictions en tenant compte que le joueur recule
-            // (Si nécessaire, implémenter la logique pour simuler le recul du joueur)
+            for (int i = 0; i < deep - 1; i++) {
+                int *lig = hm[i][MAP_LEN-1];
+                // on déplace toutes les lignes vers le bas
+                for (int j = 0; j < MAP_LEN-1; j++) {
+                    hm[i][j] = hm[i][j+1];
+                }
+                
+                // pour la ligne en haut, on est pas censé y accéder donc whatever 
+            }
             break;
             
         case LEFT:
@@ -273,3 +288,6 @@ int pouleria_zero(Board *b, float dt, int maxd) {
     }
 }
 
+int *pouleria_un(Board *, float delta_t, int max_deepness) {
+    
+}
