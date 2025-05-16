@@ -72,95 +72,108 @@ void player_free(Player *player)
  * @param[in] next_ground le sol sur lequel le joueur se déplace
  * 
  */
-void move_player(int direction, Player *player, Ground * next_ground, Ground * ground_actu)
+void move_player(int direction, Player *player, Ground *next_ground, Ground *ground_actu)
 {
     int current_cell_x;
     int new_cell_x;
     int wrapped_cell_x;
+    float target_position = player->h_position; // Position par défaut si aucun mouvement
+    bool found_safe_spot = false;
+    
     switch (direction)
     {
     case LEFT:
         if (player->h_position - player->grid_cell_width < LEFT_MAP_X)
         {
             printf("Invalid move: direction %s\n", "left");
+            return;
         }
-        else
-        {
-            // POUR ETRE TOUJOURS SUR LA BONNE PARTIE DE LA CASE -> EVITE d ETRE AU MILIEU DE 2 CASES
-            if (ground_actu->type==GROUND_WATER_LOG || ground_actu->type==GROUND_WATER_LILY ){
-                player->h_position=player->h_position-DEFAULT_CELL_SIZE;
-
-            }else{
-                current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
-                new_cell_x = current_cell_x - 1;
-                
-                wrapped_cell_x = (new_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
-                
-                player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
-
-            }
-            
-
-        }
-        player->direction = LEFT;
-        player->previous_direction = LEFT;
-        player->is_jumping = 1;
+        
+        current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
+        new_cell_x = current_cell_x - 1;
+        wrapped_cell_x = (new_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
+        target_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
+        
         break;
-
+        
     case RIGHT:
         if (player->h_position + player->grid_cell_width > RIGHT_MAP_X)
         {
             printf("Invalid move: direction %s\n", "right");
+            return;
         }
-        else
-        {   if (ground_actu->type==GROUND_WATER_LOG || ground_actu->type==GROUND_WATER_LILY ){
-                player->h_position=player->h_position+DEFAULT_CELL_SIZE;
-            }
-            else{
-                current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
-                new_cell_x = current_cell_x + 1;
-                
-                wrapped_cell_x = (new_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
-                
-                player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
-
-            }
-            
-        }
-        player->direction = RIGHT;
-        player->previous_direction = RIGHT;
-        player->is_jumping = 1;
+        
+        current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
+        new_cell_x = current_cell_x + 1;
+        wrapped_cell_x = (new_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
+        target_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
+        
         break;
-
+        
     case UP:
         current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
         wrapped_cell_x = (current_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
-
+        target_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
         
-        player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
-        
-        
-        player->direction = UP;
-        player->previous_direction = UP;
-        player->is_jumping = 1;
         break;
-
+        
     case DOWN:
         current_cell_x = player->h_position / DEFAULT_CELL_SIZE;
-                    
         wrapped_cell_x = (current_cell_x % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
-            
+        target_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
         
-        player->h_position = wrapped_cell_x * DEFAULT_CELL_SIZE + (DEFAULT_CELL_SIZE/4);
-        
-        player->direction = DOWN;
-        player->previous_direction = DOWN;
-        player->is_jumping = 1;
         break;
-    
+        
     default:
         printf("Invalid input : direction invalide : %d\n", direction);
+        return;
     }
+    
+    // traitement special pour eau
+    if (next_ground && (next_ground->type == GROUND_WATER_LILY || next_ground->type == GROUND_WATER_LOG))
+    {
+        
+        found_safe_spot = false;
+        float best_position = target_position;
+        float min_distance = 999999.0f;
+        
+        // trouve le plus proche
+        for (int i = 0; i < next_ground->nb_obstacles; i++)
+        {
+            float obstacle_center = next_ground->obstacles[i]->h_position + (next_ground->obstacles[i]->length / 2);
+            float distance = fabsf(obstacle_center - target_position);
+            
+            if (obstacle_is_colliding(next_ground->obstacles[i], target_position) && distance < min_distance)
+            {
+                min_distance = distance;
+                best_position = target_position;
+                found_safe_spot = true;
+            }
+        }
+        
+        if (found_safe_spot)
+        {
+            
+            player->h_position = best_position;
+        }
+        else
+        {
+            
+            printf("Player fell in water!\n");
+            player->h_position = target_position;
+            
+        }
+    }
+    else
+    {
+        
+        player->h_position = target_position;
+    }
+    
+    
+    player->direction = direction;
+    player->previous_direction = direction;
+    player->is_jumping = 1;
 }
 
 /**
