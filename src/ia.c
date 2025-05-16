@@ -173,8 +173,6 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
         }
     
         // Gestion des obstacles 
-        float t0xcell = t ;      // position temps 0
-        float t1xcell = (t + dt) ; // position au temps t+dt
         int deb, fin;
         
         for (int k = 0; k < g.nb_obstacles; k++) {
@@ -182,8 +180,8 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
             //printf("OBSTACLE : %d  type : %d \n",k,g.obstacles[k]->type);
             hb = obstacle_simulated_hitbox(
                 g.obstacles[k], 
-                g.velocity * t0xcell, 
-                g.velocity * (t1xcell - t0xcell)
+                g.velocity * t, 
+                g.velocity * dt
             );
             
 
@@ -201,43 +199,12 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
                 
                 break;
             } else {
-                if (g.obstacles[k]->type != LOG_TYPE ){
-                    for (int j = deb; j <= fin; j++) {
+                for (int j = deb; j <= fin; j++) {
                         if (j >= 0 && j < MAP_WIDTH ) { //
                             // On met à jour la grille avec l'information de collision
                             hitgrid[i][j % MAP_WIDTH] = collide_obstacle;
                         }
                     }
-
-                }else{
-                    for (int j = 0; j < MAP_WIDTH; j++) {
-                        int wrapped_j = (j % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
-                        int prev_j = ((j-1) % MAP_WIDTH + MAP_WIDTH) % MAP_WIDTH;
-                        
-                        
-                        float test_offset = DEFAULT_CELL_SIZE/4;
-                        
-                        
-                        bool current_collision = obstacle_is_colliding(g.obstacles[k], wrapped_j * DEFAULT_CELL_SIZE + test_offset);
-                        
-                        
-                        bool prev_collision = obstacle_is_colliding(g.obstacles[k], prev_j * DEFAULT_CELL_SIZE + test_offset);
-                        
-                        if (current_collision) {
-                            
-                            hitgrid[i][wrapped_j] = collide_obstacle;
-                        }
-                        
-                        if (prev_collision) {
-                            
-                            hitgrid[i][prev_j] = collide_obstacle;
-                        } else if (current_collision) {
-                            
-                            hitgrid[i][wrapped_j] = collide_obstacle;
-                        }
-                    }
-            
-                }
                 
             }
         }

@@ -132,18 +132,25 @@ Couple obstacle_simulated_hitbox(Obstacle *o, float x, float dx) {
     int c = (int) (h + dx);
     int d = (int) (h + dx + o->length);
 
-    if (o->type == LOG_TYPE || (o->length < 0 && o->type != LOG_TYPE)) {
-        
-        ab.a = b < d ? b : d;
-        ab.b = a > c ? a : c;
-        
-        
+    if (o->type == LOG_TYPE) {
+        ab.a = a ;
+        ab.b = b;
         if (ab.a > ab.b) {
             // on inverse pour a <= b
             int temp = ab.a;
             ab.a = ab.b;
             ab.b = temp;
         }
+        ab.a = a + DEFAULT_CELL_SIZE;
+        ab.b = b - DEFAULT_CELL_SIZE;
+
+    } else if (o->length < 0) {
+        
+        ab.a = b < d ? b : d;
+        ab.b = a > c ? a : c;
+        
+        
+
     } else {
         
         ab.a = a < c ? a : c;
