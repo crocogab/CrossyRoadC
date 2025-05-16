@@ -24,7 +24,7 @@ Player *player_start(void);
 
 void player_free(Player *player);
 
-void move_player(int direction, Player *player,Ground * next_ground);
+void move_player(int direction, Player *player,Ground * next_ground, Ground * ground_actu);
 
 void draw_chicken(Player *p, Sprite_sheet *sprite_sheet, SDL_Renderer *renderer, Camera cam, Display_informations display, debugKit *debug_kit);
 
