@@ -23,6 +23,7 @@
  * @param menu_spritesheet la sprite_sheet associée
  * @param sprite_index l'index du sprite à afficher
  * @param sprite_id l'id du sprite à afficher
+ * @param parents_frame_number pointeur vers le numéro de la frame du parent
  * 
  */
 typedef struct Button_t{
@@ -31,11 +32,12 @@ typedef struct Button_t{
     int y;
     int w;
     int h;
-    int is_hidden; // 0: visible, 1: hidden
+    int is_alternate; // 1: on, 0: off
     int state; // 0: off, 1: on
     Sprite_sheet *menu_spritesheet;
     int sprite_index;
     int sprite_id;
+    int *parents_frame_number;
 } Button;
 
 /**
@@ -44,6 +46,7 @@ typedef struct Button_t{
  * @param active état du menu (0: inactif, 1: actif)
  * @param buttons tableau de boutons associés au menu
  * @param nb nombre de boutons dans le menu
+ * @param frame_number numéro de la frame actuelle (pour les animations)
  * 
  */
 typedef struct Menu_t{
@@ -51,9 +54,10 @@ typedef struct Menu_t{
     int active;
     Button *buttons;
     int nb;
+    int frame_number;
 } Menu;
 
-Button create_button(int button_id, int x, int y, int is_hidden, int state, Sprite_sheet *menu_spritesheet, int sprite_id);
+Button create_button(int button_id, int x, int y, int is_alternate, int state, Sprite_sheet *menu_spritesheet, int sprite_id);
 
 Menu create_menu(int id, int active);
 void add_button_to_menu(Menu *menu, Button button);
@@ -62,6 +66,7 @@ void click_button(int x, int y, Menu *menus, int nb_menus);
 void save_high_score(const char* name, int score);
 void render_button(Button *button, SDL_Renderer *renderer);
 void render_menu(Menu *menu, SDL_Renderer *renderer);
+void toggle_menu_active(Menu *menu);
 void render_menus(Menu *menus, int nb_menus, SDL_Renderer *renderer);
 
 Sprite_sheet load_ui_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *renderer, Camera cam);

@@ -10,9 +10,9 @@
 
 
 
-Button create_button(int button_id, int x, int y, int is_hidden, int state, Sprite_sheet *menu_spritesheet, int sprite_id)
+Button create_button(int button_id, int x, int y, int is_alternate, int state, Sprite_sheet *menu_spritesheet, int sprite_id)
 {
-    return (Button){button_id, x, y, menu_spritesheet->sprites[sprite_id].sprites_coord->w, menu_spritesheet->sprites[sprite_id].sprites_coord->h, is_hidden, state, menu_spritesheet, 0, sprite_id};
+    return (Button){button_id, x, y, menu_spritesheet->sprites[sprite_id].sprites_coord->w, menu_spritesheet->sprites[sprite_id].sprites_coord->h, is_alternate, state, menu_spritesheet, 0, sprite_id, NULL};
 }
 
 Menu create_menu(int id, int active)
@@ -28,6 +28,7 @@ Menu create_menu(int id, int active)
 void add_button_to_menu(Menu *menu, Button button)
 {
     if (menu->nb < 10) {
+        button.parents_frame_number = &menu->frame_number; // On passe le numéro de la frame du parent
         menu->buttons[menu->nb] = button;
         menu->nb++;
     } else {
@@ -47,12 +48,15 @@ void click_button(int x, int y, Menu *menus, int nb_menus)
         Menu *menu = &menus[i];
         for (int j = 0; j < menu->nb; j++)
         {
-            Button *button = &menu->buttons[j];
-            // On regarde si le bouton a été cliqué
-            if (button->is_hidden == 0 && x >= button->x && x <= button->x + button->w && y >= button->y && y <= button->y + button->h)
+            if (menu->active == 1)
             {
-                button->state = 1 - button->state; // On inverse l'état du bouton
-                printf("Button %d clicked\n", button->button_id);
+                Button *button = &menu->buttons[j];
+                // On regarde si le bouton a été cliqué
+                if (x >= button->x && x <= button->x + button->w && y >= button->y && y <= button->y + button->h)
+                {
+                    button->state = 1 - button->state; // On inverse l'état du bouton
+                    printf("Button %d clicked\n", button->button_id);
+                }
             }
         }
     }
@@ -163,6 +167,25 @@ void render_button(Button *button, SDL_Renderer *renderer)
         sprite_index = 0;
     }
 
+    if (button->is_alternate == 1 && sprite.sprite_count > 1)
+    {
+        // On change la variation du sprite toute les 30 frames
+        if (button->parents_frame_number != NULL)
+        {
+            sprite_index = ((int)(*(button->parents_frame_number) / 220) % 2);
+        }
+        else
+        {
+            sprite_index = 0;
+        }
+    }    
+
+    if (button->button_id == 1)
+    {
+        printf("Button %d frame_number is %d\n", button->button_id, *(button->parents_frame_number));
+    }
+    
+
     // On réutilise l'affichage de sprite dans gui.c
     SDL_Rect src_rect = {sprite.sprites_coord[sprite_index].x, sprite.sprites_coord[sprite_index].y, sprite.sprites_coord[sprite_index].w, sprite.sprites_coord[sprite_index].h};
     SDL_Rect dst_rect = {p2d.x, p2d.y, sprite.sprites_coord[sprite_index].w, sprite.sprites_coord[sprite_index].h};
@@ -180,10 +203,17 @@ void render_menu(Menu *menu, SDL_Renderer *renderer)
     for (int i = 0; i < menu->nb; i++)
     {
         Button *button = &menu->buttons[i];
-        if (button->is_hidden == 0)
-        {
-            render_button(button, renderer);
-        }
+        menu->frame_number += 1;
+        render_button(button, renderer);
+    }
+}
+
+void toggle_menu_active(Menu *menu)
+{
+    menu->active = 1 - menu->active; // On inverse l'état du menu
+    if (menu->active == 0)
+    {
+        menu->frame_number = 0; // On remet le compteur de frame à 0
     }
 }
 

@@ -23,8 +23,8 @@ int main() {
     //Il faudra aussi inclure les autres bibliotheques SDL
 
     // Creation de la fenetre
-    int const width = 1400;
-    int const height = 1100;
+    int const width = 1920;
+    int const height = 1080;
 
     SDL_Window *window;
     window = SDL_CreateWindow("SDL2 Window",
@@ -47,12 +47,42 @@ int main() {
 
     Sprite_sheet menu_spritesheet = load_ui_spritesheet("assets/ui_spritesheet_coord.json", "assets/ui_spritesheet.png", renderer, (Camera){0, 0, 0, 0});
 
-    Button menu_button = create_button(0, 200, 200, 0, 0, &menu_spritesheet, SETTINGS_ID);
-    printf("Button %d created at (%d, %d) with size (%d, %d)\n", menu_button.button_id, menu_button.x, menu_button.y, menu_button.w, menu_button.h);
-
     Menu *all_menus = malloc(sizeof(Menu) * 10); // Allocation d'un tableau de 10 menus (on ne fera pas plus)
+    // Création du menu d'accueil
     all_menus[0] = create_menu(0, 1);
-    add_button_to_menu(&all_menus[0], menu_button);
+    Button game_title = create_button(0, 482, 131, 0, 0, &menu_spritesheet, TITLE_ID);
+    Button keyboard_controls = create_button(1, 625, 886, 1, 0, &menu_spritesheet, CONTROLS_ID);
+    Button right_menu = create_button(2, 1761, 922, 0, 0, &menu_spritesheet, SETTINGS_ID);
+    Button skins_menu = create_button(3, 17, 922, 0, 0, &menu_spritesheet, SKINS_ID);
+    add_button_to_menu(&all_menus[0], game_title);
+    add_button_to_menu(&all_menus[0], keyboard_controls);
+    add_button_to_menu(&all_menus[0], right_menu);
+    add_button_to_menu(&all_menus[0], skins_menu);
+
+    // Création du menu de settings
+    all_menus[1] = create_menu(1, 1);
+    Button sound_button = create_button(4, 1761, 772, 0, 0, &menu_spritesheet, SOUND_ID);
+    Button android_button = create_button(5, 1761, 622, 0, 0, &menu_spritesheet, ANDROID_ID);
+    add_button_to_menu(&all_menus[1], sound_button);
+    add_button_to_menu(&all_menus[1], android_button);
+
+    // Création du menu de fin de partie
+    all_menus[2] = create_menu(2, 0);
+    Button play_button = create_button(7, 625, 886, 1, 0, &menu_spritesheet, PLAY_ID);
+    add_button_to_menu(&all_menus[2], play_button);
+
+    // Création du menu in game
+    all_menus[3] = create_menu(3, 0);
+    Button pause_button = create_button(8, 482, 131, 0, 0, &menu_spritesheet, PAUSE_ID);
+    add_button_to_menu(&all_menus[3], pause_button);
+
+    // Création du menu android
+    all_menus[4] = create_menu(4, 0);
+    Button return_button = create_button(9, 482, 131, 0, 0, &menu_spritesheet, BACK_ID);
+    Button android_button2 = create_button(10, 625, 886, 0, 0, &menu_spritesheet, ANDROID_ID);
+    add_button_to_menu(&all_menus[4], return_button);
+    add_button_to_menu(&all_menus[4], android_button2);
+
 
     SDL_Event event;
     int running = 1;
@@ -104,8 +134,7 @@ int main() {
             exit(-1);
         }
 
-        //render_button(&all_menus[0].buttons[0], renderer);
-        render_menus(all_menus, 1, renderer); // On ne gère pas les menus pour l'instant
+        render_menus(all_menus, all_menus->nb, renderer); // On ne gère pas les menus pour l'instant
 
         // Switch framebuffer
         SDL_RenderPresent(renderer);
