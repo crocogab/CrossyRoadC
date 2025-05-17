@@ -12,7 +12,7 @@
 
 Button create_button(int button_id, int x, int y, int is_alternate, int state, Sprite_sheet *menu_spritesheet, int sprite_id, int menu_activator)
 {
-    return (Button){button_id, x, y, menu_spritesheet->sprites[sprite_id].sprites_coord->w, menu_spritesheet->sprites[sprite_id].sprites_coord->h, is_alternate, state, menu_spritesheet, 0, sprite_id, NULL, menu_activator, 0};
+    return (Button){button_id, x, y, menu_spritesheet->sprites[sprite_id].sprites_coord->w, menu_spritesheet->sprites[sprite_id].sprites_coord->h, is_alternate, state, menu_spritesheet, 0, sprite_id, NULL, menu_activator, -1, 0, 0};
 }
 
 Menu create_menu(int id, int active)
@@ -41,29 +41,44 @@ void destroy_menu(Menu *menu)
     free(menu->buttons);
 }
 
-void click_button(int x, int y, Menu *menus, int nb_menus)
+int click_button(int x, int y, Menu *menus, int nb_menus)
 {
+    int ans = -1;
     for (int i = 0; i < nb_menus; i++)
     {
         Menu *menu = &menus[i];
-        for (int j = 0; j < menu->nb; j++)
+        if (menu->active == 1)
         {
-            if (menu->active == 1)
+            for (int j = 0; j < menu->nb; j++)
             {
                 Button *button = &menu->buttons[j];
                 // On regarde si le bouton a été cliqué
                 if (x >= button->x && x <= button->x + button->w && y >= button->y && y <= button->y + button->h)
                 {
                     button->state = 1 - button->state; // On inverse l'état du bouton
+                    if (button->is_changing_menu == 1)
+                    {
+                        // On remet tout les autres menus en inactifs
+                        for (int k = 0; k < nb_menus; k++)
+                        {
+                            // On désactive tous les menus actifs
+                            if (menus[k].active == 1)
+                            {
+                                toggle_menu_active(&menus[k]);
+                            }
+                        }
+                    }
                     if (button->menu_activator != -1)
                     {
                         toggle_menu_active(&(menus[button->menu_activator])); // On change l'état du menu associé
                     }
-                    printf("Button %d clicked\n", button->button_id);
+                    ans = button->game_activator; // On change l'état du jeu
+                    printf("Button %d clicked for a game activator : %d\n", button->button_id, button->game_activator);
                 }
             }
         }
     }
+    return ans;
 }
 
 const char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -223,6 +238,10 @@ void toggle_menu_active(Menu *menu)
 {
     menu->active = 1 - menu->active; // On inverse l'état du menu
     menu->frame_number = 0; // On remet le compteur de frame à 0
+    for (int i = 0; i < menu->nb; i++)
+    {
+        menu->buttons[i].state = 0; // On remet l'état des boutons à 0
+    }
 }
 
 void render_menus(Menu *menus, int nb_menus, SDL_Renderer *renderer)

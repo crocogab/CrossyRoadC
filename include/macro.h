@@ -20,7 +20,7 @@
 #define RIGHT_MAP_X (MAP_WIDTH * DEFAULT_CELL_SIZE - DEFAULT_CELL_SIZE * (MAP_WIDTH - MAP_WIDTH_CAM) / 2)
 
 //Définition des status de la game
-#define HOME 70 //Le menu d'acceuil est affiché
+#define MENU 70 //Un menu est affiché et bloque le lancement du jeu par un appui sur une touche (le défilement des obstacles n'est pas arrêté)
 #define PLAYING 71 //La game est en cours
 #define TO_LAUNCH 72 //Le jeu est en attente d'une entrée utilisateur (avant lancement de la partie)
 #define DEAD 73 //L'écran de mort est affiché

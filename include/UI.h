@@ -25,7 +25,9 @@
  * @param sprite_id l'id du sprite à afficher
  * @param parents_frame_number pointeur vers le numéro de la frame du parent
  * @param menu_activator id du menu activé par le bouton (-1 pour aucun)
+ * @param game_activator variable appliquée à l'état de la partir (-1 pour aucun)
  * @param is_slider si le bouton est un titre qui arrive par le côté (1: oui, 0: non)
+ * @param is_changing_menu si le bouton fait changer de menu, et donc disparaitre celui auquel il appartient (1: oui, 0: non)
  * 
  */
 typedef struct Button_t{
@@ -41,7 +43,9 @@ typedef struct Button_t{
     int sprite_id;
     int *parents_frame_number;
     int menu_activator;
+    int game_activator;
     int is_slider; // 1: oui, 0: non
+    int is_changing_menu; // 1: oui, 0: non
 } Button;
 
 /**
@@ -66,7 +70,7 @@ Button create_button(int button_id, int x, int y, int is_alternate, int state, S
 Menu create_menu(int id, int active);
 void add_button_to_menu(Menu *menu, Button button);
 void destroy_menu(Menu *menu);
-void click_button(int x, int y, Menu *menus, int nb_menus);
+int click_button(int x, int y, Menu *menus, int nb_menus);
 void save_high_score(const char* name, int score);
 void render_button(Button *button, SDL_Renderer *renderer);
 void render_menu(Menu *menu, SDL_Renderer *renderer);
