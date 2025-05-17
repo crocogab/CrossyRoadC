@@ -24,6 +24,8 @@
  * @param sprite_index l'index du sprite à afficher
  * @param sprite_id l'id du sprite à afficher
  * @param parents_frame_number pointeur vers le numéro de la frame du parent
+ * @param menu_activator id du menu activé par le bouton (-1 pour aucun)
+ * @param is_slider si le bouton est un titre qui arrive par le côté (1: oui, 0: non)
  * 
  */
 typedef struct Button_t{
@@ -38,6 +40,8 @@ typedef struct Button_t{
     int sprite_index;
     int sprite_id;
     int *parents_frame_number;
+    int menu_activator;
+    int is_slider; // 1: oui, 0: non
 } Button;
 
 /**
@@ -57,7 +61,7 @@ typedef struct Menu_t{
     int frame_number;
 } Menu;
 
-Button create_button(int button_id, int x, int y, int is_alternate, int state, Sprite_sheet *menu_spritesheet, int sprite_id);
+Button create_button(int button_id, int x, int y, int is_alternate, int state, Sprite_sheet *menu_spritesheet, int sprite_id, int menu_activator);
 
 Menu create_menu(int id, int active);
 void add_button_to_menu(Menu *menu, Button button);

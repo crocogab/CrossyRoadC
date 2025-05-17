@@ -10,9 +10,9 @@
 
 
 
-Button create_button(int button_id, int x, int y, int is_alternate, int state, Sprite_sheet *menu_spritesheet, int sprite_id)
+Button create_button(int button_id, int x, int y, int is_alternate, int state, Sprite_sheet *menu_spritesheet, int sprite_id, int menu_activator)
 {
-    return (Button){button_id, x, y, menu_spritesheet->sprites[sprite_id].sprites_coord->w, menu_spritesheet->sprites[sprite_id].sprites_coord->h, is_alternate, state, menu_spritesheet, 0, sprite_id, NULL};
+    return (Button){button_id, x, y, menu_spritesheet->sprites[sprite_id].sprites_coord->w, menu_spritesheet->sprites[sprite_id].sprites_coord->h, is_alternate, state, menu_spritesheet, 0, sprite_id, NULL, menu_activator, 0};
 }
 
 Menu create_menu(int id, int active)
@@ -55,6 +55,10 @@ void click_button(int x, int y, Menu *menus, int nb_menus)
                 if (x >= button->x && x <= button->x + button->w && y >= button->y && y <= button->y + button->h)
                 {
                     button->state = 1 - button->state; // On inverse l'état du bouton
+                    if (button->menu_activator != -1)
+                    {
+                        toggle_menu_active(&(menus[button->menu_activator])); // On change l'état du menu associé
+                    }
                     printf("Button %d clicked\n", button->button_id);
                 }
             }
@@ -153,7 +157,6 @@ void render_button(Button *button, SDL_Renderer *renderer)
     // Les infomations sont bonnes, on récupère le sprite
     int sprite_index = button->sprite_index;
     int sprite_id = button->sprite_id;
-    Point2d p2d = {button->x, button->y};
 
     Sprite sprite = button->menu_spritesheet->sprites[sprite_id];
     
@@ -169,7 +172,7 @@ void render_button(Button *button, SDL_Renderer *renderer)
 
     if (button->is_alternate == 1 && sprite.sprite_count > 1)
     {
-        // On change la variation du sprite toute les 30 frames
+        // On change la variation du sprite toute les 220 frames
         if (button->parents_frame_number != NULL)
         {
             sprite_index = ((int)(*(button->parents_frame_number) / 220) % 2);
@@ -180,10 +183,18 @@ void render_button(Button *button, SDL_Renderer *renderer)
         }
     }    
 
-    if (button->button_id == 1)
+    int anim_delta_x = 0;
+    int anim_delta_y = 0;
+    int anim_frame_number = 700;
+    if (button->is_slider == 1 && *(button->parents_frame_number) < anim_frame_number)
     {
-        printf("Button %d frame_number is %d\n", button->button_id, *(button->parents_frame_number));
+        // On fait glisser le bouton sur le menu depuis le coin haut gauche
+        // On utilise la définition d'un segment, l'animation dure 200 frames
+        printf("Frame number: %d\n", *(button->parents_frame_number));
+        anim_delta_x = (int)(((float)(*(button->parents_frame_number))/(float)anim_frame_number) * (float)(button->x + button->w)) - button->x - button->w;
+        anim_delta_y = (int)(((float)(*(button->parents_frame_number))/(float)anim_frame_number) * (float)(button->y + button->h)) - button->y - button->h; 
     }
+    Point2d p2d = {button->x + anim_delta_x, button->y + anim_delta_y};
     
 
     // On réutilise l'affichage de sprite dans gui.c
@@ -211,10 +222,7 @@ void render_menu(Menu *menu, SDL_Renderer *renderer)
 void toggle_menu_active(Menu *menu)
 {
     menu->active = 1 - menu->active; // On inverse l'état du menu
-    if (menu->active == 0)
-    {
-        menu->frame_number = 0; // On remet le compteur de frame à 0
-    }
+    menu->frame_number = 0; // On remet le compteur de frame à 0
 }
 
 void render_menus(Menu *menus, int nb_menus, SDL_Renderer *renderer)

@@ -25,7 +25,6 @@
 #define TO_LAUNCH 72 //Le jeu est en attente d'une entrée utilisateur (avant lancement de la partie)
 #define DEAD 73 //L'écran de mort est affiché
 #define PAUSED 74 // Le jeu est en pause
-#define SETTINGS 75 //Le menu des paramètres est affiché
 
 //Définition des types d'obstacles
 #define TYPE_VIDE 80
