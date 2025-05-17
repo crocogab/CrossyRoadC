@@ -48,6 +48,11 @@ int main() {
     Sprite_sheet menu_spritesheet = load_ui_spritesheet("assets/ui_spritesheet_coord.json", "assets/ui_spritesheet.png", renderer, (Camera){0, 0, 0, 0});
 
     Button menu_button = create_button(0, 200, 200, 0, 0, &menu_spritesheet, SETTINGS_ID);
+    printf("Button %d created at (%d, %d) with size (%d, %d)\n", menu_button.button_id, menu_button.x, menu_button.y, menu_button.w, menu_button.h);
+
+    Menu *all_menus = malloc(sizeof(Menu) * 10); // Allocation d'un tableau de 10 menus (on ne fera pas plus)
+    all_menus[0] = create_menu(0, 1);
+    add_button_to_menu(&all_menus[0], menu_button);
 
     SDL_Event event;
     int running = 1;
@@ -58,6 +63,16 @@ int main() {
         {
             switch (event.type)
             {
+            case SDL_MOUSEBUTTONUP:
+                if (event.button.button == SDL_BUTTON_LEFT)
+                {
+                    int x, y;
+                    SDL_GetMouseState(&x, &y);
+                    printf("Mouse clicked at (%d, %d)\n", x, y);
+                    click_button(x, y, all_menus, 1); // On ne gère pas les menus pour l'instant
+                    printf("Button %d state: %d\n", all_menus[0].buttons[0].button_id, all_menus[0].buttons[0].state);
+                }
+                break;
             case SDL_QUIT:
                 running = 0;
                 break;
@@ -89,7 +104,8 @@ int main() {
             exit(-1);
         }
 
-        render_button(&menu_button, renderer);
+        //render_button(&all_menus[0].buttons[0], renderer);
+        render_menus(all_menus, 1, renderer); // On ne gère pas les menus pour l'instant
 
         // Switch framebuffer
         SDL_RenderPresent(renderer);

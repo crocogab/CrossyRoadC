@@ -38,21 +38,41 @@ typedef struct Button_t{
     int sprite_id;
 } Button;
 
+/**
+ * Structure représentant un menu
+ * @param id identifiant du menu
+ * @param active état du menu (0: inactif, 1: actif)
+ * @param buttons tableau de boutons associés au menu
+ * @param nb nombre de boutons dans le menu
+ * 
+ */
+typedef struct Menu_t{
+    int id;
+    int active;
+    Button *buttons;
+    int nb;
+} Menu;
+
 Button create_button(int button_id, int x, int y, int is_hidden, int state, Sprite_sheet *menu_spritesheet, int sprite_id);
 
+Menu create_menu(int id, int active);
+void add_button_to_menu(Menu *menu, Button button);
+void destroy_menu(Menu *menu);
+void click_button(int x, int y, Menu *menus, int nb_menus);
 void save_high_score(const char* name, int score);
-
 void render_button(Button *button, SDL_Renderer *renderer);
+void render_menu(Menu *menu, SDL_Renderer *renderer);
+void render_menus(Menu *menus, int nb_menus, SDL_Renderer *renderer);
 
 Sprite_sheet load_ui_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *renderer, Camera cam);
 
 void unload_ui_spritesheet(Sprite_sheet sprite_sheet);
 
+
+
 void draw_letter(SDL_Renderer *renderer, TTF_Font *font, char letter, int x, int y, int selected);
-
 void draw_button(SDL_Renderer *renderer, TTF_Font *font, const char *text, int x, int y, int w, int h);
-
 int load_top_scores_jsonc(const char *filename, char names[10][4], int scores[10]);
-
 void draw_text(SDL_Renderer *renderer, TTF_Font *font, const char *text, int x, int y, SDL_Color color);
+
 #endif

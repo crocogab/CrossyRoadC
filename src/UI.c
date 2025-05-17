@@ -15,6 +15,49 @@ Button create_button(int button_id, int x, int y, int is_hidden, int state, Spri
     return (Button){button_id, x, y, menu_spritesheet->sprites[sprite_id].sprites_coord->w, menu_spritesheet->sprites[sprite_id].sprites_coord->h, is_hidden, state, menu_spritesheet, 0, sprite_id};
 }
 
+Menu create_menu(int id, int active)
+{
+    Menu menu;
+    menu.id = id;
+    menu.active = active;
+    menu.buttons = malloc(sizeof(Button) * 10); // Allocation d'un tableau de 10 boutons (on ne fera pas plus)
+    menu.nb = 0;
+    return menu;
+}
+
+void add_button_to_menu(Menu *menu, Button button)
+{
+    if (menu->nb < 10) {
+        menu->buttons[menu->nb] = button;
+        menu->nb++;
+    } else {
+        printf("Menu is full\n");
+    }
+}
+
+void destroy_menu(Menu *menu)
+{
+    free(menu->buttons);
+}
+
+void click_button(int x, int y, Menu *menus, int nb_menus)
+{
+    for (int i = 0; i < nb_menus; i++)
+    {
+        Menu *menu = &menus[i];
+        for (int j = 0; j < menu->nb; j++)
+        {
+            Button *button = &menu->buttons[j];
+            // On regarde si le bouton a été cliqué
+            if (button->is_hidden == 0 && x >= button->x && x <= button->x + button->w && y >= button->y && y <= button->y + button->h)
+            {
+                button->state = 1 - button->state; // On inverse l'état du bouton
+                printf("Button %d clicked\n", button->button_id);
+            }
+        }
+    }
+}
+
 const char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 void save_high_score(const char *name, int score)
@@ -122,13 +165,37 @@ void render_button(Button *button, SDL_Renderer *renderer)
 
     // On réutilise l'affichage de sprite dans gui.c
     SDL_Rect src_rect = {sprite.sprites_coord[sprite_index].x, sprite.sprites_coord[sprite_index].y, sprite.sprites_coord[sprite_index].w, sprite.sprites_coord[sprite_index].h};
-    SDL_Rect dst_rect = {p2d.x, p2d.y - sprite.sprites_coord[sprite_index].h, sprite.sprites_coord[sprite_index].w, sprite.sprites_coord[sprite_index].h};
+    SDL_Rect dst_rect = {p2d.x, p2d.y, sprite.sprites_coord[sprite_index].w, sprite.sprites_coord[sprite_index].h};
 
     // On vérifie que tout se passe bien pour l'écriture
     if (SDL_RenderCopy(renderer, button->menu_spritesheet->sprite_sheet, &src_rect, &dst_rect) != 0)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to render copy: %s", SDL_GetError());
         exit(-1);
+    }
+}
+
+void render_menu(Menu *menu, SDL_Renderer *renderer)
+{
+    for (int i = 0; i < menu->nb; i++)
+    {
+        Button *button = &menu->buttons[i];
+        if (button->is_hidden == 0)
+        {
+            render_button(button, renderer);
+        }
+    }
+}
+
+void render_menus(Menu *menus, int nb_menus, SDL_Renderer *renderer)
+{
+    for (int i = 0; i < nb_menus; i++)
+    {
+        Menu *menu = &menus[i];
+        if (menu->active == 1)
+        {
+            render_menu(menu, renderer);
+        }
     }
 }
 
