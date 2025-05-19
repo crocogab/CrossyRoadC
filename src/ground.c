@@ -283,7 +283,7 @@ Ground *ground_generate(int type, float previous_velo, int min_nb, int max_nb, S
         // variant = random_int(0,3); 
         for (int i = 0; i < nb; i++) {
             
-            variant = random_int(0, 2); // Utilise la plage correcte (0-2)
+            variant = random_int(0, 1); // Utilise la plage correcte (1-2)
             
             obs[i] = obstacle_make(LOG_TYPE, variant, i * INTER_LOG_MIN*DEFAULT_CELL_SIZE, (int)(sprite_sheet->sprites[type_var_to_id(LOG_TYPE, variant)].lenght/DEFAULT_CELL_SIZE)*DEFAULT_CELL_SIZE);
         }
