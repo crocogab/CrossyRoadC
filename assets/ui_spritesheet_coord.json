@@ -1,9 +1,30 @@
 {
 	"frames": [
 		{
-			"filename": "controls_1.png",
+			"filename": "50_android_ad.png",
 			"frame": {
 				"x": 0,
+				"y": 0,
+				"w": 1368,
+				"h": 943
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 1368,
+				"h": 943
+			},
+			"sourceSize": {
+				"w": 1368,
+				"h": 943
+			}
+		},
+		{
+			"filename": "controls_1.png",
+			"frame": {
+				"x": 1368,
 				"y": 0,
 				"w": 646,
 				"h": 142
@@ -24,7 +45,7 @@
 		{
 			"filename": "controls_2.png",
 			"frame": {
-				"x": 646,
+				"x": 2014,
 				"y": 0,
 				"w": 646,
 				"h": 142
@@ -45,7 +66,7 @@
 		{
 			"filename": "gift_1.png",
 			"frame": {
-				"x": 1292,
+				"x": 2660,
 				"y": 0,
 				"w": 208,
 				"h": 112
@@ -66,7 +87,7 @@
 		{
 			"filename": "layer_11.png",
 			"frame": {
-				"x": 1500,
+				"x": 2868,
 				"y": 0,
 				"w": 142,
 				"h": 131
@@ -87,28 +108,7 @@
 		{
 			"filename": "layer_12.png",
 			"frame": {
-				"x": 1642,
-				"y": 0,
-				"w": 142,
-				"h": 133
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 142,
-				"h": 133
-			},
-			"sourceSize": {
-				"w": 142,
-				"h": 133
-			}
-		},
-		{
-			"filename": "layer_13.png",
-			"frame": {
-				"x": 1784,
+				"x": 3010,
 				"y": 0,
 				"w": 142,
 				"h": 133
@@ -129,7 +129,7 @@
 		{
 			"filename": "layer_21.png",
 			"frame": {
-				"x": 1926,
+				"x": 3152,
 				"y": 0,
 				"w": 208,
 				"h": 111
@@ -150,7 +150,7 @@
 		{
 			"filename": "layer_9.png",
 			"frame": {
-				"x": 2134,
+				"x": 3360,
 				"y": 0,
 				"w": 101,
 				"h": 101
@@ -171,7 +171,7 @@
 		{
 			"filename": "pause.png",
 			"frame": {
-				"x": 2235,
+				"x": 3461,
 				"y": 0,
 				"w": 114,
 				"h": 113
@@ -192,7 +192,7 @@
 		{
 			"filename": "play_1.png",
 			"frame": {
-				"x": 2349,
+				"x": 3575,
 				"y": 0,
 				"w": 246,
 				"h": 131
@@ -213,7 +213,7 @@
 		{
 			"filename": "play_2.png",
 			"frame": {
-				"x": 2595,
+				"x": 3821,
 				"y": 0,
 				"w": 246,
 				"h": 131
@@ -234,7 +234,7 @@
 		{
 			"filename": "settings_1.png",
 			"frame": {
-				"x": 2841,
+				"x": 4067,
 				"y": 0,
 				"w": 142,
 				"h": 131
@@ -255,7 +255,7 @@
 		{
 			"filename": "settings_2.png",
 			"frame": {
-				"x": 2983,
+				"x": 4209,
 				"y": 0,
 				"w": 142,
 				"h": 122
@@ -274,9 +274,51 @@
 			}
 		},
 		{
+			"filename": "sound_1.png",
+			"frame": {
+				"x": 4351,
+				"y": 0,
+				"w": 142,
+				"h": 133
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 142,
+				"h": 133
+			},
+			"sourceSize": {
+				"w": 142,
+				"h": 133
+			}
+		},
+		{
+			"filename": "sound_2.png",
+			"frame": {
+				"x": 4493,
+				"y": 0,
+				"w": 144,
+				"h": 133
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 144,
+				"h": 133
+			},
+			"sourceSize": {
+				"w": 144,
+				"h": 133
+			}
+		},
+		{
 			"filename": "title.png",
 			"frame": {
-				"x": 3125,
+				"x": 4637,
 				"y": 0,
 				"w": 949,
 				"h": 550
@@ -297,7 +339,7 @@
 		{
 			"filename": "video_1.png",
 			"frame": {
-				"x": 4074,
+				"x": 5586,
 				"y": 0,
 				"w": 210,
 				"h": 112
@@ -322,8 +364,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 4284,
-			"h": 550
+			"w": 5796,
+			"h": 943
 		},
 		"scale": "1"
 	}
