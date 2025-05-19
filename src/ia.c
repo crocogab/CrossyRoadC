@@ -180,8 +180,10 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
             //printf("OBSTACLE : %d  type : %d \n",k,g.obstacles[k]->type);
             hb = obstacle_simulated_hitbox(
                 g.obstacles[k], 
-                g.velocity * t, 
-                g.velocity * dt
+                g.velocity, 
+                t, 
+                dt,
+                g.special_attr
             );
             
 

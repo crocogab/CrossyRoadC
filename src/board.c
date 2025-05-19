@@ -101,22 +101,23 @@ void board_update(Board* b, float delta_t, Sprite_sheet *sprite_sheet, debugKit 
         si non, on change l'attr et le train ne bouge pas*/
         if (ground->type == GROUND_TRAIN && ground->special_attr <= 0)
         {
-            if (ground->type == GROUND_TRAIN && (ground->obstacles[0]->h_position >= MAP_WIDTH || ground->obstacles[0]->h_position < 0))
-            {
-                int s = random_int(0, 1);
-                if (s == 0)
-                {
+            if (ground->obstacles[0]->h_position > MAP_WIDTH || ground->obstacles[0]->h_position < 0)
+            { // si le train est hors de la map 
+                // int s = random_int(0, 1);
+                // if (s == 0)
+                if (ground->velocity > 0) {
                     ground->obstacles[0]->h_position = -sprite_sheet->sprites[TRAIN_ID].lenght;
-                    ground->velocity = TRAIN_MAX_SPEED;
+                    // ground->velocity = TRAIN_MAX_SPEED;
                 }
                 else
                 {
-                    ground->obstacles[0]->h_position = MAP_WIDTH + sprite_sheet->sprites[TRAIN_ID].lenght;
-                    ground->velocity = -TRAIN_MAX_SPEED;
+                    ground->obstacles[0]->h_position = MAP_WIDTH * DEFAULT_CELL_SIZE;
+                    // ground->velocity = -TRAIN_MAX_SPEED;
                 }
                 ground->special_attr = random_int(TRAIN_MIN_TIME, TRAIN_MAX_TIME);
                 ground->obstacles[1]->variant=0;
             }
+        
         }
         else if (ground->type == GROUND_TRAIN && ground->special_attr > 0)
         {

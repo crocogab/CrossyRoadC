@@ -29,7 +29,7 @@ void obstacle_free(Obstacle *o);
 void obstacle_update(Obstacle *o, float delta_t, float velocity);
 
 Couple obstacle_hitbox(Obstacle *o);
-Couple obstacle_simulated_hitbox(Obstacle *o, float dx, float delta_dx);
+Couple obstacle_simulated_hitbox(Obstacle *o, float velocity, float time, float dt, float special_attr);
 
 bool obstacle_is_colliding(Obstacle *o, float player_pos);
 

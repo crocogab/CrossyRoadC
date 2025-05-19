@@ -55,7 +55,7 @@ void obstacle_update(Obstacle *o, float delta_t, float velocity) {
         o->h_position += delta_t * velocity;
     }
     if (o->type==TRAIN_POLE_TYPE ){
-        o->h_position -=delta_t * velocity;
+        o->h_position -= delta_t * velocity;
     }
 
 
@@ -97,13 +97,9 @@ Couple obstacle_hitbox(Obstacle *o) {
     return ab;
 }
 
-Couple obstacle_simulated_hitbox(Obstacle *o, float x, float dx) {
+Couple obstacle_simulated_hitbox(Obstacle *o, float v, float t, float dt, float spe) {
 
-    float h = o->h_position + x; // position à t
     Couple ab;
-
-    
-
     if (o->type == TRAIN_POLE_TYPE) {
         // pour les poteaux -> pas de hitbox
         ab.a = 1; 
@@ -111,6 +107,18 @@ Couple obstacle_simulated_hitbox(Obstacle *o, float x, float dx) {
         return ab;
     }
 
+    float h;
+    if (o->type == TRAIN_TYPE) {
+        t = t - spe;
+        t = t < 0 ? 0 : t;
+        h = v < 0 ? - o->length : MAP_WIDTH * DEFAULT_CELL_SIZE;
+    } 
+
+    float x = v * t;
+    float dx = v * dt;
+
+    h = o->h_position + x; // position à t
+    
      
     if (o->type != TRAIN_TYPE) {
         
