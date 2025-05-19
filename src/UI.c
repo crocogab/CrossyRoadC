@@ -272,7 +272,7 @@ void render_menus(Menu *menus, int nb_menus, SDL_Renderer *renderer)
 Sprite_sheet load_ui_spritesheet(char *coord_path, char *sheet_path, SDL_Renderer *renderer, Camera cam)
 {
     // On charge la grille de lecture en mémoire
-    int sprite_reading_grid[12] = {CONTROLS_NB, GIFT_NB, SKINS_NB, ANDROID_NB, SOUND_NB, SHOP_NB, BACK_NB, PAUSE_NB, PLAY_NB, SETTINGS_NB, TITLE_NB, VIDEO_NB};
+    int sprite_reading_grid[13] = {ANDROID_AD_NB, CONTROLS_NB, GIFT_NB, SKINS_NB, ANDROID_NB, SHOP_NB, BACK_NB, PAUSE_NB, PLAY_NB, SETTINGS_NB, SOUND_NB, TITLE_NB, VIDEO_NB};
 
     // On charge la spritesheet
     SDL_Surface *sprite_surface = IMG_Load(sheet_path);

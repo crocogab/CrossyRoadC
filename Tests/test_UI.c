@@ -88,11 +88,13 @@ int main() {
     Button return_button = create_button(9, 20, 21, 0, 0, &menu_spritesheet, BACK_ID, 0);
     return_button.game_activator = TO_LAUNCH;
     return_button.is_changing_menu = 1;
-    Button android_button2 = create_button(10, 900, 886, 0, 0, &menu_spritesheet, ANDROID_ID, 0);
+    Button android_button2 = create_button(10, 900, 906, 0, 0, &menu_spritesheet, ANDROID_ID, 0);
     android_button2.game_activator = TO_LAUNCH;
     android_button2.is_changing_menu = 1;
+    Button android_ad = create_button(12, 330, 20, 0, 0, &menu_spritesheet, ANDROID_AD_ID, -1);
     add_button_to_menu(&all_menus[4], return_button);
     add_button_to_menu(&all_menus[4], android_button2);
+    add_button_to_menu(&all_menus[4], android_ad);
 
     // Création du menu de pause
     all_menus[5] = create_menu(5, 0);

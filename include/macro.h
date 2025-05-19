@@ -143,29 +143,31 @@
 #define TREE_NB 5
 
 //Définition des positions de la sprite_sheet UI
-#define CONTROLS_ID 0
-#define GIFT_ID 1
-#define SKINS_ID 2
-#define ANDROID_ID 3
-#define SOUND_ID 4
+#define ANDROID_AD_ID 0
+#define CONTROLS_ID 1
+#define GIFT_ID 2
+#define SKINS_ID 3
+#define ANDROID_ID 4
 #define SHOP_ID 5
 #define BACK_ID 6
 #define PAUSE_ID 7
 #define PLAY_ID 8
 #define SETTINGS_ID 9
-#define TITLE_ID 10
-#define VIDEO_ID 11
+#define SOUND_ID 10
+#define TITLE_ID 11
+#define VIDEO_ID 12
 
+#define ANDROID_AD_NB 1
 #define CONTROLS_NB 2
 #define GIFT_NB 1
 #define SKINS_NB 1
 #define ANDROID_NB 1
-#define SOUND_NB 1
 #define SHOP_NB 1
 #define BACK_NB 1
 #define PAUSE_NB 1
 #define PLAY_NB 2
 #define SETTINGS_NB 2
+#define SOUND_NB 2
 #define TITLE_NB 1
 #define VIDEO_NB 1
 
