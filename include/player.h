@@ -22,6 +22,8 @@ Player *player_make(float grid_cell_size, float h_position, int direction, bool 
 
 Player *player_start(void);
 
+void player_reset(Player *player);
+
 void player_free(Player *player);
 
 void move_player(int direction, Player *player,Ground * next_ground, Ground * ground_actu);

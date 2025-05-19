@@ -36,7 +36,7 @@ void kill_player(Game *g){
 void game_start(Game *g, Sprite_sheet *sprite_sheet){
     Board *b= board_make(sprite_sheet);
     g->board=b;
-    g->status=PLAYING;
+    g->status=TO_LAUNCH;
 }
 
 /**

@@ -40,7 +40,7 @@ int main() {
     // initialisation du plateau
     int jump_back = 0;    // Limitation des retours en arrière
     int score_actu = 0;   // Score actuel
-    int quit_game = 0;    // Signal pour quitter le jeu
+    int running = 1;    // Signal indiquant si le jeu est en cours d'exécution
 
     // Initialisation de la SDL
     if (SDL_Init(SDL_INIT_EVERYTHING)) {
@@ -57,8 +57,8 @@ int main() {
     }
 
     // Creation de la fenetre
-    int const width = 1500;
-    int const height = 1000;
+    int const width = 1920;
+    int const height = 1080;
 
     // Variables de la caméra
     Camera cam = {1.25f, -300, -765, 0.25f};
@@ -108,8 +108,10 @@ int main() {
 
     SDL_Color white = {255, 255, 255, SDL_ALPHA_OPAQUE};
 
-    // On charge la sprite_sheet
+    // On charge la sprite_sheet des sprites du jeu
     Sprite_sheet sprite_sheet = load_spritesheet("assets/spritesheet_coord.json", "assets/spritesheet.png", renderer, cam);
+    // On s'occupe aussi de la sprite_sheet des menus
+    Sprite_sheet menu_spritesheet = load_ui_spritesheet("assets/ui_spritesheet_coord.json", "assets/ui_spritesheet.png", renderer, (Camera){0, 0, 0, 0});
 
     // On change certains aspects pour le début de la partie
     game_start(&g, &sprite_sheet);
@@ -117,6 +119,14 @@ int main() {
     grid_ground_starter_set(b,&sprite_sheet);
     
     board_set_player(b, p);
+
+    // Création de tout les menus du jeu
+    Menu *all_menus = init_menus(&menu_spritesheet);
+    int menu_number = 6; // Nombre de menus
+    int game_future_state = -1;
+
+    // Ouverture du menu initial
+    toggle_menu_active(&all_menus[0]);
 
     // Paramétrage des différentes animations de saut (interpolation de polynômes du second degré)
     float duration = 13.0; // Durée d'un saut
@@ -137,44 +147,58 @@ int main() {
     SDL_Event event;
     
     // Début de la boucle d'action
-    while (g.status==PLAYING){
+    while (running){
+        
         
         if (!p->alive) {
             g.status = DEAD;
-            break; // Fin de la partie si le joueur meurt
         }
-
+        if (g.status == TO_LAUNCH) {
+            player_reset(p);
+        }
         
         //MARK: Action du joueur  
         int direction = NEUTRAL;
         int ai_direction = NEUTRAL;
         int player_direction = NEUTRAL;
 
-
-
         if (SDL_PollEvent(&event)){ 
             {
                 switch (event.type){
                     
                     case SDL_QUIT:
-                        g.status=DEAD;
+                        running = 0;
                         break;
 
                     case SDL_KEYUP: //touche relachée pour les mouvements
-            
-                        if (!(p->is_jumping)) {
-                            if (event.key.keysym.sym == SDLK_RIGHT) {
-                                player_direction = RIGHT;
+                        if (g.status != PAUSED)
+                        {
+                            if (g.status == TO_LAUNCH)
+                            {
+                                g.status = PLAYING;
+                                if (all_menus[0].active == 1) {
+                                    toggle_menu_active(&all_menus[0]); // On ferme le menu d'accueil
+                                }
+                                if (all_menus[1].active == 1) {
+                                    toggle_menu_active(&all_menus[1]); // On ferme le menu de settings
+                                }
+                                toggle_menu_active(&all_menus[3]); // On ouvre le menu in game (pour la pause)
                             }
-                            if (event.key.keysym.sym == SDLK_LEFT) {
-                                player_direction = LEFT;
-                            }
-                            if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_SPACE) {
-                                player_direction = UP;
-                            }
-                            if (event.key.keysym.sym == SDLK_DOWN) {
-                                if (jump_back < 3) {
-                                    player_direction = DOWN;
+                            if (g.status == PLAYING || !(p->is_jumping)) // On ne peut jouer que si aucun menu n'est ouvert
+                            {
+                                if (event.key.keysym.sym == SDLK_RIGHT) {
+                                    player_direction = RIGHT;
+                                }
+                                if (event.key.keysym.sym == SDLK_LEFT) {
+                                    player_direction = LEFT;
+                                }
+                                if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_SPACE) {
+                                    player_direction = UP;
+                                }
+                                if (event.key.keysym.sym == SDLK_DOWN) {
+                                    if (jump_back < 3) {
+                                        player_direction = DOWN;
+                                    }
                                 }
                             }
                         }
@@ -182,7 +206,7 @@ int main() {
 
                     case SDL_KEYDOWN: // touche pressée
                         if (event.key.keysym.sym==SDLK_q){
-                            g.status=DEAD;
+                            running = 0;
                         }
 
                         // DEBUG MODE
@@ -208,8 +232,20 @@ int main() {
                         if (event.key.keysym.sym==SDLK_F7){
                             debug.display_information_sprites = debug.display_information_sprites ? 0 : 1;
                         }
-                        if (event.key.keysym.sym==SDLK_F8) {
+                        if ((g.status == TO_LAUNCH || g.status == PLAYING) && event.key.keysym.sym==SDLK_F8) {
                             debug.pouleria = debug.pouleria ? 0 : 1;
+                        }
+                        break;
+                    
+                    case SDL_MOUSEBUTTONUP: // Gestion des clics à la souris
+                        if (event.button.button == SDL_BUTTON_LEFT) {
+                            int x, y;
+                            SDL_GetMouseState(&x, &y);
+                            game_future_state = click_button(x, y, all_menus, menu_number);
+                            if (game_future_state != -1) 
+                            {
+                                g.status = game_future_state;
+                            }
                         }
                         break;
 
@@ -272,17 +308,18 @@ int main() {
                 break;
         }
 
-        if (!p->alive) {
+        if (g.status == DEAD) {
+            g.status = MENU;
             //Enregistremeent du score
             TTF_Font *font = font_load("assets/editundo.ttf", 48);
             char letters[4] = {'A', 'A', 'A', '\0'};
             int selected_letter = 0;
-            SDL_bool running = SDL_TRUE;
+            SDL_bool high_score_running = SDL_TRUE;
             // Boucle d'événements pour la saisie du pseudo
-            while (running) {
+            while (high_score_running) {
                 while (SDL_PollEvent(&event)) {
                     if (event.type == SDL_QUIT)
-                        running = SDL_FALSE;
+                        high_score_running = SDL_FALSE;
                     else if (event.type == SDL_KEYDOWN) {
                         switch (event.key.keysym.sym) {
                             case SDLK_RIGHT:
@@ -300,7 +337,9 @@ int main() {
                             case SDLK_RETURN:
                                 printf("Pseudo validé : %c%c%c\n", letters[0], letters[1], letters[2]);
                                 save_high_score(letters, p->score);
-                                running = SDL_FALSE;
+                                high_score_running = SDL_FALSE;
+                                player_reset(p);
+                                toggle_menu_active(&all_menus[2]); // Menu de fin de partie
                                 break;
                         }
                     } else if (event.type == SDL_MOUSEBUTTONDOWN) {
@@ -309,7 +348,9 @@ int main() {
                         if (x >= 650 && x <= 850 && y >= 300 && y <= 345) {
                             printf("Pseudo validé par clic : %c%c%c\n", letters[0], letters[1], letters[2]);
                             save_high_score(letters, p->score);
-                            running = SDL_FALSE;
+                            high_score_running = SDL_FALSE;
+                            player_reset(p);
+                            toggle_menu_active(&all_menus[2]); // Menu de fin de partie
                         }
                     }
                 }
@@ -347,8 +388,10 @@ int main() {
                 
             }
         } else {
-            
-            board_update(b, debug.game_speed, &sprite_sheet,debug);
+            if (g.status != PAUSED)
+            {
+                board_update(b, debug.game_speed, &sprite_sheet, debug);
+            }
         }
         
         // On efface l'écran et on nettoie
@@ -370,7 +413,7 @@ int main() {
             p->score = score_actu;
         }
 
-        //5. Maj de etat graphique
+        //MARK: 5. Maj de etat graphique
         // Dessin des sols du plateau
         draw_board(b,anim_time, anim_jump_x,cam,display,colors,renderer,&sprite_sheet, &debug,score_actu);
         
@@ -401,21 +444,21 @@ int main() {
             sprintf(score_text, "%d", p->score);
             write_text(score_text, 50,30 , -1, 0, 10, white, renderer, score_fond);
         }
+
+        // Affichage des menus
+        render_menus(all_menus, menu_number, renderer);
         
         //6. Affichage
         SDL_RenderPresent(renderer);
         SDL_Delay(8); // ~60 FPS  
     }
-    
-
-
-    
-    
 
     TTF_CloseFont(debug_font);
     TTF_CloseFont(score_fond);
     IMG_Quit();
     unload_spritesheet(sprite_sheet);
+    destroy_menus(all_menus, menu_number);
+    unload_ui_spritesheet(menu_spritesheet);
     board_free(b);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

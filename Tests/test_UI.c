@@ -47,65 +47,10 @@ int main() {
 
     Sprite_sheet menu_spritesheet = load_ui_spritesheet("assets/ui_spritesheet_coord.json", "assets/ui_spritesheet.png", renderer, (Camera){0, 0, 0, 0});
 
-    Menu *all_menus = malloc(sizeof(Menu) * 10); // Allocation d'un tableau de 10 menus (on ne fera pas plus)
-    // Création du menu d'accueil
-    all_menus[0] = create_menu(0, 0);
-    Button game_title = create_button(0, 482, 131, 0, 0, &menu_spritesheet, TITLE_ID, -1);
-    game_title.is_slider = 1;
-    game_title.game_activator = TO_LAUNCH;
-    Button keyboard_controls = create_button(1, 625, 886, 1, 0, &menu_spritesheet, CONTROLS_ID, -1);
-    Button right_menu = create_button(2, 1761, 922, 0, 0, &menu_spritesheet, SETTINGS_ID, 1);
-    Button skins_menu = create_button(3, 17, 922, 0, 0, &menu_spritesheet, SKINS_ID, -1);
-    add_button_to_menu(&all_menus[0], game_title);
-    add_button_to_menu(&all_menus[0], keyboard_controls);
-    add_button_to_menu(&all_menus[0], right_menu);
-    add_button_to_menu(&all_menus[0], skins_menu);
-
-    // Création du menu de settings
-    all_menus[1] = create_menu(1, 0);
-    Button sound_button = create_button(4, 1761, 772, 0, 0, &menu_spritesheet, SOUND_ID, -1);
-    Button android_button = create_button(5, 1761, 622, 0, 0, &menu_spritesheet, ANDROID_ID, 4);
-    android_button.game_activator = MENU;
-    android_button.is_changing_menu = 1;
-    add_button_to_menu(&all_menus[1], sound_button);
-    add_button_to_menu(&all_menus[1], android_button);
-
-    // Création du menu de fin de partie
-    all_menus[2] = create_menu(2, 0);
-    Button play_button = create_button(7, 625, 886, 1, 0, &menu_spritesheet, PLAY_ID, 0);
-    play_button.game_activator = TO_LAUNCH;
-    play_button.is_changing_menu = 1;
-    add_button_to_menu(&all_menus[2], play_button);
-
-    // Création du menu in game
-    all_menus[3] = create_menu(3, 0);
-    Button pause_button = create_button(8, 1787, 21, 0, 0, &menu_spritesheet, PAUSE_ID, -1);
-    pause_button.game_activator = PAUSED;
-    add_button_to_menu(&all_menus[3], pause_button);
-
-    // Création du menu android
-    all_menus[4] = create_menu(4, 0);
-    Button return_button = create_button(9, 20, 21, 0, 0, &menu_spritesheet, BACK_ID, 0);
-    return_button.game_activator = TO_LAUNCH;
-    return_button.is_changing_menu = 1;
-    Button android_button2 = create_button(10, 900, 906, 0, 0, &menu_spritesheet, ANDROID_ID, 0);
-    android_button2.game_activator = TO_LAUNCH;
-    android_button2.is_changing_menu = 1;
-    Button android_ad = create_button(12, 330, 20, 0, 0, &menu_spritesheet, ANDROID_AD_ID, -1);
-    add_button_to_menu(&all_menus[4], return_button);
-    add_button_to_menu(&all_menus[4], android_button2);
-    add_button_to_menu(&all_menus[4], android_ad);
-
-    // Création du menu de pause
-    all_menus[5] = create_menu(5, 0);
-    Button resume_button = create_button(11, 625, 886, 0, 0, &menu_spritesheet, PAUSE_ID, -1);
-    resume_button.game_activator = PLAYING;
-    resume_button.is_changing_menu = 1;
-
+    Menu *all_menus = init_menus(&menu_spritesheet); // Allocation d'un tableau de 10 menus (on ne fera pas plus)
 
     // Ouverture du menu initial
-    toggle_menu_active(&all_menus[0]);
-
+    toggle_menu_active(&all_menus[3]);
 
     SDL_Event event;
     int running = 1;
@@ -124,7 +69,7 @@ int main() {
                     int x, y;
                     SDL_GetMouseState(&x, &y);
                     printf("Mouse clicked at (%d, %d)\n", x, y);
-                    game_click_state = click_button(x, y, all_menus, 5); // On ne gère pas les menus pour l'instant
+                    game_click_state = click_button(x, y, all_menus, 6); // On ne gère pas les menus pour l'instant
                     if (game_click_state != -1)
                     {
                         game_state = game_click_state;
@@ -163,7 +108,7 @@ int main() {
             exit(-1);
         }
 
-        render_menus(all_menus, 5, renderer); // On ne gère pas les menus pour l'instant
+        render_menus(all_menus, 6, renderer); // On ne gère pas les menus pour l'instant
 
         // Switch framebuffer
         SDL_RenderPresent(renderer);
@@ -175,6 +120,7 @@ int main() {
     IMG_Quit();
 
     unload_ui_spritesheet(menu_spritesheet);
+    destroy_menus(all_menus, 6);
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);    

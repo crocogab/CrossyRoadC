@@ -205,7 +205,6 @@ void render_button(Button *button, SDL_Renderer *renderer)
     {
         // On fait glisser le bouton sur le menu depuis le coin haut gauche
         // On utilise la définition d'un segment, l'animation dure 200 frames
-        printf("Frame number: %d\n", *(button->parents_frame_number));
         anim_delta_x = (int)(((float)(*(button->parents_frame_number))/(float)anim_frame_number) * (float)(button->x + button->w)) - button->x - button->w;
         anim_delta_y = (int)(((float)(*(button->parents_frame_number))/(float)anim_frame_number) * (float)(button->y + button->h)) - button->y - button->h; 
     }
@@ -381,6 +380,87 @@ void unload_ui_spritesheet(Sprite_sheet sprite_sheet)
     {
         SDL_DestroyTexture(sprite_sheet.sprite_sheet);
     }
+}
+
+/**
+ * Fonction d'initialisation des menus du jeu
+ * @param menu_spritesheet la sprite_sheet des menus
+ */
+Menu *init_menus(Sprite_sheet *menu_spritesheet)
+{
+    Menu *all_menus = malloc(sizeof(Menu) * 10); // Allocation d'un tableau de 10 menus (on ne fera pas plus)
+    // Création du menu d'accueil
+    all_menus[0] = create_menu(0, 0);
+    Button game_title = create_button(0, 482, 131, 0, 0, menu_spritesheet, TITLE_ID, -1);
+    game_title.is_slider = 1;
+    game_title.game_activator = TO_LAUNCH;
+    Button keyboard_controls = create_button(1, 625, 886, 1, 0, menu_spritesheet, CONTROLS_ID, -1);
+    Button right_menu = create_button(2, 1761, 922, 0, 0, menu_spritesheet, SETTINGS_ID, 1);
+    Button skins_menu = create_button(3, 17, 922, 0, 0, menu_spritesheet, SKINS_ID, -1);
+    add_button_to_menu(&all_menus[0], game_title);
+    add_button_to_menu(&all_menus[0], keyboard_controls);
+    add_button_to_menu(&all_menus[0], right_menu);
+    add_button_to_menu(&all_menus[0], skins_menu);
+
+    // Création du menu de settings
+    all_menus[1] = create_menu(1, 0);
+    Button sound_button = create_button(4, 1761, 772, 0, 0, menu_spritesheet, SOUND_ID, -1);
+    Button android_button = create_button(5, 1761, 622, 0, 0, menu_spritesheet, ANDROID_ID, 4);
+    android_button.game_activator = MENU;
+    android_button.is_changing_menu = 1;
+    add_button_to_menu(&all_menus[1], sound_button);
+    add_button_to_menu(&all_menus[1], android_button);
+
+    // Création du menu de fin de partie
+    all_menus[2] = create_menu(2, 0);
+    Button play_button = create_button(7, 820, 886, 1, 0, menu_spritesheet, PLAY_ID, 0);
+    play_button.game_activator = TO_LAUNCH;
+    play_button.is_changing_menu = 1;
+    add_button_to_menu(&all_menus[2], play_button);
+
+    // Création du menu in game
+    all_menus[3] = create_menu(3, 0);
+    Button pause_button = create_button(8, 1787, 21, 0, 0, menu_spritesheet, PAUSE_ID, 5);
+    pause_button.game_activator = PAUSED;
+    pause_button.is_changing_menu = 1;
+    add_button_to_menu(&all_menus[3], pause_button);
+
+    // Création du menu android
+    all_menus[4] = create_menu(4, 0);
+    Button return_button = create_button(9, 20, 21, 0, 0, menu_spritesheet, BACK_ID, 0);
+    return_button.game_activator = TO_LAUNCH;
+    return_button.is_changing_menu = 1;
+    Button android_button2 = create_button(10, 900, 906, 0, 0, menu_spritesheet, ANDROID_ID, 0);
+    android_button2.game_activator = TO_LAUNCH;
+    android_button2.is_changing_menu = 1;
+    Button android_ad = create_button(12, 330, 20, 0, 0, menu_spritesheet, ANDROID_AD_ID, -1);
+    add_button_to_menu(&all_menus[4], return_button);
+    add_button_to_menu(&all_menus[4], android_button2);
+    add_button_to_menu(&all_menus[4], android_ad);
+
+    // Création du menu de pause
+    all_menus[5] = create_menu(5, 0);
+    Button resume_button = create_button(11, 900, 430, 0, 0, menu_spritesheet, PAUSE_ID, 3);
+    resume_button.game_activator = PLAYING;
+    resume_button.is_changing_menu = 1;
+    add_button_to_menu(&all_menus[5], resume_button);
+
+    return all_menus;
+}
+
+/**
+ * Libère la mémoire allouée pour les menus
+ * @param menus les menus à libérer
+ * @param nb_menus le nombre de menus
+ * 
+ */
+void destroy_menus(Menu *menus, int nb_menus)
+{
+    for (int i = 0; i < nb_menus; i++)
+    {
+        destroy_menu(&menus[i]);
+    }
+    free(menus);
 }
 
 /**

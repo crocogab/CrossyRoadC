@@ -81,6 +81,9 @@ Sprite_sheet load_ui_spritesheet(char *coord_path, char *sheet_path, SDL_Rendere
 
 void unload_ui_spritesheet(Sprite_sheet sprite_sheet);
 
+Menu *init_menus(Sprite_sheet *menu_spritesheet);
+void destroy_menus(Menu *menus, int nb_menus);
+
 
 
 void draw_letter(SDL_Renderer *renderer, TTF_Font *font, char letter, int x, int y, int selected);

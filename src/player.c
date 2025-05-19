@@ -51,6 +51,16 @@ Player *player_start(void)
     return player_make(DEFAULT_CELL_SIZE, (float)(MAP_WIDTH*DEFAULT_CELL_SIZE/2)+(DEFAULT_CELL_SIZE/4), UP, true, false, 0);
 }
 
+void player_reset(Player *player)
+{
+    player->h_position = (float)(MAP_WIDTH*DEFAULT_CELL_SIZE/2)+(DEFAULT_CELL_SIZE/4);
+    player->direction = UP;
+    player->previous_direction = UP;
+    player->alive = true;
+    player->is_jumping = false;
+    player->score = 0;
+}
+
 /**
  * Libère la mémoire allouée pour une structure Player.
  *
