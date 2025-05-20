@@ -50,7 +50,7 @@ int main() {
     Menu *all_menus = init_menus(&menu_spritesheet); // Allocation d'un tableau de 10 menus (on ne fera pas plus)
 
     // Ouverture du menu initial
-    toggle_menu_active(&all_menus[3]);
+    toggle_menu_active(&all_menus[0]);
 
     SDL_Event event;
     int running = 1;

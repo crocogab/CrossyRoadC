@@ -116,9 +116,9 @@ int main() {
     // On change certains aspects pour le début de la partie
     game_start(&g, &sprite_sheet);
     b = g.board;
-    grid_ground_starter_set(b,&sprite_sheet);
+    grid_ground_starter_set(g.board,&sprite_sheet);
     
-    board_set_player(b, p);
+    board_set_player(g.board, p);
 
     // Création de tout les menus du jeu
     Menu *all_menus = init_menus(&menu_spritesheet);
@@ -148,13 +148,19 @@ int main() {
     
     // Début de la boucle d'action
     while (running){
-        
-        
-        if (!p->alive) {
-            g.status = DEAD;
-        }
-        if (g.status == TO_LAUNCH) {
-            player_reset(p);
+
+        if (g.status == RESET)
+        {
+            // Remise à zéro de certaines variables
+            jump_back = 0;    // Limitation des retours en arrière
+            score_actu = 0;   // Score actuel
+            running = 1;
+            // Désactivation de l'ia
+            debug.pouleria = 0;
+            // Réinitialisation de la partie et de son statut
+            game_reset(&g, &sprite_sheet);
+            b = g.board;
+            p = g.board->player;
         }
         
         //MARK: Action du joueur  
@@ -184,7 +190,7 @@ int main() {
                                 }
                                 toggle_menu_active(&all_menus[3]); // On ouvre le menu in game (pour la pause)
                             }
-                            if (g.status == PLAYING || !(p->is_jumping)) // On ne peut jouer que si aucun menu n'est ouvert
+                            if (g.status == PLAYING && !(p->is_jumping)) // On ne peut jouer que si aucun menu n'est ouvert
                             {
                                 if (event.key.keysym.sym == SDLK_RIGHT) {
                                     player_direction = RIGHT;
@@ -268,44 +274,47 @@ int main() {
         // 2. Traiter action
         int collision_type;
         if (!debug.god_mode){
-            collision_type= check_future_collision(b, direction);
+            collision_type= check_future_collision(g.board, direction);
         }else{
             collision_type=COLLIDE_NONE;
         }
         
-        switch (collision_type) {
-            case COLLIDE_NONE:
-                //mouvement autorise
-                if (direction== UP) {
-                    score_actu++;
-                    if (jump_back > 0) {
-                        jump_back--;
+        if (g.status == PLAYING)
+        {
+            switch (collision_type) {
+                case COLLIDE_NONE:
+                    //mouvement autorise
+                    if (direction== UP) {
+                        score_actu++;
+                        if (jump_back > 0) {
+                            jump_back--;
+                        }
+                    } else if (direction == DOWN) {
+                        score_actu--;
+                        jump_back++;
                     }
-                } else if (direction == DOWN) {
-                    score_actu--;
-                    jump_back++;
-                }
-            
-            
-                if (direction != NEUTRAL) {
-                    // On déplace le joueur
-                    move_player(direction, p,b->grid_ground[V_POS-1],b->grid_ground[V_POS]);
-                    ground_move(b, direction,&sprite_sheet);
-
-
-                }
-                break;
-            
-            case COLLIDE_DEADLY:
-                // Collision mortelle
-                p->alive = false;
-                g.status = DEAD;
-                printf("direction: %d\n",direction);
-                break;
-            
-            case COLLIDE_HARMLESS:
-                // Collision sans effet, on ne fait rien
-                break;
+                
+                
+                    if (direction != NEUTRAL) {
+                        // On déplace le joueur
+                        move_player(direction, p,b->grid_ground[V_POS-1],b->grid_ground[V_POS]);
+                        ground_move(b, direction,&sprite_sheet);
+    
+    
+                    }
+                    break;
+                
+                case COLLIDE_DEADLY:
+                    // Collision mortelle
+                    p->alive = false;
+                    g.status = DEAD;
+                    printf("direction: %d\n",direction);
+                    break;
+                
+                case COLLIDE_HARMLESS:
+                    // Collision sans effet, on ne fait rien
+                    break;
+            }
         }
 
         if (g.status == DEAD) {
@@ -338,7 +347,8 @@ int main() {
                                 printf("Pseudo validé : %c%c%c\n", letters[0], letters[1], letters[2]);
                                 save_high_score(letters, p->score);
                                 high_score_running = SDL_FALSE;
-                                player_reset(p);
+                                g.status = MENU;
+                                toggle_menu_active(&all_menus[3]);
                                 toggle_menu_active(&all_menus[2]); // Menu de fin de partie
                                 break;
                         }
@@ -349,7 +359,8 @@ int main() {
                             printf("Pseudo validé par clic : %c%c%c\n", letters[0], letters[1], letters[2]);
                             save_high_score(letters, p->score);
                             high_score_running = SDL_FALSE;
-                            player_reset(p);
+                            g.status = MENU;
+                            toggle_menu_active(&all_menus[3]);
                             toggle_menu_active(&all_menus[2]); // Menu de fin de partie
                         }
                     }
@@ -366,17 +377,17 @@ int main() {
                 draw_button(renderer, font, "Valider", 710, 300, 80, 50);
 
                 // YOUR SCORE
-                draw_text(renderer, font, "YOUR SCORE :", 550, 100, (SDL_Color){255, 255, 255});    
+                draw_text(renderer, font, "YOUR SCORE :", 550, 100, (SDL_Color){255, 255, 255, 255});    
                 char score_buf[16];
                 sprintf(score_buf, "%d", p->score);
-                draw_text(renderer, font, score_buf, 920, 100, (SDL_Color){255, 255, 255});
+                draw_text(renderer, font, score_buf, 920, 100, (SDL_Color){255, 255, 255, 255});
 
                 // LEADERBOARD
                 char top_names[10][4];
                 int top_scores[10];
                 int top_count = load_top_scores_jsonc(FILE_NAME_SCORE, top_names, top_scores);
 
-                draw_text(renderer, font, "LEADERBOARD", 580, 420, (SDL_Color){255, 255, 255});
+                draw_text(renderer, font, "LEADERBOARD", 580, 420, (SDL_Color){255, 255, 255, 255});
                 for (int i = 0; i < top_count; i++) {
                     char line[64];
                     sprintf(line, "%d. %s - %d", i + 1, top_names[i], top_scores[i]);

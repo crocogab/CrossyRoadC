@@ -414,7 +414,7 @@ Menu *init_menus(Sprite_sheet *menu_spritesheet)
     // Création du menu de fin de partie
     all_menus[2] = create_menu(2, 0);
     Button play_button = create_button(7, 820, 886, 1, 0, menu_spritesheet, PLAY_ID, 0);
-    play_button.game_activator = TO_LAUNCH;
+    play_button.game_activator = RESET;
     play_button.is_changing_menu = 1;
     add_button_to_menu(&all_menus[2], play_button);
 

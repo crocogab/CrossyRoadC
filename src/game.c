@@ -127,3 +127,22 @@ void game_debug(Game *g, TTF_Font *font, SDL_Renderer *renderer, Camera cam, deb
         }
     }
 }
+
+/**
+ * Réinitialise la partie, libère la mémoire des board et player,
+ * les objets de la partie sont remis à zéro
+ * @param g la partie a réinitialiser
+ * 
+ */
+void game_reset(Game *g, Sprite_sheet *sprite_sheet)
+{
+    if (g->board != NULL)
+    {
+        board_free(g->board);
+        g->board = NULL;
+    }
+    g->status = TO_LAUNCH;
+    g->board = board_make(sprite_sheet);
+    grid_ground_starter_set(g->board, sprite_sheet);
+    board_set_player(g->board, player_start());
+}
