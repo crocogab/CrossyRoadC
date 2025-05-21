@@ -658,3 +658,34 @@ int draw_entities(Board *b, float anim_time, Animation anim_x, Animation anim_z,
     }
     return is_animating;
 }
+
+void draw_hitboxes(Board *b, Camera cam, Display_informations display, SDL_Renderer *renderer, debugKit *debug_kit)
+{
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    // Bleu clair à 30% de transparence pour le dessin des hitboxes des obstacles
+    SDL_Color light_blue = {173, 216, 230, 77};
+    // Rouge foncé à 30% de transparence pour le dessin de la hitbox du joueur
+    SDL_Color dark_red = {139, 0, 0, 77};
+    Point3d p1, p2, p3, p4;
+
+    for (int i = 0; i < MAP_LEN; i++)
+    {
+        Ground *ground = b->grid_ground[i];
+        for (int j = 0; j < ground->nb_obstacles; j++)
+        {
+            p1 = (Point3d){ground->obstacles[j]->h_position, ((float)i + (float)1) * (float)(display.line_width * display.tile_size), (float)2};
+            p2 = (Point3d){ground->obstacles[j]->h_position, ((float)i) * (float)(display.line_width*display.tile_size), (float)2};
+            p3 = (Point3d){ground->obstacles[j]->h_position + ground->obstacles[j]->length, ((float)i) * (float)(display.line_width*display.tile_size), (float)2};
+            p4 = (Point3d){ground->obstacles[j]->h_position + ground->obstacles[j]->length, ((float)i + (float)1) * (float)(display.line_width*display.tile_size), (float)2};
+            draw_quad_from_3d(p1, p2, p3, p4, light_blue, cam, renderer);
+        }
+    }
+
+    // On finit par le dessin de la hitbox du joueur
+    p1 = (Point3d){b->player->h_position, (V_POS + 1) * (float)(display.line_width * display.tile_size), (float)2};
+    p2 = (Point3d){b->player->h_position, V_POS * (float)(display.line_width * display.tile_size), (float)2};
+    p3 = (Point3d){b->player->h_position + (display.line_width*display.tile_size), V_POS * (float)(display.line_width * display.tile_size), (float)2};
+    p4 = (Point3d){b->player->h_position + (display.line_width*display.tile_size), (V_POS + 1) * (float)(display.line_width * display.tile_size), (float)2};
+    draw_quad_from_3d(p1, p2, p3, p4, dark_red, cam, renderer);
+
+}

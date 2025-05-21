@@ -53,27 +53,28 @@ void game_debug(Game *g, TTF_Font *font, SDL_Renderer *renderer, Camera cam, deb
 {
     SDL_Color white = {255, 255, 255, SDL_ALPHA_OPAQUE};
     Obstacle *o;
-    write_text("Controls: F1=God | F2= lines | F3 = informations | F4 = sprites | F5=Slow | F6=Speed | F7= sprites_info | Q = quit", 5, 25, -1, 0, 2, white, renderer, font);
+    write_text("Controls: F1 = god mode | F2 = lines | F3 = informations | F4 = sprites | F5 = slow | F6 = speed | F7= sprites_info", 5, 25, -1, 0, 2, white, renderer, font);
+    write_text("Controls: F8 = Toggle IA | F9 = Hitboxes | Q = quit", 5, 45, -1, 0, 2, white, renderer, font);
     if (debug_kit->display_information)
     {
         // Première zone : affichage des informations joueurs
-        write_text("Player : ", 5, 45, -1, 0, 2, white, renderer, font);
+        write_text("Player : ", 5, 65, -1, 0, 2, white, renderer, font);
         char player_info[256];
         snprintf(player_info, sizeof(player_info), "Position: (%.2f, %d) | Alive: %s | Score: %d",
                 g->board->player->h_position, V_POS,
                 g->board->player->alive ? "Yes" : "No",
                 g->board->player->score);
-        write_text(player_info, 115, 45, -1, 0, 2, white, renderer, font);
+        write_text(player_info, 115, 65, -1, 0, 2, white, renderer, font);
 
         // Deuxième zone : affichage des informations de la ligne suivante
-        write_text("Next line : ", 5, 65, -1, 0, 2, white, renderer, font);
+        write_text("Next line : ", 5, 85, -1, 0, 2, white, renderer, font);
         char next_line_info[256];
         snprintf(next_line_info, sizeof(next_line_info), "Nb. Obsta.: %d | Type: %d | Special: %f | Velocity: %f",
                 g->board->grid_ground[V_POS - 1]->nb_obstacles,
                 g->board->grid_ground[V_POS - 1]->type,
                 g->board->grid_ground[V_POS - 1]->special_attr,
                 g->board->grid_ground[V_POS - 1]->velocity);
-        write_text(next_line_info, 155, 65, -1, 0, 2, white, renderer, font);
+        write_text(next_line_info, 155, 85, -1, 0, 2, white, renderer, font);
         
         // Troisième zone : affichage des informations des obstacles de la ligne suivante
         for (int i = 0; i < g->board->grid_ground[V_POS-1]->nb_obstacles; i++)
@@ -84,14 +85,14 @@ void game_debug(Game *g, TTF_Font *font, SDL_Renderer *renderer, Camera cam, deb
                 char obstacle_info[256];
                 snprintf(obstacle_info, sizeof(obstacle_info), "Obstacle num. %d: Type: %d | Position: (%.2f, %d) | Length: %.2f",
                         i, o->type, o->h_position, V_POS-1, o->length);
-                write_text(obstacle_info, 5, 85 + i*20, -1, 0, 2, white, renderer, font);
+                write_text(obstacle_info, 5, 105 + i*20, -1, 0, 2, white, renderer, font);
             }
             else if (!(o->type == TREE_TYPE || o->type == ROCK_TYPE))
             {
                 char obstacle_info[256];
                 snprintf(obstacle_info, sizeof(obstacle_info), "Obstacle num. %d: Type: %d | Position: (%.2f, %d) | Length: %.2f",
                         i, o->type, o->h_position, V_POS-1, o->length);
-                write_text(obstacle_info, 5, 85 + i*20, -1, 0, 2, white, renderer, font);
+                write_text(obstacle_info, 5, 105 + i*20, -1, 0, 2, white, renderer, font);
             }
             
         }

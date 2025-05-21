@@ -28,6 +28,7 @@ int main() {
     debug.display_sprites=0;
     debug.display_information=0;
     debug.display_information_sprites=0;
+    debug.display_hitboxes=0;
     debug.pouleria = 0;
     debug.deepness_ia = 5;
     
@@ -241,6 +242,9 @@ int main() {
                         if ((g.status == TO_LAUNCH || g.status == PLAYING) && event.key.keysym.sym==SDLK_F8) {
                             debug.pouleria = debug.pouleria ? 0 : 1;
                         }
+                        if (event.key.keysym.sym==SDLK_F9){
+                            debug.display_hitboxes = debug.display_hitboxes ? 0 : 1;
+                        }
                         break;
                     
                     case SDL_MOUSEBUTTONUP: // Gestion des clics à la souris
@@ -329,8 +333,13 @@ int main() {
                 while (SDL_PollEvent(&event)) {
                     if (event.type == SDL_QUIT)
                         high_score_running = SDL_FALSE;
+
                     else if (event.type == SDL_KEYDOWN) {
                         switch (event.key.keysym.sym) {
+                            case SDLK_q:
+                                high_score_running = 0;
+                                running = 0;
+                                break;
                             case SDLK_RIGHT:
                                 selected_letter = (selected_letter + 1) % 3;
                                 break;
@@ -432,6 +441,12 @@ int main() {
         if (p->is_jumping)
         {
             anim_time += debug.game_speed; // Avancée de l'animation
+        }
+        
+        if (debug.display_hitboxes)
+        {
+            // Foncion de dessin des hitboxes
+            draw_hitboxes(b, cam, display, renderer, &debug);
         }
         
         // Dessin des entités en prenant en compte le temps d'animation s'il y a une animation en cours
