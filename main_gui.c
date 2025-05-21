@@ -15,11 +15,10 @@
 #include "ia.h"
 #include "UI.h" 
 
-
-debugKit debug;
-
 int main() {
     srand(time(NULL)); // nouvelle graine
+
+    debugKit debug;
     
     //Initialisation des informations pour le debug
     debug.display_grid_lines=0;
@@ -62,7 +61,7 @@ int main() {
     int const height = 1080;
 
     // Variables de la caméra
-    Camera cam = {1.25f, -300, -765, 0.25f};
+    Camera cam = {1.25f, -150, -765, 0.25f};
 
     // Variables de la grille
     Display_informations display = {121, 14, 50, 1, 25};
