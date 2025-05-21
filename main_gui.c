@@ -28,6 +28,7 @@ int main() {
     debug.display_information=0;
     debug.display_information_sprites=0;
     debug.display_hitboxes=0;
+    debug.display_hitgrid=0;
     debug.pouleria = 0;
     debug.deepness_ia = 5;
     
@@ -244,6 +245,9 @@ int main() {
                         if (event.key.keysym.sym==SDLK_F9){
                             debug.display_hitboxes = debug.display_hitboxes ? 0 : 1;
                         }
+                        if (event.key.keysym.sym==SDLK_F10){
+                            debug.display_hitgrid = debug.display_hitgrid ? 0 : 1;
+                        }
                         break;
                     
                     case SDL_MOUSEBUTTONUP: // Gestion des clics à la souris
@@ -446,6 +450,12 @@ int main() {
         {
             // Foncion de dessin des hitboxes
             draw_hitboxes(b, cam, display, renderer, &debug);
+        }
+        
+        if (debug.display_hitgrid){
+            int **hitgrid = hitgrid_init(b->grid_ground, 0, duration);
+            draw_hitgrid(b, cam, display, renderer, &debug,hitgrid,2);
+            hitgrid_free(hitgrid);
         }
         
         // Dessin des entités en prenant en compte le temps d'animation s'il y a une animation en cours

@@ -689,3 +689,62 @@ void draw_hitboxes(Board *b, Camera cam, Display_informations display, SDL_Rende
     draw_quad_from_3d(p1, p2, p3, p4, dark_red, cam, renderer);
 
 }
+
+void draw_hitgrid(Board *b, Camera cam, Display_informations display, SDL_Renderer *renderer, debugKit *debug_kit, int **hitgrid, int taille_affichage)
+{
+    // hitgrid : tableau entier de taille MAP_LEN*MAP_WIDTH
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    // VERT FONCE pour les cases clean (à 50%)
+    SDL_Color light_green = {0, 66, 30, 170};
+    // ROUGE FONCE pour les cases dangereuses (à 50%)
+    SDL_Color dark_red = {139, 0, 0, 170};
+    SDL_Color dark_blue = {9,0,66,170};
+    Point3d p1, p2, p3, p4;
+    
+    // pos du joueur
+    int player_cell_x = (int)(b->player->h_position / display.tile_size);
+    int player_cell_y = V_POS; // Position verticale du joueur (du code joueur)
+    
+    // limites
+    int start_x = player_cell_x - taille_affichage;
+    int end_x = player_cell_x + taille_affichage;
+    int start_y = player_cell_y - taille_affichage;
+    int end_y = player_cell_y + taille_affichage;
+    
+    
+    start_x = (start_x < 0) ? 0 : start_x;
+    end_x = (end_x >= MAP_WIDTH) ? MAP_WIDTH - 1 : end_x;
+    start_y = (start_y < 0) ? 0 : start_y;
+    end_y = (end_y >= MAP_LEN) ? MAP_LEN - 1 : end_y;
+    
+    //parcours de la grille
+    for (int i = start_y; i <= end_y; i++)
+    {
+        for (int j = start_x; j <= end_x; j++)
+        {
+            
+            float x_pos = j * display.tile_size;
+            float y_pos = i * display.tile_size;
+            
+            
+            p1 = (Point3d){x_pos, y_pos + (display.line_width * display.tile_size), 2.0f};
+            p2 = (Point3d){x_pos, y_pos, 2.0f};
+            p3 = (Point3d){x_pos + (display.line_width * display.tile_size), y_pos, 2.0f};
+            p4 = (Point3d){x_pos + (display.line_width * display.tile_size), y_pos + (display.line_width * display.tile_size), 2.0f};
+            
+            SDL_Color color;
+            if (hitgrid[i][j]==COLLIDE_NONE){
+                color= light_green;
+            }else if (hitgrid[i][j]==COLLIDE_DEADLY){
+                color=dark_red;
+            }else{
+                color=dark_blue;
+            }
+
+            
+            
+            // Dessin du quadrilatère avec la couleur appropriée
+            draw_quad_from_3d(p1, p2, p3, p4, color, cam, renderer);
+        }
+    }
+}
