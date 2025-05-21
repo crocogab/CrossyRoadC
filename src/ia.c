@@ -281,6 +281,82 @@ int pouleria_zero(Board *b, float dt, int maxd) {
     hitgrid_free(hitgrid);
 }
 
-int *pouleria_un(Board *, float delta_t, int max_deepness) {
+/**
+ * fonction recursive auxiliaire pour l'ia I
+ * 
+ * @return true si le je peux 
+ * 
+ */
+bool pouleroti_un(Board *b, int deep, int v, float h_pxl, int***hm, float dt, int *res) {
+    if (deep == 0) {
+        // condition d'arrêt
+        return true;
+    }
+
+    int h = h_pxl / DEFAULT_CELL_SIZE;
+
+    if (h < 0 || MAP_WIDTH <= h || V_POS - v >= MEMORISATION) {
+        // hors de la map
+        return false;
+    }
+    else if (hm[deep][v][h] != COLLIDE_NONE) {
+        // case bloquée
+        return false;
+    }
+    else if (pouleroti_un(b, deep - 1, v - 1, h, hm, dt, res)) {
+        // on essaye up
+        res[deep] = UP;
+        return true;
+    }
+    else if (h < MAP_WIDTH/2 && pouleroti_un(b, deep-1, v, h+1, hm, dt, res)) {
+        // si right est prio on essaye
+        res[deep] = RIGHT;
+        return true;
+    }
+    else if (pouleroti_un(b, deep-1, v, h-1, hm, dt, res)) {
+        // on essaye left
+        res[deep] = LEFT;
+        return true; 
+    } 
+    else if (h >= MAP_WIDTH/2 && pouleroti_un(b, deep-1, v, h+1, hm, dt, res)) {
+        // on réessaye right si pas prio
+        res[deep] = RIGHT;
+        return true;
+    }
+    else if (pouleroti_un(b, deep-1, v, h, hm, dt, res)) {
+        // on essaye neutral
+        res[deep] = NEUTRAL;
+        return true;        
+    } 
+    else if (pouleroti_un(b, deep-1, v+1, h, hm, dt, res)){
+        // on essaye down
+        res[deep] = DOWN;
+        return true;
+    } 
+    return false;
+}
+
+
+/**
+ * V1 de l'ia.
+ * Simulation de la trajectoire des obstacles et parcours en profondeur avec priorité au score.
+ * 
+ * Dès qu'un coup a été trouvé il est renvoyé.
+ * 
+ * NB une profondeur de 0 ça n'existe pas.
+ * 
+ * @param[in] board le plateau de jeu
+ * @param[in] dt l'unité de temps, correspond au temps d'animation d'un jump
+ * @param[in] max_deepness profondeur de simulation (>= 1)
+ * 
+ * @returns
+ * Un pointeur vers une séquence de coups (tableau de taille deepness).
+ */
+int *pouleria_un(Board *b, int*** hm, float dt, int mdeep) {
     
+    int *res = malloc(mdeep * sizeof(int));
+
+    pouleroti_un(b, mdeep, V_POS, b->player->h_position, hm, dt, res);
+
+    return res;
 }

@@ -1,6 +1,7 @@
 #ifndef IA_H
 #define IA_H
 
+#include <stdbool.h>
 #include "board.h"
 
 int ***hitmatrix_make(int max_deepness);
@@ -14,6 +15,7 @@ int **hitgrid_init(Ground **, float t, float dt);
 void hitgrid_fill(int **hitgrid, Ground **, float t, float dt);
 
 int pouleria_zero(Board *, float delta_t, int max_deepness);
-int *pouleria_un(Board *, float delta_t, int max_deepness);
+int *pouleria_un(Board *, int***hitmatrix, float delta_t, int max_deepness);
+bool pouleroti_un(Board *b, int deepness, int v_index, float h_pos_pxl, int***hitmatrix, float dt_jump, int *results);
 
 #endif //IA_H
