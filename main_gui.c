@@ -20,7 +20,7 @@ int main() {
 
     debugKit debug;
     
-    //Initialisation des informations pour le debug
+    //Initialisation des informations pour le MARK:debug
     debug.display_grid_lines=0;
     debug.game_speed=1;
     debug.god_mode=0;
@@ -30,7 +30,7 @@ int main() {
     debug.display_hitboxes=0;
     debug.display_hitgrid=0;
     debug.pouleria = 0;
-    debug.deepness_ia = 5;
+    debug.deepness_ia = 1;
     
     //Initialisation des objets
     Game g = game_make(TO_LAUNCH);
@@ -143,6 +143,10 @@ int main() {
     Animation anim_jump_z = {.duration = duration, .a = a_z, .b = b_z, .c = 0}; // La courbe de saut est quadratique
     // Initialisation du compteur pour les frames des animations
     float anim_time = 0;
+
+    // entrée dans la matrice pour l'ia
+    int ***hitmatrix = hitmatrix_init(b, debug.deepness_ia, duration);
+    int *next_moves = malloc(debug.deepness_ia * sizeof(int));
     
     // Initialisation de l'écoute des événements
     SDL_Event event;
@@ -268,8 +272,11 @@ int main() {
             }
         }
         if (debug.pouleria && (!(p->is_jumping))) {
+
+            pouleria_un(g.board, hitmatrix,  duration, debug.deepness_ia, next_moves);
             
-            ai_direction = pouleria_zero(g.board, duration, debug.deepness_ia);
+            // ai_direction = pouleria_zero(g.board, duration, debug.deepness_ia);
+            ai_direction = next_moves[0];
                 
             direction = ai_direction;
             
@@ -414,6 +421,7 @@ int main() {
             if (g.status != PAUSED)
             {
                 board_update(b, debug.game_speed, &sprite_sheet, debug);
+                hitmatrix_update(hitmatrix, b, debug.deepness_ia, duration, direction);
             }
         }
         
@@ -453,9 +461,9 @@ int main() {
         }
         
         if (debug.display_hitgrid){
-            int **hitgrid = hitgrid_init(b->grid_ground, 0, duration);
+            int **hitgrid = hitmatrix[0]; //hitgrid_init(b->grid_ground, 0, duration);
             draw_hitgrid(b, cam, display, renderer, &debug,hitgrid,2);
-            hitgrid_free(hitgrid);
+            // hitgrid_free(hitgrid); // ça free un bout de hitmatrix
         }
         
         // Dessin des entités en prenant en compte le temps d'animation s'il y a une animation en cours
@@ -487,6 +495,10 @@ int main() {
         SDL_RenderPresent(renderer);
         SDL_Delay(8); // ~60 FPS  
     }
+
+    //sortie de la matrice
+    hitmatrix_free(hitmatrix, debug.deepness_ia);
+    free(next_moves);
 
     TTF_CloseFont(debug_font);
     TTF_CloseFont(score_fond);

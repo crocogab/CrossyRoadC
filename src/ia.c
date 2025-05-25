@@ -17,23 +17,18 @@
 int ***hitmatrix_make(int deepness) {
     int ***matrix = malloc(deepness * sizeof(int **));
     for (int i=0; i<deepness;i++) {
-        matrix[i] = malloc(MAP_LEN*sizeof(int *));
-        for (int j=0; j<MAP_LEN; j++) {
-            matrix[i][j] = malloc(MAP_WIDTH * sizeof(int));
-        }
+        matrix[i] = hitgrid_make();
     }
     return matrix;
 }
+
 
 /**
  * Libère la mémoire allouée à une grille de collision 3D.
  */
 void hitmatrix_free(int ***hitmatrix, int max_deepness) {
     for (int i = 0; i < max_deepness; i++) {
-        for (int j = 0; j < MAP_LEN; j++) {
-            free(hitmatrix[i][j]);
-        }
-        free(hitmatrix[i]);
+        hitgrid_free(hitmatrix[i]);
     }
     free(hitmatrix);
 }
@@ -67,8 +62,8 @@ void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
     switch (coup) {
         case UP:
             // Ajuster les prédictions en tenant compte que le joueur avance
+            // on ajuste pas celle qu'on vient de créer parce qu'elle se base sur board up to date
             for (int i = 0; i < deep - 1; i++) {
-                int *lig = hm[i][MAP_LEN-1];
                 // on déplace toutes les lignes vers le haut
                 for (int j = 0; j < MAP_LEN-1; j++) {
                     hm[i][j+1] = hm[i][j];
@@ -80,7 +75,6 @@ void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
         
         case DOWN:
             for (int i = 0; i < deep - 1; i++) {
-                int *lig = hm[i][MAP_LEN-1];
                 // on déplace toutes les lignes vers le bas
                 for (int j = 0; j < MAP_LEN-1; j++) {
                     hm[i][j] = hm[i][j+1];
@@ -284,51 +278,58 @@ int pouleria_zero(Board *b, float dt, int maxd) {
 /**
  * fonction recursive auxiliaire pour l'ia I
  * 
- * @return true si le je peux 
+ * @param[in] deep profondeur à laquelle on regarde
+ * 
+ * @return true si le coup ne condamne pas le poulet
  * 
  */
 bool pouleroti_un(Board *b, int deep, int v, float h_pxl, int***hm, float dt, int *res) {
+    
     if (deep == 0) {
         // condition d'arrêt
         return true;
+    } else {
+        // on a plus besoin que de deep - 1 en fait;
+        deep = deep -1;
     }
 
     int h = h_pxl / DEFAULT_CELL_SIZE;
+    // TODO ajouter le décalage dû au rondins
 
     if (h < 0 || MAP_WIDTH <= h || V_POS - v >= MEMORISATION) {
         // hors de la map
         return false;
     }
     else if (hm[deep][v][h] != COLLIDE_NONE) {
-        // case bloquée
+        // case bloquée.
         return false;
     }
-    else if (pouleroti_un(b, deep - 1, v - 1, h, hm, dt, res)) {
+    else if (pouleroti_un(b, deep, v + 1, h_pxl, hm, dt, res)) {
         // on essaye up
         res[deep] = UP;
         return true;
     }
-    else if (h < MAP_WIDTH/2 && pouleroti_un(b, deep-1, v, h+1, hm, dt, res)) {
+    else if (h < MAP_WIDTH/2 && pouleroti_un(b, deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res)) {
         // si right est prio on essaye
         res[deep] = RIGHT;
         return true;
     }
-    else if (pouleroti_un(b, deep-1, v, h-1, hm, dt, res)) {
+    else if (pouleroti_un(b, deep, v, h_pxl - DEFAULT_CELL_SIZE, hm, dt, res)) {
         // on essaye left
         res[deep] = LEFT;
         return true; 
     } 
-    else if (h >= MAP_WIDTH/2 && pouleroti_un(b, deep-1, v, h+1, hm, dt, res)) {
+    else if (h >= MAP_WIDTH/2 && pouleroti_un(b, deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res)) {
         // on réessaye right si pas prio
         res[deep] = RIGHT;
         return true;
     }
-    else if (pouleroti_un(b, deep-1, v, h, hm, dt, res)) {
+    else if (pouleroti_un(b, deep, v, h_pxl, hm, dt, res)) {
         // on essaye neutral
         res[deep] = NEUTRAL;
         return true;        
     } 
-    else if (pouleroti_un(b, deep-1, v+1, h, hm, dt, res)){
+    else if (pouleroti_un(b, deep, v+1, h_pxl, hm, dt, res)){
         // on essaye down
         res[deep] = DOWN;
         return true;
@@ -350,13 +351,8 @@ bool pouleroti_un(Board *b, int deep, int v, float h_pxl, int***hm, float dt, in
  * @param[in] max_deepness profondeur de simulation (>= 1)
  * 
  * @returns
- * Un pointeur vers une séquence de coups (tableau de taille deepness).
+ * `true` si un chemin a été trouvé
  */
-int *pouleria_un(Board *b, int*** hm, float dt, int mdeep) {
-    
-    int *res = malloc(mdeep * sizeof(int));
-
-    pouleroti_un(b, mdeep, V_POS, b->player->h_position, hm, dt, res);
-
-    return res;
+bool pouleria_un(Board *b, int*** hm, float dt, int mdeep, int *res) {
+    return pouleroti_un(b, mdeep, V_POS, b->player->h_position, hm, dt, res);
 }
