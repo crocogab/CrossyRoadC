@@ -94,6 +94,42 @@ void draw_quad_from_3d(Point3d p1, Point3d p2, Point3d p3, Point3d p4, SDL_Color
 }
 
 /**
+ * @brief Dessine une ligne 2D entre deux points avec une couleur spécifiée en utilisant un renderer SDL.
+ * 
+ * @param p1 Le point de départ de la ligne dans l'espace 2D.
+ * @param p2 Le point d'arrivée de la ligne dans l'espace 2D.
+ * @param color La couleur de la ligne (structure SDL_Color contenant les valeurs RGBA).
+ * @param renderer Le SDL_Renderer utilisé pour dessiner la ligne.
+ */
+void draw_line(Point2d p1, Point2d p2, SDL_Color color, SDL_Renderer *renderer)
+{
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawLine(renderer, (int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
+}
+
+/**
+ * Dessine une ligne 3D projetée en 2D avec une couleur spécifiée en utilisant un renderer SDL.
+ * 
+ * Cette fonction prend deux points 3D, les projette en 2D en utilisant la caméra fournie,
+ * puis dessine une ligne entre les points 2D résultants.
+ * 
+ * @param p1 Le point de départ de la ligne dans l'espace 3D.
+ * @param p2 Le point d'arrivée de la ligne dans l'espace 3D.
+ * @param color La couleur de la ligne (structure SDL_Color contenant les valeurs RGBA).
+ * @param cam La caméra utilisée pour projeter les points 3D en 2D.
+ * @param renderer Le SDL_Renderer utilisé pour dessiner la ligne.
+ */
+void draw_line_from_3d(Point3d p1, Point3d p2, SDL_Color color, Camera cam, SDL_Renderer *renderer)
+{
+    //Transformation en 2D
+    Point2d p2d_1 = d3_to_2d(p1.x, p1.y, p1.z, cam);
+    Point2d p2d_2 = d3_to_2d(p2.x, p2.y, p2.z, cam);
+
+    // Dessin de la ligne
+    draw_line(p2d_1, p2d_2, color, renderer);
+}
+
+/**
  * Fonction qui dessine une ligne de la grille
  * @param y coordonnée y de la ligne (ordonnée sur le plateau)
  * @param type type de la ligne (GRASS, WATER, ROAD, ... cf macro.h)

@@ -36,7 +36,6 @@ int main() {
     Game g = game_make(TO_LAUNCH);
     Player *p = player_start();
     Board *b;
-   
     
     // initialisation du plateau
     int jump_back = 0;    // Limitation des retours en arrière
@@ -277,7 +276,7 @@ int main() {
             
             // ai_direction = pouleria_zero(g.board, duration, debug.deepness_ia);
             ai_direction = next_moves[0];
-                
+            
             direction = ai_direction;
             
         } else {
@@ -464,6 +463,11 @@ int main() {
             // hitgrid_free(hitgrid); // ça free un bout de hitmatrix
         }
         
+        if(debug.pouleria) {
+            // Dessin des prochaines actions de l'ia
+            draw_next_moves(b, cam, display, renderer, &debug, next_moves, debug.deepness_ia);
+        }
+
         // Dessin des entités en prenant en compte le temps d'animation s'il y a une animation en cours
         // si le temps d'animation est dépassé, draw_entities renvoie 0 et on met fin à l'état d'animation
         if (draw_entities(b, anim_time, anim_jump_x, anim_jump_z, cam,display,renderer,&sprite_sheet, &debug) == 0)
@@ -476,7 +480,9 @@ int main() {
             p->is_jumping = 1;
             anim_time += 0.01;
         }
-        
+
+
+
         // Affichage des menus de debug si activés
         if (debug.display_information || debug.display_information_sprites){
             game_debug(&g, debug_font, renderer, cam, &debug);
