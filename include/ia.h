@@ -16,6 +16,6 @@ void hitgrid_fill(int **hitgrid, Ground **, float t, float dt);
 
 int pouleria_zero(Board *, float delta_t, int max_deepness);
 bool pouleria_un(Board *, int***hitmatrix, float delta_t, int max_deepness, int *results);
-bool pouleroti_un(Board *b, int deepness, int v_index, float h_pos_pxl, int***hitmatrix, float dt_jump, int *results);
+bool pouleroti_un(Board *b, int max_deepness, int deepness, int v_index, float h_pos_pxl, int***hitmatrix, float dt_jump, int *results);
 
 #endif //IA_H

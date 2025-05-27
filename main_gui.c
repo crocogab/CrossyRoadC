@@ -30,7 +30,7 @@ int main() {
     debug.display_hitboxes=0;
     debug.display_hitgrid=0;
     debug.pouleria = 0;
-    debug.deepness_ia = 1;
+    debug.deepness_ia = 5;
     
     //Initialisation des objets
     Game g = game_make(TO_LAUNCH);
@@ -277,7 +277,7 @@ int main() {
             
             // ai_direction = pouleria_zero(g.board, duration, debug.deepness_ia);
             ai_direction = next_moves[0];
-                
+             
             direction = ai_direction;
             
         } else {
@@ -285,7 +285,7 @@ int main() {
             direction = player_direction;
         }
 
-        // 2. Traiter action
+        //MARK: 2. Traiter action
         int collision_type;
         if (!debug.god_mode){
             collision_type= check_future_collision(g.board, direction);
@@ -421,7 +421,9 @@ int main() {
             if (g.status != PAUSED)
             {
                 board_update(b, debug.game_speed, &sprite_sheet, debug);
-                hitmatrix_update(hitmatrix, b, debug.deepness_ia, duration, direction);
+                if (! p->is_jumping) {
+                    hitmatrix_update(hitmatrix, b, debug.deepness_ia, duration, direction);
+                }
             }
         }
         

@@ -8,7 +8,7 @@
 
 #include <stdio.h> // debug
 
-
+//MARK: hitmatrix
 /**
  * Alloue de la mémoire pour une grille 3D de collision.
  * 
@@ -46,28 +46,33 @@ int ***hitmatrix_init(Board *b, int deepness, float dt) {
 
 void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
     // Libérer la mémoire de la première grille
+    printf("0\n");
     if (hm[0] != NULL) {
         hitgrid_free(hm[0]);
     }
-    
-    // Faire glisser toutes les grilles d'un cran
+    printf("1\n");
+    // Faire glisser toutes les grilles d'un cran (avancée dans le temps)
     for (int i = 1; i < deep; i++) {
         hm[i-1] = hm[i];
     }
-
+    printf("2\n");
     // Créer une nouvelle grille pour la dernière position
     hm[deep-1] = hitgrid_init(b->grid_ground, (deep-1) * dt, dt);
-
+    printf("3\n");
     // Modifier les grilles en fonction du coup joué
     switch (coup) {
         case UP:
+            printf("up\n");
             // Ajuster les prédictions en tenant compte que le joueur avance
             // on ajuste pas celle qu'on vient de créer parce qu'elle se base sur board up to date
             for (int i = 0; i < deep - 1; i++) {
+                printf("i\n");
+                int *lig = hm[i][deep-1];
                 // on déplace toutes les lignes vers le haut
                 for (int j = 0; j < MAP_LEN-1; j++) {
                     hm[i][j+1] = hm[i][j];
                 }
+                hm[i][0] = lig;
                 
                 // pour la ligne en bas, on est pas censé y accéder donc whatever 
             }
@@ -76,11 +81,14 @@ void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
         case DOWN:
             for (int i = 0; i < deep - 1; i++) {
                 // on déplace toutes les lignes vers le bas
+                int *lig =hm[i][0];
                 for (int j = 0; j < MAP_LEN-1; j++) {
                     hm[i][j] = hm[i][j+1];
                 }
+                hm[i][deep-1] =  lig;
                 
                 // pour la ligne en haut, on est pas censé y accéder donc whatever 
+                // on fait cycler pour pouvoir free sans se poser de questions
             }
             break;
             
@@ -95,7 +103,7 @@ void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
             break;
     }
 }
-
+//MARK: hitgrid
 /**
  * Alloue de la mémoire pour une grille de collision.
  */
@@ -113,7 +121,7 @@ int **hitgrid_make(void) {
  */
 void hitgrid_free(int **hitgrid) {
     for (int i = 0; i < MAP_LEN; i++) {
-        free(hitgrid[i]);
+        if (hitgrid[i] != NULL) {free(hitgrid[i]);}
     }
     free(hitgrid);
 }
@@ -208,7 +216,7 @@ void hitgrid_fill(int **hitgrid, Ground **grid_ground, float t, float dt) {
     }
 }
 
-
+//MARK: ia 0
 /**
  * version zero de l'ia. Se contente de regarder devant et d'avancer si c'est possible. 
  * 
@@ -275,6 +283,7 @@ int pouleria_zero(Board *b, float dt, int maxd) {
     hitgrid_free(hitgrid);
 }
 
+//MARK: ia 1
 /**
  * fonction recursive auxiliaire pour l'ia I
  * 
@@ -283,16 +292,7 @@ int pouleria_zero(Board *b, float dt, int maxd) {
  * @return true si le coup ne condamne pas le poulet
  * 
  */
-bool pouleroti_un(Board *b, int deep, int v, float h_pxl, int***hm, float dt, int *res) {
-    
-    if (deep == 0) {
-        // condition d'arrêt
-        return true;
-    } else {
-        // on a plus besoin que de deep - 1 en fait;
-        deep = deep -1;
-    }
-
+bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, float dt, int *res) {
     int h = h_pxl / DEFAULT_CELL_SIZE;
     // TODO ajouter le décalage dû au rondins
 
@@ -300,36 +300,41 @@ bool pouleroti_un(Board *b, int deep, int v, float h_pxl, int***hm, float dt, in
         // hors de la map
         return false;
     }
-    else if (hm[deep][v][h] != COLLIDE_NONE) {
+    else if (deep != 0 && hm[deep-1][v][h] != COLLIDE_NONE) {
         // case bloquée.
         return false;
+    } 
+    else if (deep == mdeep) {
+        // condition d'arrêt
+        return true;
     }
-    else if (pouleroti_un(b, deep, v + 1, h_pxl, hm, dt, res)) {
+
+    else if (pouleroti_un(b, mdeep, deep+1, v + 1, h_pxl, hm, dt, res)) {
         // on essaye up
         res[deep] = UP;
         return true;
     }
-    else if (h < MAP_WIDTH/2 && pouleroti_un(b, deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res)) {
+    else if (h < MAP_WIDTH/2 && pouleroti_un(b, mdeep, 1+ deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res)) {
         // si right est prio on essaye
         res[deep] = RIGHT;
         return true;
     }
-    else if (pouleroti_un(b, deep, v, h_pxl - DEFAULT_CELL_SIZE, hm, dt, res)) {
+    else if (pouleroti_un(b, mdeep, 1+deep, v, h_pxl - DEFAULT_CELL_SIZE, hm, dt, res)) {
         // on essaye left
         res[deep] = LEFT;
         return true; 
     } 
-    else if (h >= MAP_WIDTH/2 && pouleroti_un(b, deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res)) {
+    else if (h >= MAP_WIDTH/2 && pouleroti_un(b, mdeep, 1 + deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res)) {
         // on réessaye right si pas prio
         res[deep] = RIGHT;
         return true;
     }
-    else if (pouleroti_un(b, deep, v, h_pxl, hm, dt, res)) {
+    else if (pouleroti_un(b, mdeep, 1+deep, v, h_pxl, hm, dt, res)) {
         // on essaye neutral
         res[deep] = NEUTRAL;
         return true;        
     } 
-    else if (pouleroti_un(b, deep, v+1, h_pxl, hm, dt, res)){
+    else if (pouleroti_un(b, mdeep, 1 + deep, v+1, h_pxl, hm, dt, res)){
         // on essaye down
         res[deep] = DOWN;
         return true;
@@ -354,5 +359,5 @@ bool pouleroti_un(Board *b, int deep, int v, float h_pxl, int***hm, float dt, in
  * `true` si un chemin a été trouvé
  */
 bool pouleria_un(Board *b, int*** hm, float dt, int mdeep, int *res) {
-    return pouleroti_un(b, mdeep, V_POS, b->player->h_position, hm, dt, res);
+    return pouleroti_un(b, mdeep, 0, V_POS, b->player->h_position, hm, dt, res);
 }
