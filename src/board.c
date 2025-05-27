@@ -750,11 +750,11 @@ void draw_hitgrid(Board *b, Camera cam, Display_informations display, SDL_Render
 }
 
 void draw_next_moves(Board *b, Camera cam, Display_informations display, SDL_Renderer *renderer, debugKit *debug_kit, int *next_moves, int deepness) {
-    printf("Next moves: ");
-    for (int i = 0; i < deepness; i++) {
-        printf("%d move %d ", next_moves[i], i);
-    }
-    printf("\n");
+    // printf("Next moves: ");
+    // for (int i = 0; i < deepness; i++) {
+    //     printf("%d move %d ", next_moves[i], i);
+    // }
+    // printf("\n");
 
     // On dessine les prochaines cases possibles et les lignes reliant les cases
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);

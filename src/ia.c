@@ -29,6 +29,7 @@ int ***hitmatrix_make(int deepness) {
 void hitmatrix_free(int ***hitmatrix, int max_deepness) {
     for (int i = 0; i < max_deepness; i++) {
         hitgrid_free(hitmatrix[i]);
+        hitmatrix[i] = NULL;
     }
     free(hitmatrix);
 }
@@ -46,27 +47,28 @@ int ***hitmatrix_init(Board *b, int deepness, float dt) {
 
 void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
     // Libérer la mémoire de la première grille
-    printf("0\n");
-    if (hm[0] != NULL) {
-        hitgrid_free(hm[0]);
-    }
-    printf("1\n");
+    // printf("0\n");
+    int **deprecated_grid = hm[0];
+    
+    // printf("1\n");
     // Faire glisser toutes les grilles d'un cran (avancée dans le temps)
     for (int i = 1; i < deep; i++) {
         hm[i-1] = hm[i];
     }
-    printf("2\n");
+    // printf("2\n");
     // Créer une nouvelle grille pour la dernière position
-    hm[deep-1] = hitgrid_init(b->grid_ground, (deep-1) * dt, dt);
-    printf("3\n");
+    // hm[deep-1] = hitgrid_init(b->grid_ground, (deep-1) * dt, dt);
+    hitgrid_fill(deprecated_grid, b->grid_ground, (deep-1) * dt, dt);
+    hm[deep-1] = deprecated_grid;
+    // printf("3\n");
     // Modifier les grilles en fonction du coup joué
     switch (coup) {
         case UP:
-            printf("up\n");
+            // printf("up\n");
             // Ajuster les prédictions en tenant compte que le joueur avance
             // on ajuste pas celle qu'on vient de créer parce qu'elle se base sur board up to date
             for (int i = 0; i < deep - 1; i++) {
-                printf("i\n");
+                // printf("i\n");
                 int *lig = hm[i][deep-1];
                 // on déplace toutes les lignes vers le haut
                 for (int j = 0; j < MAP_LEN-1; j++) {
@@ -79,6 +81,7 @@ void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
             break;
         
         case DOWN:
+            // printf("down\n");
             for (int i = 0; i < deep - 1; i++) {
                 // on déplace toutes les lignes vers le bas
                 int *lig =hm[i][0];
@@ -96,10 +99,12 @@ void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
         case RIGHT:
         case NEUTRAL:
             // Pas besoin d'ajustement spécial pour ces coups
+            // printf("neutral\n");
             break;
-            
+        
         default:
             // Coup non reconnu, ne rien faire de spécial
+            printf("coup default dans hm update\n");
             break;
     }
 }
@@ -121,7 +126,11 @@ int **hitgrid_make(void) {
  */
 void hitgrid_free(int **hitgrid) {
     for (int i = 0; i < MAP_LEN; i++) {
-        if (hitgrid[i] != NULL) {free(hitgrid[i]);}
+        if (hitgrid[i] != NULL) {
+
+            free(hitgrid[i]); 
+            hitgrid[i] = NULL;
+        }
     }
     free(hitgrid);
 }

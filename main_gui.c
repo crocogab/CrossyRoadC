@@ -15,7 +15,7 @@
 #include "ia.h"
 #include "UI.h" 
 
-int main() {
+int main(void) {
     srand(time(NULL)); // nouvelle graine
 
     debugKit debug;
@@ -29,7 +29,7 @@ int main() {
     debug.display_information_sprites=0;
     debug.display_hitboxes=0;
     debug.display_hitgrid=0;
-    debug.pouleria = 0;
+    debug.ia_mode = 0;
     debug.deepness_ia = 5;
     
     //Initialisation des objets
@@ -144,8 +144,9 @@ int main() {
     float anim_time = 0;
 
     // entrée dans la matrice pour l'ia
-    int ***hitmatrix = hitmatrix_init(b, debug.deepness_ia, duration);
+    int ***hitmatrix;
     int *next_moves = malloc(debug.deepness_ia * sizeof(int));
+    int last_move = NEUTRAL;
     
     // Initialisation de l'écoute des événements
     SDL_Event event;
@@ -160,7 +161,8 @@ int main() {
             score_actu = 0;   // Score actuel
             running = 1;
             // Désactivation de l'ia
-            debug.pouleria = 0;
+            debug.ia_mode = 0;
+            debug.ia_shall_init = 0;
             // Réinitialisation de la partie et de son statut
             game_reset(&g, &sprite_sheet);
             b = g.board;
@@ -243,13 +245,22 @@ int main() {
                             debug.display_information_sprites = debug.display_information_sprites ? 0 : 1;
                         }
                         if ((g.status == TO_LAUNCH || g.status == PLAYING) && event.key.keysym.sym==SDLK_F8) {
-                            debug.pouleria = debug.pouleria ? 0 : 1;
+                            if (debug.ia_mode) {
+                                debug.ia_mode = 0;
+                                debug.ia_shall_init = 0;
+                            } else {
+                                debug.ia_mode = 1;
+                                debug.ia_shall_init = 1;
+                            }
                         }
                         if (event.key.keysym.sym==SDLK_F9){
                             debug.display_hitboxes = debug.display_hitboxes ? 0 : 1;
                         }
                         if (event.key.keysym.sym==SDLK_F10){
                             debug.display_hitgrid = debug.display_hitgrid ? 0 : 1;
+                            if (debug.display_hitboxes) {
+                                debug.ia_shall_init =1 ;
+                            }
                         }
                         break;
                     
@@ -270,9 +281,17 @@ int main() {
                 }
             }
         }
-        if (debug.pouleria && (!(p->is_jumping))) {
 
-            pouleria_un(g.board, hitmatrix,  duration, debug.deepness_ia, next_moves);
+        if (g.status == PLAYING && debug.ia_mode && (!(p->is_jumping))) {
+            if (debug.ia_shall_init) {
+                hitmatrix = hitmatrix_init(b, debug.deepness_ia, duration);
+                debug.ia_shall_init = 0;
+            } else {
+                hitmatrix_update(hitmatrix, b, debug.deepness_ia, duration, last_move);
+            }
+            if (!pouleria_un(g.board, hitmatrix,  duration, debug.deepness_ia, next_moves)) {
+                printf("pas de chemin trouvé\n");
+            }
             
             // ai_direction = pouleria_zero(g.board, duration, debug.deepness_ia);
             ai_direction = next_moves[0];
@@ -321,13 +340,14 @@ int main() {
                     // Collision mortelle
                     p->alive = false;
                     g.status = DEAD;
-                    printf("direction: %d\n",direction);
+                    printf("direction fatale: %d\n",direction);
                     break;
                 
                 case COLLIDE_HARMLESS:
                     // Collision sans effet, on ne fait rien
                     break;
             }
+            last_move = direction;
         }
 
         if (g.status == DEAD) {
@@ -418,9 +438,9 @@ int main() {
             if (g.status != PAUSED)
             {
                 board_update(b, debug.game_speed, &sprite_sheet, debug);
-                if (! p->is_jumping) {
-                    hitmatrix_update(hitmatrix, b, debug.deepness_ia, duration, direction);
-                }
+                // if (! p->is_jumping) {
+                //     hitmatrix_update(hitmatrix, b, debug.deepness_ia, duration, direction);
+                // }
             }
         }
         
@@ -465,7 +485,7 @@ int main() {
             // hitgrid_free(hitgrid); // ça free un bout de hitmatrix
         }
         
-        if(debug.pouleria) {
+        if(debug.ia_mode) {
             // Dessin des prochaines actions de l'ia
             draw_next_moves(b, cam, display, renderer, &debug, next_moves, debug.deepness_ia);
         }
@@ -501,10 +521,11 @@ int main() {
         SDL_RenderPresent(renderer);
         SDL_Delay(8); // ~60 FPS  
     }
-
-    //sortie de la matrice
+    printf("sortie de la matrice\n");
     hitmatrix_free(hitmatrix, debug.deepness_ia);
+    hitmatrix = NULL;
     free(next_moves);
+    next_moves = NULL;
 
     TTF_CloseFont(debug_font);
     TTF_CloseFont(score_fond);
