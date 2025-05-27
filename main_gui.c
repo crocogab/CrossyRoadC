@@ -29,8 +29,9 @@ int main(void) {
     debug.display_information_sprites=0;
     debug.display_hitboxes=0;
     debug.display_hitgrid=0;
-    debug.ia_mode = 0;
-    debug.deepness_ia = 5;
+    debug.ai_mode = 0;
+    debug.ai_shall_init = 0;
+    debug.deepness_ai = 5;
     
     //Initialisation des objets
     Game g = game_make(TO_LAUNCH);
@@ -145,8 +146,10 @@ int main(void) {
 
     // entrée dans la matrice pour l'ia
     int ***hitmatrix;
-    int *next_moves = malloc(debug.deepness_ia * sizeof(int));
+    int *next_moves = malloc(debug.deepness_ai * sizeof(int));
     int last_move = NEUTRAL;
+    int hm_is_uptodate;
+    float ai_timer;
     
     // Initialisation de l'écoute des événements
     SDL_Event event;
@@ -161,8 +164,8 @@ int main(void) {
             score_actu = 0;   // Score actuel
             running = 1;
             // Désactivation de l'ia
-            debug.ia_mode = 0;
-            debug.ia_shall_init = 0;
+            debug.ai_mode = 0;
+            debug.ai_shall_init = 0;
             // Réinitialisation de la partie et de son statut
             game_reset(&g, &sprite_sheet);
             b = g.board;
@@ -173,6 +176,7 @@ int main(void) {
         int direction = NEUTRAL;
         int ai_direction = NEUTRAL;
         int player_direction = NEUTRAL;
+        hm_is_uptodate = 0;
 
         if (SDL_PollEvent(&event)){ 
             {
@@ -245,12 +249,12 @@ int main(void) {
                             debug.display_information_sprites = debug.display_information_sprites ? 0 : 1;
                         }
                         if ((g.status == TO_LAUNCH || g.status == PLAYING) && event.key.keysym.sym==SDLK_F8) {
-                            if (debug.ia_mode) {
-                                debug.ia_mode = 0;
-                                debug.ia_shall_init = 0;
+                            if (debug.ai_mode) {
+                                debug.ai_mode = 0;
+                                debug.ai_shall_init = 0;
                             } else {
-                                debug.ia_mode = 1;
-                                debug.ia_shall_init = 1;
+                                debug.ai_mode = 1;
+                                debug.ai_shall_init = 1;
                             }
                         }
                         if (event.key.keysym.sym==SDLK_F9){
@@ -258,9 +262,6 @@ int main(void) {
                         }
                         if (event.key.keysym.sym==SDLK_F10){
                             debug.display_hitgrid = debug.display_hitgrid ? 0 : 1;
-                            if (debug.display_hitboxes) {
-                                debug.ia_shall_init =1 ;
-                            }
                         }
                         break;
                     
@@ -281,20 +282,21 @@ int main(void) {
                 }
             }
         }
-
-        if (g.status == PLAYING && debug.ia_mode && (!(p->is_jumping))) {
-            if (debug.ia_shall_init) {
-                hitmatrix = hitmatrix_init(b, debug.deepness_ia, duration);
-                debug.ia_shall_init = 0;
+        if (g.status == PLAYING && debug.ai_mode && ai_timer <= 0) {
+            hm_is_uptodate = 1;
+            if (debug.ai_shall_init) {
+                hitmatrix = hitmatrix_init(b, debug.deepness_ai, duration);
+                debug.ai_shall_init = 0;
             } else {
-                hitmatrix_update(hitmatrix, b, debug.deepness_ia, duration, last_move);
+                hitmatrix_update(hitmatrix, b, debug.deepness_ai, duration, last_move);
             }
-            if (!pouleria_un(g.board, hitmatrix,  duration, debug.deepness_ia, next_moves)) {
+            if ( !pouleria_un(g.board, hitmatrix,  duration, debug.deepness_ai, next_moves)) {
                 printf("pas de chemin trouvé\n");
             }
             
-            // ai_direction = pouleria_zero(g.board, duration, debug.deepness_ia);
+            // ai_direction = pouleria_zero(g.board, duration, debug.deepness_ai);
             ai_direction = next_moves[0];
+            ai_timer = duration;
                 
             direction = ai_direction;
             
@@ -348,6 +350,7 @@ int main(void) {
                     break;
             }
             last_move = direction;
+            ai_timer -= debug.game_speed;
         }
 
         if (g.status == DEAD) {
@@ -439,7 +442,7 @@ int main(void) {
             {
                 board_update(b, debug.game_speed, &sprite_sheet, debug);
                 // if (! p->is_jumping) {
-                //     hitmatrix_update(hitmatrix, b, debug.deepness_ia, duration, direction);
+                //     hitmatrix_update(hitmatrix, b, debug.deepness_ai, duration, direction);
                 // }
             }
         }
@@ -480,14 +483,14 @@ int main(void) {
         }
         
         if (debug.display_hitgrid){
-            int **hitgrid = hitmatrix[0]; //hitgrid_init(b->grid_ground, 0, duration);
+            int **hitgrid = hm_is_uptodate? hitmatrix[0] : hitgrid_init(b->grid_ground, 0, duration);
             draw_hitgrid(b, cam, display, renderer, &debug,hitgrid,2);
             // hitgrid_free(hitgrid); // ça free un bout de hitmatrix
         }
         
-        if(debug.ia_mode) {
+        if(debug.ai_mode) {
             // Dessin des prochaines actions de l'ia
-            draw_next_moves(b, cam, display, renderer, &debug, next_moves, debug.deepness_ia);
+            draw_next_moves(b, cam, display, renderer, &debug, next_moves, debug.deepness_ai);
         }
 
         // Dessin des entités en prenant en compte le temps d'animation s'il y a une animation en cours
@@ -502,7 +505,6 @@ int main(void) {
             p->is_jumping = 1;
             anim_time += 0.01;
         }
-
 
 
         // Affichage des menus de debug si activés
@@ -522,7 +524,7 @@ int main(void) {
         SDL_Delay(8); // ~60 FPS  
     }
     printf("sortie de la matrice\n");
-    hitmatrix_free(hitmatrix, debug.deepness_ia);
+    hitmatrix_free(hitmatrix, debug.deepness_ai);
     hitmatrix = NULL;
     free(next_moves);
     next_moves = NULL;
