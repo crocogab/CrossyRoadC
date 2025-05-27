@@ -748,3 +748,55 @@ void draw_hitgrid(Board *b, Camera cam, Display_informations display, SDL_Render
         }
     }
 }
+
+void draw_next_moves(Board *b, Camera cam, Display_informations display, SDL_Renderer *renderer, debugKit *debug_kit, int *next_moves, int deepness) {
+    printf("Next moves: ");
+    for (int i = 0; i < deepness; i++) {
+        printf("%d move %d ", next_moves[i], i);
+    }
+    printf("\n");
+
+    // On dessine les prochaines cases possibles et les lignes reliant les cases
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_Color line_color = {255, 0, 0, 200}; 
+    Point3d p1, p2, p3, p4, line_start, line_end;
+
+    int y_pos = V_POS ;
+    float x_pos = b->player->h_position - (display.line_width * display.tile_size / 12); // On centre la ligne, pas forcement le mieux
+    float prev_x = x_pos;
+    int prev_y = y_pos;
+
+    for (int i = 0; i < deepness; i++) {
+        // Met à jour la position selon le coup
+        switch (next_moves[i]) {
+            case UP:
+                y_pos -= 1;
+                break;
+            case DOWN:
+                y_pos += 1;
+                break;
+            case RIGHT:
+                x_pos += DEFAULT_CELL_SIZE;
+                break;
+            case LEFT:
+                x_pos -= DEFAULT_CELL_SIZE;
+                break;
+        }
+
+        // Dessine une ligne plus épaisse reliant la case précédente à la case actuelle
+        line_start = (Point3d){prev_x + display.line_width * display.tile_size / 2, prev_y * display.tile_size + display.line_width * display.tile_size / 2, 2.0f};
+        line_end = (Point3d){x_pos + display.line_width * display.tile_size / 2, y_pos * display.tile_size + display.line_width * display.tile_size / 2, 2.0f};
+
+        // Dessine plusieurs lignes parallèles pour simuler une ligne plus épaisse
+        float thickness = 5.0f; // Ajustez cette valeur pour changer l'épaisseur
+        for (float offset = -thickness / 2; offset <= thickness / 2; offset += 0.1f) {
+            Point3d offset_start = (Point3d){line_start.x + offset, line_start.y , line_start.z};
+            Point3d offset_end = (Point3d){line_end.x + offset, line_end.y , line_end.z};
+            draw_line_from_3d(offset_start, offset_end, line_color, cam, renderer);
+        }
+
+        // Met à jour les positions précédentes
+        prev_x = x_pos;
+        prev_y = y_pos;
+    }
+}

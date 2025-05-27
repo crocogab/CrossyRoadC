@@ -153,6 +153,8 @@ typedef struct Animation_t
 Point2d d3_to_2d(float x, float y, float z, Camera cam);
 void draw_quad(Point2d p1, Point2d p2, Point2d p3, Point2d p4, SDL_Color color, SDL_Renderer *renderer);
 void draw_quad_from_3d(Point3d p1, Point3d p2, Point3d p3, Point3d p4, SDL_Color color, Camera cam, SDL_Renderer *renderer);
+void draw_line(Point2d p1, Point2d p2, SDL_Color color, SDL_Renderer *renderer);
+void draw_line_from_3d(Point3d p1, Point3d p2, SDL_Color color, Camera cam, SDL_Renderer *renderer);
 void draw_board_line(float x, int type, Camera cam, Display_informations display, Colors colors, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit,int score_actu, int is_jumping, int p_direction);
 
 Sprite create_sprite(Sprite_coord *sprites_coord, int sprite_count, float lenght);

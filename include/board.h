@@ -34,5 +34,6 @@ int draw_board(Board *b, float anim_time, Animation anim, Camera cam, Display_in
 int draw_entities(Board *b, float anim_time, Animation anim_x, Animation anim_z, Camera cam, Display_informations display, SDL_Renderer *renderer, Sprite_sheet *sprite_sheet, debugKit *debug_kit);
 void draw_hitboxes(Board *b, Camera cam, Display_informations display, SDL_Renderer *renderer, debugKit *debug_kit);
 void draw_hitgrid(Board *b, Camera cam, Display_informations display, SDL_Renderer *renderer, debugKit *debug_kit, int **hitgrid,int taille_affichage);
+void draw_next_moves(Board *b, Camera cam, Display_informations display, SDL_Renderer *renderer, debugKit *debug_kit, int *next_moves, int deepness);
 #endif
 
