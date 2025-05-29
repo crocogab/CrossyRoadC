@@ -12,6 +12,7 @@ typedef struct debugKit_
    int display_information_sprites; // active les infos des sprites
    int display_hitboxes; // active l'affichage des hitboxes
    int display_hitgrid;
+   int display_next_moves; // active l'affichage des prochaines actions de l'ia
    int pouleria; // active l'ia (on pourra mettre son niveau)
    int deepness_ia; // profondeur de calcul
 }debugKit;

@@ -29,6 +29,7 @@ int main() {
     debug.display_information_sprites=0;
     debug.display_hitboxes=0;
     debug.display_hitgrid=0;
+    debug.display_next_moves=0;
     debug.pouleria = 0;
     debug.deepness_ia = 5;
     
@@ -251,6 +252,10 @@ int main() {
                         if (event.key.keysym.sym==SDLK_F10){
                             debug.display_hitgrid = debug.display_hitgrid ? 0 : 1;
                         }
+
+                        if(event.key.keysym.sym == SDLK_F11){
+                            debug.display_next_moves = debug.display_next_moves ? 0 : 1;
+                        }
                         break;
                     
                     case SDL_MOUSEBUTTONUP: // Gestion des clics à la souris
@@ -464,11 +469,12 @@ int main() {
             draw_hitgrid(b, cam, display, renderer, &debug,hitgrid,2);
             // hitgrid_free(hitgrid); // ça free un bout de hitmatrix
         }
-        
-        if(debug.pouleria) {
+
+        if (debug.display_next_moves && debug.pouleria) {
             // Dessin des prochaines actions de l'ia
             draw_next_moves(b, cam, display, renderer, &debug, next_moves, debug.deepness_ia);
         }
+        
 
         // Dessin des entités en prenant en compte le temps d'animation s'il y a une animation en cours
         // si le temps d'animation est dépassé, draw_entities renvoie 0 et on met fin à l'état d'animation
