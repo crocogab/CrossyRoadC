@@ -54,7 +54,7 @@ void game_debug(Game *g, TTF_Font *font, SDL_Renderer *renderer, Camera cam, deb
     SDL_Color white = {255, 255, 255, SDL_ALPHA_OPAQUE};
     Obstacle *o;
     write_text("Controls: F1 = god mode | F2 = lines | F3 = informations | F4 = sprites | F5 = slow | F6 = speed | F7= sprites_info", 5, 25, -1, 0, 2, white, renderer, font);
-    write_text("Controls: F8 = Toggle IA | F9 = Hitboxes | Q = quit", 5, 45, -1, 0, 2, white, renderer, font);
+    write_text("Controls: F8 = Toggle IA | F9 = Hitboxes | F10 = Hitgrid | F11 = Next moves | Q = quit", 5, 45, -1, 0, 2, white, renderer, font);
     if (debug_kit->display_information)
     {
         // Première zone : affichage des informations joueurs
