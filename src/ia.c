@@ -302,15 +302,17 @@ int pouleria_zero(Board *b, float dt, int maxd) {
  * 
  */
 bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, float dt, int *res) {
-    int h = h_pxl / DEFAULT_CELL_SIZE;
+    int h = (h_pxl - DEFAULT_CELL_SIZE/4) / DEFAULT_CELL_SIZE;
     // TODO ajouter le décalage dû au rondins
 
     if (h < 0 || MAP_WIDTH <= h || V_POS - v >= MEMORISATION) {
         // hors de la map
+        printf("hors de la map\n");
         return false;
     }
     else if (deep != 0 && hm[deep-1][v][h] != COLLIDE_NONE) {
         // case bloquée.
+        printf("looked at %d %d | deepness %d\n", v,h, deep);
         return false;
     } 
     else if (deep == mdeep) {
@@ -318,7 +320,7 @@ bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, f
         return true;
     }
 
-    else if (pouleroti_un(b, mdeep, deep+1, v + 1, h_pxl, hm, dt, res)) {
+    else if (pouleroti_un(b, mdeep, deep+1, v - 1, h_pxl, hm, dt, res)) {
         // on essaye up
         res[deep] = UP;
         return true;

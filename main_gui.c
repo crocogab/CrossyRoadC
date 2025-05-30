@@ -31,7 +31,7 @@ int main(void) {
     debug.display_hitgrid=0;
     debug.ai_mode = 0;
     debug.ai_shall_init = 0;
-    debug.deepness_ai = 5;
+    debug.deepness_ai = 2;
     
     //Initialisation des objets
     Game g = game_make(TO_LAUNCH);
