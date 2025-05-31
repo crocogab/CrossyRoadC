@@ -348,6 +348,7 @@ void print_moves(int *moves, int deepness){
 }
 
 void reset_moves(int *moves, int d) {
+    // pour être sur qu'on a pas des mouvements rémanents
     for (int i = 0; i < d; i++) {
         moves[i] = 0;
     }
@@ -438,6 +439,7 @@ bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, f
  * `true` si un chemin a été trouvé
  */
 bool pouleria_un(Board *b, int*** hm, float dt, int mdeep, int *moves) {
+    reset_moves(moves, mdeep);
     bool res = pouleroti_un(b, mdeep, 0, V_POS, b->player->h_position, hm, dt, moves);
     print_hm(hm, mdeep, V_POS, cased_h(b->player->h_position));
     print_moves(moves, mdeep);
