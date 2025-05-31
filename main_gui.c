@@ -489,7 +489,7 @@ int main(void) {
         
         if (debug.display_hitgrid){
             int **hitgrid = hm_is_uptodate? hitmatrix[0] : hitgrid_init(b->grid_ground, 0, duration);
-            draw_hitgrid(b, cam, display, renderer, &debug,hitgrid,2);
+            draw_hitgrid(b, cam, display, renderer, &debug,hitgrid,3);
             // hitgrid_free(hitgrid); // ça free un bout de hitmatrix
         }
 

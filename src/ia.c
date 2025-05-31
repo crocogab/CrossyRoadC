@@ -293,6 +293,66 @@ int pouleria_zero(Board *b, float dt, int maxd) {
 }
 
 //MARK: ia 1
+
+void print_hm(int ***hm, int mdeep, int v, int h) {
+
+    for (int i = 0; i < mdeep; i++) {
+        printf("POULET: %d %d %d ---\n", i, v, h);
+        for (int j = v-2; j < v +1 ; j++) {
+            for (int k = h - 4; k < h + 5; k++) {
+                
+                if (h == k && j == v) {
+                    printf("@");
+                } 
+                else if (hm[i][j][k] == COLLIDE_NONE) {
+                    printf("_");
+                }
+                else if (hm[i][j][k] == COLLIDE_DEADLY) {
+                    printf("+");
+                } 
+                else {
+                    printf("#");
+                }
+            }
+            
+            printf("\n");
+        }
+    }
+    printf("~~~~~~~~~~~~~~~\n");
+}
+
+int cased_h(float h_pxl) {
+    return (h_pxl - DEFAULT_CELL_SIZE/4 + .00001) / DEFAULT_CELL_SIZE;
+}
+
+void print_moves(int *moves, int deepness){
+    printf("MOVES: ");
+    for (int i = 0; i < deepness; i++) {
+        switch (moves[i]) {
+            case UP: 
+                printf("^ ");
+            break;
+            case DOWN: 
+                printf("v ");
+            case RIGHT: printf("> ");
+            break;
+            case LEFT: 
+                printf("< ");
+            break;
+            case NEUTRAL: printf("o ");
+            break;
+            
+        }
+    }
+    printf("\n");
+}
+
+void reset_moves(int *moves, int d) {
+    for (int i = 0; i < d; i++) {
+        moves[i] = 0;
+    }
+}
+
 /**
  * fonction recursive auxiliaire pour l'ia I
  * 
@@ -302,7 +362,7 @@ int pouleria_zero(Board *b, float dt, int maxd) {
  * 
  */
 bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, float dt, int *res) {
-    int h = (h_pxl - DEFAULT_CELL_SIZE/4) / DEFAULT_CELL_SIZE;
+    int h = cased_h(h_pxl);
     // TODO ajouter le décalage dû au rondins
 
     if (h < 0 || MAP_WIDTH <= h || V_POS - v >= MEMORISATION) {
@@ -310,12 +370,18 @@ bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, f
         printf("hors de la map\n");
         return false;
     }
-    else if (deep != 0 && hm[deep-1][v][h] != COLLIDE_NONE) {
-        // case bloquée.
-        printf("looked at %d %d | deepness %d\n", v,h, deep);
-        return false;
-    } 
-    else if (deep == mdeep) {
+    
+    
+    if (deep != 0) {
+        printf("looked at %d %d | deepness %d", v,h, deep);
+        if (hm[deep-1][v][h] != COLLIDE_NONE) {
+            printf(" -> nope\n");
+            return false;
+        } else {
+            printf(" -> ok\n");
+        }
+    }
+    if (deep == mdeep) {
         // condition d'arrêt
         return true;
     }
@@ -350,7 +416,9 @@ bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, f
         res[deep] = DOWN;
         return true;
     } 
+
     return false;
+    
 }
 
 
@@ -369,6 +437,9 @@ bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, f
  * @returns
  * `true` si un chemin a été trouvé
  */
-bool pouleria_un(Board *b, int*** hm, float dt, int mdeep, int *res) {
-    return pouleroti_un(b, mdeep, 0, V_POS, b->player->h_position, hm, dt, res);
+bool pouleria_un(Board *b, int*** hm, float dt, int mdeep, int *moves) {
+    bool res = pouleroti_un(b, mdeep, 0, V_POS, b->player->h_position, hm, dt, moves);
+    print_hm(hm, mdeep, V_POS, cased_h(b->player->h_position));
+    print_moves(moves, mdeep);
+    return res;
 }

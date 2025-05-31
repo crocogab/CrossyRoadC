@@ -170,11 +170,11 @@ Couple obstacle_simulated_hitbox(Obstacle *o, float v, float t, float dt, float 
         if (ab.a < 0) {
             
             
-            printf("Attention: hitbox hors limites (a=%d) pour obstacle type %d\n", ab.a, o->type);
+            // printf("Attention: hitbox hors limites (a=%d) pour obstacle type %d\n", ab.a, o->type);
             
             
             ab.a = (ab.a % (MAP_WIDTH * DEFAULT_CELL_SIZE) + MAP_WIDTH * DEFAULT_CELL_SIZE) % (MAP_WIDTH * DEFAULT_CELL_SIZE);
-            printf("Nouvelle position : %d ",ab.a);
+            // printf("Nouvelle position : %d ",ab.a);
         }
         if (ab.b < 0) {
             ab.b = (ab.b % (MAP_WIDTH * DEFAULT_CELL_SIZE) + MAP_WIDTH * DEFAULT_CELL_SIZE) % (MAP_WIDTH * DEFAULT_CELL_SIZE);
