@@ -29,8 +29,18 @@ int ***hitmatrix_make(int deepness) {
 void hitmatrix_free(int ***hitmatrix, int max_deepness) {
     for (int i = 0; i < max_deepness; i++) {
         hitgrid_free(hitmatrix[i]);
+        hitmatrix[i] = NULL;
     }
     free(hitmatrix);
+}
+
+/**
+ * Remplit un hitmatrix (applique hitgrid_fill à chaque profondeur)
+ */
+void hitmatrix_fill(int ***hm, Board *b, int d, float dt) {
+    for (int i = 0; i < d; i++) {
+        hitgrid_fill(hm[i], b->grid_ground, i * dt, dt);
+    }
 }
 
 /**
@@ -38,36 +48,35 @@ void hitmatrix_free(int ***hitmatrix, int max_deepness) {
  */
 int ***hitmatrix_init(Board *b, int deepness, float dt) {
     int ***grid = hitmatrix_make(deepness);
-    for (int i = 0; i < deepness; i++) {
-        hitgrid_fill(grid[i], b->grid_ground, i * dt, dt);
-    }
+    hitmatrix_fill(grid, b, deepness, dt);
     return grid;
 }
 
 void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
     // Libérer la mémoire de la première grille
-    printf("0\n");
-    if (hm[0] != NULL) {
-        hitgrid_free(hm[0]);
-    }
-    printf("1\n");
+    // printf("0\n");
+    int **deprecated_grid = hm[0];
+    
+    // printf("1\n");
     // Faire glisser toutes les grilles d'un cran (avancée dans le temps)
     for (int i = 1; i < deep; i++) {
         hm[i-1] = hm[i];
     }
-    printf("2\n");
+    // printf("2\n");
     // Créer une nouvelle grille pour la dernière position
-    hm[deep-1] = hitgrid_init(b->grid_ground, (deep-1) * dt, dt);
-    printf("3\n");
+    // hm[deep-1] = hitgrid_init(b->grid_ground, (deep-1) * dt, dt);
+    hitgrid_fill(deprecated_grid, b->grid_ground, (deep-1) * dt, dt);
+    hm[deep-1] = deprecated_grid;
+    // printf("3\n");
     // Modifier les grilles en fonction du coup joué
     switch (coup) {
         case UP:
-            printf("up\n");
+            // printf("up\n");
             // Ajuster les prédictions en tenant compte que le joueur avance
             // on ajuste pas celle qu'on vient de créer parce qu'elle se base sur board up to date
             for (int i = 0; i < deep - 1; i++) {
-                printf("i\n");
-                int *lig = hm[i][deep-1];
+                // printf("i\n");
+                int *lig = hm[i][MAP_LEN-1];
                 // on déplace toutes les lignes vers le haut
                 for (int j = 0; j < MAP_LEN-1; j++) {
                     hm[i][j+1] = hm[i][j];
@@ -79,13 +88,14 @@ void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
             break;
         
         case DOWN:
+            // printf("down\n");
             for (int i = 0; i < deep - 1; i++) {
                 // on déplace toutes les lignes vers le bas
                 int *lig =hm[i][0];
                 for (int j = 0; j < MAP_LEN-1; j++) {
                     hm[i][j] = hm[i][j+1];
                 }
-                hm[i][deep-1] =  lig;
+                hm[i][MAP_LEN-1] =  lig;
                 
                 // pour la ligne en haut, on est pas censé y accéder donc whatever 
                 // on fait cycler pour pouvoir free sans se poser de questions
@@ -96,13 +106,20 @@ void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
         case RIGHT:
         case NEUTRAL:
             // Pas besoin d'ajustement spécial pour ces coups
+            // printf("neutral\n");
             break;
-            
+        
         default:
             // Coup non reconnu, ne rien faire de spécial
+            printf("coup default dans hm update\n");
             break;
     }
 }
+
+
+
+
+
 //MARK: hitgrid
 /**
  * Alloue de la mémoire pour une grille de collision.
@@ -121,7 +138,11 @@ int **hitgrid_make(void) {
  */
 void hitgrid_free(int **hitgrid) {
     for (int i = 0; i < MAP_LEN; i++) {
-        if (hitgrid[i] != NULL) {free(hitgrid[i]);}
+        if (hitgrid[i] != NULL) {
+
+            free(hitgrid[i]); 
+            hitgrid[i] = NULL;
+        }
     }
     free(hitgrid);
 }
@@ -284,6 +305,67 @@ int pouleria_zero(Board *b, float dt, int maxd) {
 }
 
 //MARK: ia 1
+
+void print_hm(int ***hm, int mdeep, int v, int h) {
+
+    for (int i = 0; i < mdeep; i++) {
+        printf("POULET: %d %d %d ---\n", i, v, h);
+        for (int j = v-2; j < v +1 ; j++) {
+            for (int k = h - 4; k < h + 5; k++) {
+                
+                if (h == k && j == v) {
+                    printf("@");
+                } 
+                else if (hm[i][j][k] == COLLIDE_NONE) {
+                    printf("_");
+                }
+                else if (hm[i][j][k] == COLLIDE_DEADLY) {
+                    printf("+");
+                } 
+                else {
+                    printf("#");
+                }
+            }
+            
+            printf("\n");
+        }
+    }
+    printf("~~~~~~~~~~~~~~~\n");
+}
+
+int cased_h(float h_pxl) {
+    return (h_pxl - DEFAULT_CELL_SIZE/4 + .00001) / DEFAULT_CELL_SIZE;
+}
+
+void print_moves(int *moves, int deepness){
+    printf("MOVES: ");
+    for (int i = 0; i < deepness; i++) {
+        switch (moves[i]) {
+            case UP: 
+                printf("^ ");
+            break;
+            case DOWN: 
+                printf("v ");
+            case RIGHT: printf("> ");
+            break;
+            case LEFT: 
+                printf("< ");
+            break;
+            case NEUTRAL: printf("o ");
+            break;
+            
+        }
+    }
+    printf("\n");
+}
+
+void reset_moves(int *moves, int d) {
+    // pour être sur qu'on a pas des mouvements rémanents
+    for (int i = 0; i < d; i++) {
+        moves[i] = 0;
+    }
+}
+
 /**
  * fonction recursive auxiliaire pour l'ia I
  * 
@@ -292,54 +374,64 @@ int pouleria_zero(Board *b, float dt, int maxd) {
  * @return true si le coup ne condamne pas le poulet
  * 
  */
-bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, float dt, int *res) {
-    int h = h_pxl / DEFAULT_CELL_SIZE;
+bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, float dt, int *res, char from) {
+    int h = cased_h(h_pxl);
     // TODO ajouter le décalage dû au rondins
 
     if (h < 0 || MAP_WIDTH <= h || V_POS - v >= MEMORISATION) {
         // hors de la map
+        printf("hors de la map\n");
         return false;
     }
-    else if (deep != 0 && hm[deep-1][v][h] != COLLIDE_NONE) {
-        // case bloquée.
-        return false;
-    } 
-    else if (deep == mdeep) {
+    
+    
+    if (deep != 0) {
+        printf("looked at %d %d | deepness %d from %c", v,h, deep - 1, from);
+        if (hm[deep-1][v][h] != COLLIDE_NONE) {
+            printf(" -> nope\n");
+            return false;
+        } else {
+            printf(" -> ok\n");
+        }
+    }
+    if (deep == mdeep) {
         // condition d'arrêt
         return true;
     }
 
-    else if (pouleroti_un(b, mdeep, deep+1, v + 1, h_pxl, hm, dt, res)) {
+    else if (pouleroti_un(b, mdeep, deep+1, v - 1, h_pxl, hm, dt, res, '^')) {
         // on essaye up
         res[deep] = UP;
         return true;
     }
-    else if (h < MAP_WIDTH/2 && pouleroti_un(b, mdeep, 1+ deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res)) {
+    else if (h < MAP_WIDTH/2 && pouleroti_un(b, mdeep, 1+ deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res, '>')) {
         // si right est prio on essaye
         res[deep] = RIGHT;
         return true;
     }
-    else if (pouleroti_un(b, mdeep, 1+deep, v, h_pxl - DEFAULT_CELL_SIZE, hm, dt, res)) {
+    else if (pouleroti_un(b, mdeep, 1+deep, v, h_pxl - DEFAULT_CELL_SIZE, hm, dt, res, '<')) {
         // on essaye left
         res[deep] = LEFT;
         return true; 
     } 
-    else if (h >= MAP_WIDTH/2 && pouleroti_un(b, mdeep, 1 + deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res)) {
+    else if (h >= MAP_WIDTH/2 && pouleroti_un(b, mdeep, 1 + deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res, '>')) {
         // on réessaye right si pas prio
         res[deep] = RIGHT;
         return true;
     }
-    else if (pouleroti_un(b, mdeep, 1+deep, v, h_pxl, hm, dt, res)) {
+    else if (pouleroti_un(b, mdeep, 1+deep, v, h_pxl, hm, dt, res, 'o')) {
         // on essaye neutral
         res[deep] = NEUTRAL;
         return true;        
     } 
-    else if (pouleroti_un(b, mdeep, 1 + deep, v+1, h_pxl, hm, dt, res)){
+    else if (pouleroti_un(b, mdeep, 1 + deep, v+1, h_pxl, hm, dt, res, 'v')){
         // on essaye down
         res[deep] = DOWN;
         return true;
     } 
+
     return false;
+    
 }
 
 
@@ -358,6 +450,10 @@ bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, f
  * @returns
  * `true` si un chemin a été trouvé
  */
-bool pouleria_un(Board *b, int*** hm, float dt, int mdeep, int *res) {
-    return pouleroti_un(b, mdeep, 0, V_POS, b->player->h_position, hm, dt, res);
+bool pouleria_un(Board *b, int*** hm, float dt, int mdeep, int *moves) {
+    reset_moves(moves, mdeep);
+    bool res = pouleroti_un(b, mdeep, 0, V_POS, b->player->h_position, hm, dt, moves, '.');
+    print_hm(hm, mdeep, V_POS, cased_h(b->player->h_position));
+    print_moves(moves, mdeep);
+    return res;
 }

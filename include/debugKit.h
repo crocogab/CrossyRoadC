@@ -13,8 +13,9 @@ typedef struct debugKit_
    int display_hitboxes; // active l'affichage des hitboxes
    int display_hitgrid;
    int display_next_moves; // active l'affichage des prochaines actions de l'ia
-   int pouleria; // active l'ia (on pourra mettre son niveau)
-   int deepness_ia; // profondeur de calcul
+   int ai_mode; // active l'ia (on pourra mettre son niveau)
+   int deepness_ai; // profondeur de calcul
+   int ai_shall_init;
 }debugKit;
 
 
