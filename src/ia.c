@@ -35,13 +35,20 @@ void hitmatrix_free(int ***hitmatrix, int max_deepness) {
 }
 
 /**
+ * Remplit un hitmatrix (applique hitgrid_fill à chaque profondeur)
+ */
+void hitmatrix_fill(int ***hm, Board *b, int d, float dt) {
+    for (int i = 0; i < d; i++) {
+        hitgrid_fill(hm[i], b->grid_ground, i * dt, dt);
+    }
+}
+
+/**
  * Crée et initialise une matrice 3D de collision à partir de l'état du jeu au moment de l'appel
  */
 int ***hitmatrix_init(Board *b, int deepness, float dt) {
     int ***grid = hitmatrix_make(deepness);
-    for (int i = 0; i < deepness; i++) {
-        hitgrid_fill(grid[i], b->grid_ground, i * dt, dt);
-    }
+    hitmatrix_fill(grid, b, deepness, dt);
     return grid;
 }
 
@@ -69,7 +76,7 @@ void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
             // on ajuste pas celle qu'on vient de créer parce qu'elle se base sur board up to date
             for (int i = 0; i < deep - 1; i++) {
                 // printf("i\n");
-                int *lig = hm[i][deep-1];
+                int *lig = hm[i][MAP_LEN-1];
                 // on déplace toutes les lignes vers le haut
                 for (int j = 0; j < MAP_LEN-1; j++) {
                     hm[i][j+1] = hm[i][j];
@@ -88,7 +95,7 @@ void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
                 for (int j = 0; j < MAP_LEN-1; j++) {
                     hm[i][j] = hm[i][j+1];
                 }
-                hm[i][deep-1] =  lig;
+                hm[i][MAP_LEN-1] =  lig;
                 
                 // pour la ligne en haut, on est pas censé y accéder donc whatever 
                 // on fait cycler pour pouvoir free sans se poser de questions
@@ -108,6 +115,11 @@ void hitmatrix_update(int ***hm, Board *b, int deep, float dt, int coup) {
             break;
     }
 }
+
+
+
+
+
 //MARK: hitgrid
 /**
  * Alloue de la mémoire pour une grille de collision.
@@ -362,7 +374,7 @@ void reset_moves(int *moves, int d) {
  * @return true si le coup ne condamne pas le poulet
  * 
  */
-bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, float dt, int *res) {
+bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, float dt, int *res, char from) {
     int h = cased_h(h_pxl);
     // TODO ajouter le décalage dû au rondins
 
@@ -374,7 +386,7 @@ bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, f
     
     
     if (deep != 0) {
-        printf("looked at %d %d | deepness %d", v,h, deep);
+        printf("looked at %d %d | deepness %d from %c", v,h, deep - 1, from);
         if (hm[deep-1][v][h] != COLLIDE_NONE) {
             printf(" -> nope\n");
             return false;
@@ -387,32 +399,32 @@ bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, f
         return true;
     }
 
-    else if (pouleroti_un(b, mdeep, deep+1, v - 1, h_pxl, hm, dt, res)) {
+    else if (pouleroti_un(b, mdeep, deep+1, v - 1, h_pxl, hm, dt, res, '^')) {
         // on essaye up
         res[deep] = UP;
         return true;
     }
-    else if (h < MAP_WIDTH/2 && pouleroti_un(b, mdeep, 1+ deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res)) {
+    else if (h < MAP_WIDTH/2 && pouleroti_un(b, mdeep, 1+ deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res, '>')) {
         // si right est prio on essaye
         res[deep] = RIGHT;
         return true;
     }
-    else if (pouleroti_un(b, mdeep, 1+deep, v, h_pxl - DEFAULT_CELL_SIZE, hm, dt, res)) {
+    else if (pouleroti_un(b, mdeep, 1+deep, v, h_pxl - DEFAULT_CELL_SIZE, hm, dt, res, '<')) {
         // on essaye left
         res[deep] = LEFT;
         return true; 
     } 
-    else if (h >= MAP_WIDTH/2 && pouleroti_un(b, mdeep, 1 + deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res)) {
+    else if (h >= MAP_WIDTH/2 && pouleroti_un(b, mdeep, 1 + deep, v, h_pxl + DEFAULT_CELL_SIZE, hm, dt, res, '>')) {
         // on réessaye right si pas prio
         res[deep] = RIGHT;
         return true;
     }
-    else if (pouleroti_un(b, mdeep, 1+deep, v, h_pxl, hm, dt, res)) {
+    else if (pouleroti_un(b, mdeep, 1+deep, v, h_pxl, hm, dt, res, 'o')) {
         // on essaye neutral
         res[deep] = NEUTRAL;
         return true;        
     } 
-    else if (pouleroti_un(b, mdeep, 1 + deep, v+1, h_pxl, hm, dt, res)){
+    else if (pouleroti_un(b, mdeep, 1 + deep, v+1, h_pxl, hm, dt, res, 'v')){
         // on essaye down
         res[deep] = DOWN;
         return true;
@@ -440,7 +452,7 @@ bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, f
  */
 bool pouleria_un(Board *b, int*** hm, float dt, int mdeep, int *moves) {
     reset_moves(moves, mdeep);
-    bool res = pouleroti_un(b, mdeep, 0, V_POS, b->player->h_position, hm, dt, moves);
+    bool res = pouleroti_un(b, mdeep, 0, V_POS, b->player->h_position, hm, dt, moves, '.');
     print_hm(hm, mdeep, V_POS, cased_h(b->player->h_position));
     print_moves(moves, mdeep);
     return res;

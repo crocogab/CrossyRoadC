@@ -32,7 +32,7 @@ int main(void) {
     debug.display_next_moves=0;
     debug.ai_mode = 0;
     debug.ai_shall_init = 0;
-    debug.deepness_ai = 2;
+    debug.deepness_ai = 10;
     
     //Initialisation des objets
     Game g = game_make(TO_LAUNCH);
@@ -146,7 +146,8 @@ int main(void) {
     float anim_time = 0;
 
     // entrée dans la matrice pour l'ia
-    int ***hitmatrix;
+    int ***hitmatrix = NULL;
+    hitmatrix = hitmatrix_init(b, debug.deepness_ai, duration);
     int *next_moves = malloc(debug.deepness_ai * sizeof(int));
     int last_move = NEUTRAL;
     int hm_is_uptodate;
@@ -289,12 +290,16 @@ int main(void) {
         }
         if (g.status == PLAYING && debug.ai_mode && ai_timer <= 0) {
             hm_is_uptodate = 1;
-            if (debug.ai_shall_init) {
-                hitmatrix = hitmatrix_init(b, debug.deepness_ai, duration);
-                debug.ai_shall_init = 0;
-            } else {
-                hitmatrix_update(hitmatrix, b, debug.deepness_ai, duration, last_move);
-            }
+
+            // if (debug.ai_shall_init) {
+            //     hitmatrix = hitmatrix_init(b, debug.deepness_ai, duration);
+            //     debug.ai_shall_init = 0;
+            // } else {
+            //     hitmatrix_update(hitmatrix, b, debug.deepness_ai, duration, last_move);
+            // }
+            
+            hitmatrix_fill(hitmatrix, b, debug.deepness_ai, duration);
+
             if ( !pouleria_un(g.board, hitmatrix,  duration, debug.deepness_ai, next_moves)) {
                 printf("pas de chemin trouvé\n");
             }
@@ -488,9 +493,14 @@ int main(void) {
         }
         
         if (debug.display_hitgrid){
-            int **hitgrid = hm_is_uptodate? hitmatrix[0] : hitgrid_init(b->grid_ground, 0, duration);
-            draw_hitgrid(b, cam, display, renderer, &debug,hitgrid,3);
-            // hitgrid_free(hitgrid); // ça free un bout de hitmatrix
+            if (hm_is_uptodate) {
+                draw_hitgrid(b, cam, display, renderer, &debug,hitmatrix[0],3);
+            } else {
+                int **hitgrid = hitgrid_init(b->grid_ground, 0, duration);
+                draw_hitgrid(b, cam, display, renderer, &debug,hitgrid,3);
+                hitgrid_free(hitgrid);
+            }
+            
         }
 
         if (debug.display_next_moves && debug.ai_mode) {
