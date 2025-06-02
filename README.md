@@ -4,7 +4,7 @@ Ce projet est une réimplémentation du célèbre jeu **Crossy Road**, disponibl
 - Une version jouable en terminal (TUI) à l'aide de la bibliothèque `ncurses`
 - Une version avec interface graphique (GUI)
 
-![Crossy Road](assets/Crossy_road.png)
+![Crossy Road](assets/Menu.png)
 
 ## Objectifs
 
@@ -32,10 +32,27 @@ Ce projet est une réimplémentation du célèbre jeu **Crossy Road**, disponibl
 
 ### Version GUI spécifique
 - Rendu graphique 3D isométrique
+
+![Crossy Road](assets/Crossy_road.png)
 - Sprites pour tous les éléments du jeu
 - Animations fluides
 - Affichage du score et des statistiques
 - Mode debug pour visualiser les hitbox et les données techniques
+![Debug](assets/debug1.png)
+![Debug](assets/debug2.png)
+
+
+En mode débug il est possible : 
+- de passer en GodMod (F1)
+- d'afficher la grille de déplacement (F2)
+- d'afficher des informations de debug (F3)
+- afficher les hitbox (F4)
+- ralentir le temps (F5)
+- accelerer le temps (F6)
+- afficher les positions des obstacles (F7)
+- activer l'IA (F8)
+- afficher hitbox au sol (F9)
+- afficher le chemin à suivre de l'IA (F10) 
 
 # Comment jouer
 
@@ -114,32 +131,80 @@ Le jeu s'adapte au score du joueur avec plusieurs niveaux de difficulté:
 
 ```bash
 .
+├── assets
+│   ├── Crossy_road.png
+│   ├── DroidKufi-Regular.ttf
+│   ├── editundo.ttf
+│   ├── Hardpixel.otf
+│   ├── high_scores.json
+│   ├── spritesheet_coord.json
+│   ├── spritesheet.png
+│   ├── ui_spritesheet_coord.json
+│   └── ui_spritesheet.png
+├── Cahier des charges.xlsx
+├── CR
+│   ├── 21_05.pdf
+│   ├── 27_05.pdf
+│   ├── CR 06_05.pdf
+│   ├── CR 12_03.pdf
+│   ├── CR 13_05.pdf
+│   ├── CR 19_03.pdf
+│   ├── CR 23_04.pdf
+│   ├── CR 26_03.pdf
+│   ├── CR 29_04.pdf
+│   ├── CR 4_04.pdf
+│   ├── CR 5_03.pdf
+│   └── Notes
+│       ├── 21_05.docx
+│       ├── 27_05.docx
+│       ├── CR 06_05.docx
+│       ├── CR 12_03.docx
+│       ├── CR 13_05.docx
+│       ├── CR 19_03.docx
+│       ├── CR 23_04.docx
+│       ├── CR 26_03.docx
+│       ├── CR 29_04.docx
+│       ├── CR 4_04.docx
+│       └── CR 5_03.docx
+├── Etat de l’art crossy road.docx
 ├── include
-    ├── board.h
-    ├── game.h 
-    ├── ground.h  
-    ├── macro.h  
-    ├── obstacle.h
-    ├── player.h  
-    ├── random_custom.h 
+│   ├── board.h
+│   ├── debugKit.h
+│   ├── game.h
+│   ├── ground.h
+│   ├── gui.h
+│   ├── ia.h
+│   ├── macro.h
+│   ├── obstacle.h
+│   ├── player.h
+│   ├── random_custom.h
+│   ├── ttf.h
+│   └── UI.h
+├── main_gui.c
+├── Makefile
+├── README.md
 ├── src
-    ├── board.c
-    ├── game.c 
-    ├── ground.c    
-    ├── obstacle.c
-    ├── player.c  
-    ├── random_custom.c
-├── Tests
+│   ├── board.c
+│   ├── game.c
+│   ├── ground.c
+│   ├── gui.c
+│   ├── ia.c
+│   ├── obstacle.c
+│   ├── player.c
+│   ├── random_custom.c
+│   ├── ttf.c
+│   └── UI.c
+└── Tests
     ├── test_board.c
-    ├── test_ground.c 
-    ├── test_obstacle.c  
-    ├── test_player.c 
+    ├── test_ground.c
+    ├── test_gui.c
+    ├── test_ia.c
+    ├── test_obstacle.c
+    ├── test_player.c
     ├── test_random_custom.c
-├── Makefile         
-├── README.md        
-├── .gitignore
-├── .gitlab-ci.yml
-├── main_tui.c  
+    ├── test_ttf.c
+    └── test_UI.c
+
 ```
 
 
