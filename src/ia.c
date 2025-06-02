@@ -436,23 +436,311 @@ bool pouleroti_un(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, f
 
 
 /**
- * V1 de l'ia.
- * Simulation de la trajectoire des obstacles et parcours en profondeur avec priorité au score.
+ * Fonction récursive auxiliaire pour l'IA avec détection de boucles
  * 
- * Dès qu'un coup a été trouvé il est renvoyé.
+ * @param[in] b Board du jeu
+ * @param[in] mdeep profondeur maximale
+ * @param[in] deep profondeur actuelle
+ * @param[in] v position verticale
+ * @param[in] h_pxl position horizontale en pixels
+ * @param[in] hm hitmatrix 3D
+ * @param[in] dt delta temps
+ * @param[out] res tableau des mouvements résultants
+ * @param[in] from caractère de debug
+ * @param[in] visited_positions tableau des positions visitées
+ * @param[in] visit_count nombre de positions visitées
  * 
- * NB une profondeur de 0 ça n'existe pas.
- * 
- * @param[in] board le plateau de jeu
- * @param[in] dt l'unité de temps, correspond au temps d'animation d'un jump
- * @param[in] max_deepness profondeur de simulation (>= 1)
- * 
- * @returns
- * `true` si un chemin a été trouvé
+ * @return true si un chemin sans boucle a été trouvé
+ */
+bool pouleroti_un_no_loop(Board *b, int mdeep, int deep, int v, float h_pxl, int***hm, 
+                          float dt, int *res, char from, int **visited_positions, int visit_count) {
+    int h = cased_h(h_pxl);
+    
+    // Vérifications de base
+    if (h < 0 || MAP_WIDTH <= h || V_POS - v >= MEMORISATION) {
+        printf("hors de la map (v=%d, h=%d)\n", v, h);
+        return false;
+    }
+    
+    // Vérifier si cette position a déjà été visitée dans ce chemin
+    for (int i = 0; i < visit_count; i++) {
+        if (visited_positions[i][0] == v && visited_positions[i][1] == h) {
+            printf("Position (%d,%d) déjà visitée - éviter la boucle\n", v, h);
+            return false;
+        }
+    }
+    
+    // Ajouter la position actuelle aux positions visitées
+    if (visit_count < mdeep) {
+        visited_positions[visit_count][0] = v;
+        visited_positions[visit_count][1] = h;
+        visit_count++;
+    }
+    
+    // Vérification de collision
+    if (deep != 0) {
+        printf("looked at %d %d | deepness %d from %c", v, h, deep - 1, from);
+        if (hm[deep-1][v][h] != COLLIDE_NONE) {
+            printf(" -> nope (collision)\n");
+            return false;
+        } else {
+            printf(" -> ok\n");
+        }
+    }
+    
+    // Condition d'arrêt
+    if (deep == mdeep) {
+        printf("Profondeur max atteinte - chemin trouvé!\n");
+        return true;
+    }
+    
+    // Définir les mouvements avec priorités améliorées
+    typedef struct {
+        int move;
+        int delta_v;
+        float delta_h;
+        int base_priority;
+        char debug_char;
+        const char* name;
+    } Move;
+    
+    Move moves[] = {
+        {UP,      -1, 0,                    10, '^', "UP"},      // Priorité pour avancer
+        {LEFT,     0, -DEFAULT_CELL_SIZE,    5, '<', "LEFT"},
+        {RIGHT,    0, DEFAULT_CELL_SIZE,     5, '>', "RIGHT"},
+        {NEUTRAL,  0, 0,                     2, 'o', "NEUTRAL"}, // Éviter de rester immobile
+        {DOWN,     1, 0,                     1, 'v', "DOWN"}     // Éviter de reculer
+    };
+    
+    // Adapter les priorités pour éviter les oscillations
+    if (deep > 0) {
+        // Regarder le mouvement précédent pour éviter l'aller-retour immédiat
+        int prev_move = (deep > 0) ? res[deep-1] : NEUTRAL;
+        
+        switch (prev_move) {
+            case LEFT:
+                // Si on vient de LEFT, pénaliser RIGHT
+                for (int i = 0; i < 5; i++) {
+                    if (moves[i].move == RIGHT) {
+                        moves[i].base_priority -= 3;
+                    }
+                }
+                break;
+            case RIGHT:
+                // Si on vient de RIGHT, pénaliser LEFT
+                for (int i = 0; i < 5; i++) {
+                    if (moves[i].move == LEFT) {
+                        moves[i].base_priority -= 3;
+                    }
+                }
+                break;
+            case UP:
+                // Si on vient de UP, pénaliser DOWN
+                for (int i = 0; i < 5; i++) {
+                    if (moves[i].move == DOWN) {
+                        moves[i].base_priority -= 5;
+                    }
+                }
+                break;
+            case DOWN:
+                // Si on vient de DOWN, favoriser UP
+                for (int i = 0; i < 5; i++) {
+                    if (moves[i].move == UP) {
+                        moves[i].base_priority += 3;
+                    }
+                }
+                break;
+        }
+    }
+    
+    // CORRECTION: Calculer les priorités en fonction de la position par rapport au centre
+    int center = MAP_WIDTH / 2;
+    int distance_from_center = abs(h - center);
+    
+    // CORRECTION: Ajuster les priorités pour privilégier le centre
+    for (int i = 0; i < 5; i++) {
+        if (moves[i].move == LEFT || moves[i].move == RIGHT) {
+            int new_h_after_move = h;
+            if (moves[i].move == LEFT) new_h_after_move = h - 1;
+            if (moves[i].move == RIGHT) new_h_after_move = h + 1;
+            
+            int new_distance_from_center = abs(new_h_after_move - center);
+            
+            // Bonus si le mouvement rapproche du centre
+            if (new_distance_from_center < distance_from_center) {
+                moves[i].base_priority += 3; // Bonus pour se rapprocher du centre
+                printf("Bonus centrage pour %s: +3\n", moves[i].name);
+            }
+            // Pénalité si le mouvement éloigne du centre
+            else if (new_distance_from_center > distance_from_center) {
+                moves[i].base_priority -= 2; // Pénalité pour s'éloigner du centre
+                printf("Pénalité centrage pour %s: -2\n", moves[i].name);
+            }
+            
+            // Bonus supplémentaire si on est déjà loin du centre
+            if (distance_from_center > 2 && new_distance_from_center < distance_from_center) {
+                moves[i].base_priority += 2; // Bonus supplémentaire quand on est loin
+                printf("Bonus supplémentaire pour %s: +2\n", moves[i].name);
+            }
+        }
+    }
+    
+    // CORRECTION: Tri par priorité ET par préférence (en cas d'égalité, préférer le centrage)
+    for (int i = 0; i < 4; i++) {
+        for (int j = i + 1; j < 5; j++) {
+            bool should_swap = false;
+            
+            if (moves[i].base_priority < moves[j].base_priority) {
+                should_swap = true;
+            } else if (moves[i].base_priority == moves[j].base_priority) {
+                // En cas d'égalité, préférer le mouvement qui centre
+                if ((moves[j].move == LEFT || moves[j].move == RIGHT) && 
+                    (moves[i].move != LEFT && moves[i].move != RIGHT)) {
+                    
+                    int h_after_j = h;
+                    if (moves[j].move == LEFT) h_after_j = h - 1;
+                    if (moves[j].move == RIGHT) h_after_j = h + 1;
+                    
+                    if (abs(h_after_j - center) < distance_from_center) {
+                        should_swap = true;
+                    }
+                }
+            }
+            
+            if (should_swap) {
+                Move temp = moves[i];
+                moves[i] = moves[j];
+                moves[j] = temp;
+            }
+        }
+    }
+    
+    // Affichage des priorités pour debug
+    printf("Priorités ajustées (position h=%d, centre=%d):\n", h, center);
+    for (int i = 0; i < 5; i++) {
+        printf("  %s: priorité %d\n", moves[i].name, moves[i].base_priority);
+    }
+    
+    // Explorer chaque mouvement
+    for (int i = 0; i < 5; i++) {
+        Move current_move = moves[i];
+        int new_v = v + current_move.delta_v;
+        float new_h = h_pxl + current_move.delta_h;
+        int new_h_cell = cased_h(new_h);
+        
+        // Vérifications de limites
+        bool move_valid = true;
+        switch (current_move.move) {
+            case LEFT:
+                if (new_h_cell < 0) move_valid = false;
+                break;
+            case RIGHT:
+                if (new_h_cell >= MAP_WIDTH) move_valid = false;
+                break;
+            case UP:
+                if (new_v < 0) move_valid = false;
+                break;
+            case DOWN:
+                if (new_v >= MAP_LEN) move_valid = false;
+                break;
+        }
+        
+        if (!move_valid) {
+            printf("Mouvement %s invalide (limites)\n", current_move.name);
+            continue;
+        }
+        
+        // Vérification préalable de boucle
+        bool would_create_loop = false;
+        for (int j = 0; j < visit_count; j++) {
+            if (visited_positions[j][0] == new_v && visited_positions[j][1] == new_h_cell) {
+                would_create_loop = true;
+                break;
+            }
+        }
+        
+        if (would_create_loop) {
+            printf("Mouvement %s évité (créerait une boucle)\n", current_move.name);
+            continue;
+        }
+        
+        printf("Tentative mouvement %s vers (%d,%d)\n", current_move.name, new_v, new_h_cell);
+        
+        // Exploration récursive avec copie des positions visitées
+        int **new_visited = malloc(mdeep * sizeof(int *));
+        for (int j = 0; j < mdeep; j++) {
+            new_visited[j] = malloc(2 * sizeof(int));
+            if (j < visit_count) {
+                new_visited[j][0] = visited_positions[j][0];
+                new_visited[j][1] = visited_positions[j][1];
+            }
+        }
+        
+        if (pouleroti_un_no_loop(b, mdeep, deep + 1, new_v, new_h, hm, dt, res, 
+                                current_move.debug_char, new_visited, visit_count)) {
+            // Chemin trouvé ! Enregistrer le mouvement
+            res[deep] = current_move.move;
+            printf("Mouvement %s choisi à profondeur %d\n", current_move.name, deep);
+            
+            // Libérer la mémoire temporaire
+            for (int j = 0; j < mdeep; j++) {
+                free(new_visited[j]);
+            }
+            free(new_visited);
+            
+            return true;
+        }
+        
+        // Libérer la mémoire si le chemin n'a pas fonctionné
+        for (int j = 0; j < mdeep; j++) {
+            free(new_visited[j]);
+        }
+        free(new_visited);
+    }
+    
+    printf("Aucun chemin viable depuis (%d,%d) à profondeur %d\n", v, h, deep);
+    return false;
+}
+
+/**
+ * Version améliorée de l'IA qui évite les boucles
  */
 bool pouleria_un(Board *b, int*** hm, float dt, int mdeep, int *moves) {
     reset_moves(moves, mdeep);
-    bool res = pouleroti_un(b, mdeep, 0, V_POS, b->player->h_position, hm, dt, moves, '.');
+    
+    // Allocation pour tracker les positions visitées
+    int **visited_positions = malloc(mdeep * sizeof(int *));
+    for (int i = 0; i < mdeep; i++) {
+        visited_positions[i] = malloc(2 * sizeof(int)); // [v, h]
+    }
+    
+    printf("=== IA v1 améliorée - Sans boucles ===\n");
+    
+    bool res = pouleroti_un_no_loop(b, mdeep, 0, V_POS, b->player->h_position, 
+                                   hm, dt, moves, '.', visited_positions, 0);
+    
+    // Libérer la mémoire
+    for (int i = 0; i < mdeep; i++) {
+        free(visited_positions[i]);
+    }
+    free(visited_positions);
+    
+    if (res) {
+        printf("Chemin sans boucle trouvé:\n");
+    } else {
+        printf("Aucun chemin sans boucle trouvé - stratégie de secours\n");
+        // Stratégie simple : essayer d'avancer puis se déplacer latéralement
+        for (int i = 0; i < mdeep; i++) {
+            if (i % 3 == 0) {
+                moves[i] = UP;    // Essayer d'avancer
+            } else if (i % 3 == 1) {
+                moves[i] = LEFT;  // Puis aller à gauche
+            } else {
+                moves[i] = RIGHT; // Puis aller à droite
+            }
+        }
+    }
+    
     print_hm(hm, mdeep, V_POS, cased_h(b->player->h_position));
     print_moves(moves, mdeep);
     return res;

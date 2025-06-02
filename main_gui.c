@@ -34,6 +34,7 @@ int main(void) {
     debug.ai_shall_init = 0;
     debug.deepness_ai = 10;
     
+    
     //Initialisation des objets
     Game g = game_make(TO_LAUNCH);
     Player *p = player_start();
@@ -314,7 +315,7 @@ int main(void) {
             // Le joueur contrôle le jeu
             direction = player_direction;
         }
-
+        
         //MARK: 2. Traiter action
         int collision_type;
         if (!debug.god_mode){
