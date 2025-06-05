@@ -288,29 +288,37 @@ int main(void) {
                 }
             }
         }
-        if (g.status == PLAYING && debug.ai_mode && ai_timer <= 0) {
-            hm_is_uptodate = 1;
+        // if (g.status == PLAYING && debug.ai_mode && ai_timer <= 0) {
+        //     hm_is_uptodate = 1;
 
-            // if (debug.ai_shall_init) {
-            //     hitmatrix = hitmatrix_init(b, debug.deepness_ai, duration);
-            //     debug.ai_shall_init = 0;
-            // } else {
-            //     hitmatrix_update(hitmatrix, b, debug.deepness_ai, duration, last_move);
-            // }
+        //     // if (debug.ai_shall_init) {
+        //     //     hitmatrix = hitmatrix_init(b, debug.deepness_ai, duration);
+        //     //     debug.ai_shall_init = 0;
+        //     // } else {
+        //     //     hitmatrix_update(hitmatrix, b, debug.deepness_ai, duration, last_move);
+        //     // }
             
-            hitmatrix_fill(hitmatrix, b, debug.deepness_ai, duration);
+        //     hitmatrix_fill(hitmatrix, b, debug.deepness_ai, duration);
 
-            if ( !pouleria_un(g.board, hitmatrix,  duration, debug.deepness_ai, next_moves)) {
-                printf("pas de chemin trouvé\n");
-            }
+        //     if ( !pouleria_un(g.board, hitmatrix,  duration, debug.deepness_ai, next_moves)) {
+        //         printf("pas de chemin trouvé\n");
+        //     }
             
-            // ai_direction = pouleria_zero(g.board, duration, debug.deepness_ai);
-            ai_direction = next_moves[0];
-            ai_timer = duration;
+        //     // ai_direction = pouleria_zero(g.board, duration, debug.deepness_ai);
+        //     ai_direction = next_moves[0];
+        //     ai_timer = duration;
+                
+        //     direction = ai_direction;
+            
+        // } 
+        if (debug.ai_mode && (!(p->is_jumping))) {
+            
+            ai_direction = pouleria_zero(g.board, debug.game_speed, debug.deepness_ai);
                 
             direction = ai_direction;
             
-        } else {
+        }
+        else {
             // Le joueur contrôle le jeu
             direction = player_direction;
         }
