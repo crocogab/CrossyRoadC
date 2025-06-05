@@ -103,12 +103,16 @@ make clean
 ### Lancer la version TUI
 
 ```bash
+git checkout TUI # aller sur le commit spécifique au TUI
+make clean
 make run_tui
 ```
 
 ### Lancer la version GUI
 
 ```bash
+git checkout main
+make clean
 make run_gui
 ```
 
