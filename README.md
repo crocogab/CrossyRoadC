@@ -72,7 +72,7 @@ Assurez-vous d’avoir les paquets suivants installés :
 sudo apt update
 sudo apt install libncurses-dev build-essential
 # Pour la version GUI
-sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
+sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libjson-c-dev
 ```
 
 ### Compilation
