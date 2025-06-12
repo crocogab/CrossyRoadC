@@ -1,83 +1,82 @@
-# Crossy Road - IA 
+# Crossy Road - AI 
 
-Ce projet est une réimplémentation du célèbre jeu **Crossy Road**, disponible en deux versions :
-- Une version jouable en terminal (TUI) à l'aide de la bibliothèque `ncurses`
-- Une version avec interface graphique (GUI)
+This project is a reimplementation of the famous **Crossy Road** game, available in two versions:
+- A playable terminal version (TUI) using the `ncurses` library
+- A graphical user interface (GUI) version
 
 ![Crossy Road](assets/Menu.png)
 
-## Objectifs
+## Objectives
 
-- Reproduire les mécaniques de **Crossy Road** dans un environnement en ligne de commande et graphique
-- Utiliser `ncurses` pour gérer l'affichage et les interactions dans le terminal
-- Implémenter une interface graphique moderne avec SDL2
-- Développer une architecture modulaire permettant d'étendre facilement le jeu
-- Créer une IA pour jouer automatiquement
+- Reproduce the mechanics of **Crossy Road** in both command-line and graphical environments
+- Use `ncurses` to manage display and interactions in the terminal
+- Implement a modern graphical interface with SDL2
+- Develop a modular architecture that allows easy game extension
+- Create an AI to play automatically
 
-## Fonctionnalités
+## Features
 
-- Affichage en temps réel dans le terminal ou en interface graphique
-- Déplacement du joueur (avant, arrière, gauche, droite)
-- Gestion des routes et des obstacles
-- Rafraîchissement dynamique de l'écran
-- Contrôles clavier (flèches directionnelles)
+- Real-time display in terminal or graphical interface
+- Player movement (forward, backward, left, right)
+- Road and obstacle management
+- Dynamic screen refresh
+- Keyboard controls (arrow keys)
 
-### Mécaniques de jeu
-- Différents types de terrain (herbe, route, eau)
-- Variété d'obstacles (arbres, rochers, voitures, camions, trains)
-- Système de score progressif
-- Difficulté croissante avec le score
-- Détection des collisions
-- Animation des déplacements
+### Game Mechanics
+- Different terrain types (grass, road, water)
+- Variety of obstacles (trees, rocks, cars, trucks, trains)
+- Progressive scoring system
+- Increasing difficulty with score
+- Collision detection
+- Movement animations
 
-### Version GUI spécifique
-- Rendu graphique 3D isométrique
+### GUI-specific Version
+- 3D isometric graphical rendering
 
 ![Crossy Road](assets/Crossy_road.png)
-- Sprites pour tous les éléments du jeu
-- Animations fluides
-- Affichage du score et des statistiques
-- Mode debug pour visualiser les hitbox et les données techniques
+- Sprites for all game elements
+- Smooth animations
+- Score and statistics display
+- Debug mode to visualize hitboxes and technical data
 ![Debug](assets/debug1.png)
 ![Debug](assets/debug2.png)
 
+In debug mode, it's possible to:
+- Enter God Mode (F1)
+- Display the movement grid (F2)
+- Display debug information (F3)
+- Show hitboxes (F4)
+- Slow down time (F5)
+- Speed up time (F6)
+- Display obstacle positions (F7)
+- Activate AI (F8)
+- Show ground hitboxes (F9)
+- Display AI path to follow (F10)
 
-En mode débug il est possible : 
-- de passer en GodMod (F1)
-- d'afficher la grille de déplacement (F2)
-- d'afficher des informations de debug (F3)
-- afficher les hitbox (F4)
-- ralentir le temps (F5)
-- accelerer le temps (F6)
-- afficher les positions des obstacles (F7)
-- activer l'IA (F8)
-- afficher hitbox au sol (F9)
-- afficher le chemin à suivre de l'IA (F10) 
+# How to Play
 
-# Comment jouer
-
-- Utilisez les flèches directionnelles pour vous déplacer
-- Évitez les obstacles et les véhicules
-- Traversez les rivières en sautant sur les rondins ou nénuphars
-- Progressez aussi loin que possible pour augmenter votre score
-- Le jeu s'accélère avec l'augmentation du score
+- Use arrow keys to move
+- Avoid obstacles and vehicles
+- Cross rivers by jumping on logs or lily pads
+- Progress as far as possible to increase your score
+- The game speeds up as your score increases
 
 ## Installation
 
-### Prérequis
+### Prerequisites
 
-Assurez-vous d’avoir les paquets suivants installés :
+Make sure you have the following packages installed:
 
 ```bash
 sudo apt update
 sudo apt install libncurses-dev build-essential
-# Pour la version GUI
+# For GUI version
 sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libjson-c-dev
 ```
 
 ### Compilation
 
-Clonez le projet et compilez avec make :
+Clone the project and compile with make:
 ```bash
 git clone https://gibson.telecomnancy.univ-lorraine.fr/projets/2425/ppii-s6/ppii-s6-grp-26.git
 cd ppii-s6-grp-26
@@ -86,29 +85,29 @@ make
 
 ### Tests
 
-Exécuter les tests : 
+Run tests:
 ```bash
 make run_tests
 ```
 
-### Nettoyer le projet
+### Clean the project
 
-Nettoyer les fichiers de compilation : 
+Clean compilation files:
 ```bash
 make clean
 ```
 
-## Exécution
+## Execution
 
-### Lancer la version TUI
+### Launch TUI version
 
 ```bash
-git checkout TUI # aller sur le commit spécifique au TUI
+git checkout TUI # go to TUI-specific commit
 make clean
 make run_tui
 ```
 
-### Lancer la version GUI
+### Launch GUI version
 
 ```bash
 git checkout main
@@ -116,88 +115,88 @@ make clean
 make run_gui
 ```
 
-## Difficultés progressives
+## Progressive Difficulties
 
-Le jeu s'adapte au score du joueur avec plusieurs niveaux de difficulté:
-- **Facile** (début)
+The game adapts to the player's score with several difficulty levels:
+- **Easy** (beginning)
 - **Normal** (score > 10)
-- **Moyen** (score > 25)
-- **Difficile** (score > 50)
+- **Medium** (score > 25)
+- **Hard** (score > 50)
 - **Expert** (score > 100)
 
-À chaque niveau, les paramètres suivants sont modifiés:
-- Nombre et vitesse des véhicules
-- Fréquence des trains
-- Complexité des traversées d'eau
-- Densité des obstacles
+At each level, the following parameters are modified:
+- Number and speed of vehicles
+- Train frequency
+- Water crossing complexity
+- Obstacle density
 
-## Structure du projet
+## Project Structure
 
 ```bash
 .
 ├── assets
-│   ├── Crossy_road.png
-│   ├── DroidKufi-Regular.ttf
-│   ├── editundo.ttf
-│   ├── Hardpixel.otf
-│   ├── high_scores.json
-│   ├── spritesheet_coord.json
-│   ├── spritesheet.png
-│   ├── ui_spritesheet_coord.json
-│   └── ui_spritesheet.png
+│   ├── Crossy_road.png
+│   ├── DroidKufi-Regular.ttf
+│   ├── editundo.ttf
+│   ├── Hardpixel.otf
+│   ├── high_scores.json
+│   ├── spritesheet_coord.json
+│   ├── spritesheet.png
+│   ├── ui_spritesheet_coord.json
+│   └── ui_spritesheet.png
 ├── Cahier des charges.xlsx
 ├── CR
-│   ├── 21_05.pdf
-│   ├── 27_05.pdf
-│   ├── CR 06_05.pdf
-│   ├── CR 12_03.pdf
-│   ├── CR 13_05.pdf
-│   ├── CR 19_03.pdf
-│   ├── CR 23_04.pdf
-│   ├── CR 26_03.pdf
-│   ├── CR 29_04.pdf
-│   ├── CR 4_04.pdf
-│   ├── CR 5_03.pdf
-│   └── Notes
-│       ├── 21_05.docx
-│       ├── 27_05.docx
-│       ├── CR 06_05.docx
-│       ├── CR 12_03.docx
-│       ├── CR 13_05.docx
-│       ├── CR 19_03.docx
-│       ├── CR 23_04.docx
-│       ├── CR 26_03.docx
-│       ├── CR 29_04.docx
-│       ├── CR 4_04.docx
-│       └── CR 5_03.docx
-├── Etat de l’art crossy road.docx
+│   ├── 21_05.pdf
+│   ├── 27_05.pdf
+│   ├── CR 06_05.pdf
+│   ├── CR 12_03.pdf
+│   ├── CR 13_05.pdf
+│   ├── CR 19_03.pdf
+│   ├── CR 23_04.pdf
+│   ├── CR 26_03.pdf
+│   ├── CR 29_04.pdf
+│   ├── CR 4_04.pdf
+│   ├── CR 5_03.pdf
+│   └── Notes
+│       ├── 21_05.docx
+│       ├── 27_05.docx
+│       ├── CR 06_05.docx
+│       ├── CR 12_03.docx
+│       ├── CR 13_05.docx
+│       ├── CR 19_03.docx
+│       ├── CR 23_04.docx
+│       ├── CR 26_03.docx
+│       ├── CR 29_04.docx
+│       ├── CR 4_04.docx
+│       └── CR 5_03.docx
+├── Etat de l'art crossy road.docx
 ├── include
-│   ├── board.h
-│   ├── debugKit.h
-│   ├── game.h
-│   ├── ground.h
-│   ├── gui.h
-│   ├── ia.h
-│   ├── macro.h
-│   ├── obstacle.h
-│   ├── player.h
-│   ├── random_custom.h
-│   ├── ttf.h
-│   └── UI.h
+│   ├── board.h
+│   ├── debugKit.h
+│   ├── game.h
+│   ├── ground.h
+│   ├── gui.h
+│   ├── ia.h
+│   ├── macro.h
+│   ├── obstacle.h
+│   ├── player.h
+│   ├── random_custom.h
+│   ├── ttf.h
+│   └── UI.h
 ├── main_gui.c
 ├── Makefile
 ├── README.md
 ├── src
-│   ├── board.c
-│   ├── game.c
-│   ├── ground.c
-│   ├── gui.c
-│   ├── ia.c
-│   ├── obstacle.c
-│   ├── player.c
-│   ├── random_custom.c
-│   ├── ttf.c
-│   └── UI.c
+│   ├── board.c
+│   ├── game.c
+│   ├── ground.c
+│   ├── gui.c
+│   ├── ia.c
+│   ├── obstacle.c
+│   ├── player.c
+│   ├── random_custom.c
+│   ├── ttf.c
+│   └── UI.c
 └── Tests
     ├── test_board.c
     ├── test_ground.c
@@ -211,7 +210,6 @@ Le jeu s'adapte au score du joueur avec plusieurs niveaux de difficulté:
 
 ```
 
+## Contributors
 
-## Contributeurs
-
-Ce projet a été développé dans le cadre du PP2I à Télécom Nancy.
+This project was developed as part of the PP2I at Télécom Nancy.
